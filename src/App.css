@@ -1,0 +1,65 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app__main {
+  flex: 1;
+}
+
+/* Content area with max-width container */
+.app__content-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 36px 24px 0;
+  width: 100%;
+}
+
+.app__content-inner {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
+
+.app__main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.app__section-gap {
+  margin-top: 40px;
+}
+
+/* Full-width section (below the grid) */
+.app__full-width {
+  max-width: 1400px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+}
+
+/* Responsive: stack sidebar below main on smaller screens */
+@media (max-width: 1024px) {
+  .app__content-inner {
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .app__content-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .app__content-wrap {
+    padding: 24px 16px 0;
+  }
+
+  .app__full-width {
+    padding: 0 16px;
+    margin-top: 28px;
+  }
+}
