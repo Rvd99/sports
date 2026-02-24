@@ -1,50 +1,34 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ScoresTicker from './components/ScoresTicker';
-import TopStories from './components/TopStories';
-import VideoHighlights from './components/VideoHighlights';
-import Sidebar from './components/Sidebar';
-import FeaturedLeagues from './components/FeaturedLeagues';
 import Footer from './components/Footer';
+import LeaguePage from './pages/LeaguePage';
+import AdminAddPost from './pages/AdminAddPost';
+
+// Simple global flag — set true to show admin link in nav
+export const IS_ADMIN = true;
 
 function App() {
   return (
-    <div className="app">
-      <Navbar />
-
-      <main className="app__main">
-        {/* Hero Carousel */}
-        <Hero />
-
-        {/* Live Scores Ticker */}
-        <ScoresTicker />
-
-        {/* Main Content + Sidebar */}
-        <div className="app__content-wrap">
-          <div className="app__content-inner">
-            {/* Main Column */}
-            <div className="app__main-col">
-              <TopStories />
-
-              <div className="app__section-gap">
-                <VideoHighlights />
-              </div>
-            </div>
-
-            {/* Sidebar */}
-            <Sidebar />
-          </div>
-        </div>
-
-        {/* Full-width sections */}
-        <div className="app__full-width">
-          <FeaturedLeagues />
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Navbar isAdmin={IS_ADMIN} />
+        <main className="app__main">
+          <Routes>
+            <Route path="/" element={<LeaguePage league="all" />} />
+            <Route path="/nhl" element={<LeaguePage league="nhl" />} />
+            <Route path="/nba" element={<LeaguePage league="nba" />} />
+            <Route path="/mlb" element={<LeaguePage league="mlb" />} />
+            <Route path="/cfl" element={<LeaguePage league="cfl" />} />
+            <Route path="/soccer" element={<LeaguePage league="soccer" />} />
+            <Route path="/golf" element={<LeaguePage league="golf" />} />
+            <Route path="/tennis" element={<LeaguePage league="tennis" />} />
+            <Route path="/admin/add-post" element={<AdminAddPost />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

@@ -41,6 +41,62 @@
   padding: 0 24px;
 }
 
+/* League page banner */
+.league-banner {
+  background: #0a0a0a;
+  border-bottom: 3px solid var(--red);
+  padding: 18px 0;
+}
+
+.league-banner__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.league-banner__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.league-banner__title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.league-banner__sub {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+
+/* Offline warning banner */
+.offline-banner {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 10px 24px;
+  background: rgba(200, 16, 46, 0.08);
+  border: 1px solid rgba(200, 16, 46, 0.25);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #ff8899;
+}
+
+.offline-banner code {
+  background: rgba(255,255,255,0.08);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
 /* Responsive: stack sidebar below main on smaller screens */
 @media (max-width: 1024px) {
   .app__content-inner {

@@ -1,6 +1,6 @@
 import './ScoresTicker.css';
 
-const SCORES = [
+const FALLBACK_SCORES = [
   { id: 1, league: 'NHL', home: 'TOR', homeScore: 3, away: 'NYR', awayScore: 2, status: 'FINAL/OT', homeColor: '#00205b', awayColor: '#0038a8' },
   { id: 2, league: 'NHL', home: 'EDM', homeScore: 5, away: 'VAN', awayScore: 1, status: 'FINAL', homeColor: '#041e42', awayColor: '#00843d' },
   { id: 3, league: 'NBA', home: 'LAL', homeScore: 112, away: 'GSW', awayScore: 108, status: 'FINAL', homeColor: '#552583', awayColor: '#1d428a' },
@@ -13,7 +13,13 @@ const SCORES = [
   { id: 10, league: 'MLB', home: 'CHC', homeScore: 5, away: 'STL', awayScore: 6, status: 'FINAL', homeColor: '#0e3386', awayColor: '#c41e3a' },
 ];
 
-export default function ScoresTicker() {
+export default function ScoresTicker({ scores = [], loading = false }) {
+  const displayScores = scores.length > 0
+    ? scores.map(s => ({ ...s, league: (s.league || '').toUpperCase() }))
+    : FALLBACK_SCORES;
+
+  const doubled = [...displayScores, ...displayScores];
+
   return (
     <div className="ticker">
       <div className="ticker__label">
@@ -21,8 +27,8 @@ export default function ScoresTicker() {
         <span className="ticker__label-scores">SCORES</span>
       </div>
       <div className="ticker__scroll-wrap">
-        <div className="ticker__track">
-          {[...SCORES, ...SCORES].map((game, idx) => (
+        <div className="ticker__track" style={{ animationPlayState: loading ? 'paused' : 'running' }}>
+          {doubled.map((game, idx) => (
             <ScoreCard key={`${game.id}-${idx}`} game={game} />
           ))}
         </div>
@@ -32,19 +38,23 @@ export default function ScoresTicker() {
 }
 
 function ScoreCard({ game }) {
+  const showScore = game.live || (!game.upcoming && game.homeScore !== undefined);
   return (
-    <a href="#" className={`ticker__card${game.live ? ' ticker__card--live' : ''}${game.upcoming ? ' ticker__card--upcoming' : ''}`}>
+    <a
+      href="#"
+      className={`ticker__card${game.live ? ' ticker__card--live' : ''}${game.upcoming ? ' ticker__card--upcoming' : ''}`}
+    >
       <div className="ticker__league">{game.league}</div>
       <div className="ticker__teams">
         <div className="ticker__team">
-          <span className="ticker__team-dot" style={{ background: game.awayColor }} />
+          <span className="ticker__team-dot" style={{ background: game.awayColor || '#555' }} />
           <span className="ticker__team-name">{game.away}</span>
-          {!game.upcoming && <span className="ticker__score">{game.awayScore}</span>}
+          {showScore && <span className="ticker__score">{game.awayScore}</span>}
         </div>
         <div className="ticker__team">
-          <span className="ticker__team-dot" style={{ background: game.homeColor }} />
+          <span className="ticker__team-dot" style={{ background: game.homeColor || '#555' }} />
           <span className="ticker__team-name">{game.home}</span>
-          {!game.upcoming && <span className="ticker__score">{game.homeScore}</span>}
+          {showScore && <span className="ticker__score">{game.homeScore}</span>}
         </div>
       </div>
       <div className={`ticker__status${game.live ? ' ticker__status--live' : ''}${game.upcoming ? ' ticker__status--upcoming' : ''}`}>

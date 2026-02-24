@@ -29,9 +29,11 @@ body {
   background-color: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  min-width: 320px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: block;
 }
 
 #root {

@@ -1,38 +1,37 @@
 import { useState } from 'react';
 import './Sidebar.css';
 
-const LIVE_GAMES = [
-  { id: 1, league: 'NBA', home: 'BOS', homeScore: 98, away: 'MIA', awayScore: 101, status: 'Q4 2:34', live: true, homeColor: '#007a33', awayColor: '#98002e' },
-  { id: 2, league: 'MLB', home: 'LAD', homeScore: 3, away: 'SF', awayScore: 3, status: 'BOT 7th', live: true, homeColor: '#005a9c', awayColor: '#fd5a1e' },
-  { id: 3, league: 'NHL', home: 'MTL', homeScore: 0, away: 'OTT', awayScore: 0, status: '7:00 PM ET', live: false, homeColor: '#af1e2d', awayColor: '#c52032' },
-  { id: 4, league: 'NBA', home: 'DEN', homeScore: 0, away: 'OKC', awayScore: 0, status: '9:30 PM ET', live: false, homeColor: '#0e2240', awayColor: '#007ac1' },
-  { id: 5, league: 'MLB', home: 'NYY', homeScore: 0, away: 'BOS', awayScore: 0, status: '7:05 PM ET', live: false, homeColor: '#003087', awayColor: '#bd3039' },
-];
-
-const TRENDING = [
-  { id: 1, rank: 1, headline: 'McDavid Wins Hart Trophy for Record Fifth Time', league: 'NHL', views: '142K' },
-  { id: 2, rank: 2, headline: 'SGA Named NBA MVP in Landslide Vote', league: 'NBA', views: '98K' },
-  { id: 3, rank: 3, headline: 'Canada Qualifies for 2026 World Cup', league: 'SOCCER', views: '87K' },
-  { id: 4, rank: 4, headline: 'Blue Jays Acquire All-Star Closer at Deadline', league: 'MLB', views: '65K' },
-  { id: 5, rank: 5, headline: 'Andreescu Returns to Top 20 After Comeback', league: 'TENNIS', views: '54K' },
-  { id: 6, rank: 6, headline: 'Grey Cup Tickets Sell Out in 12 Minutes', league: 'CFL', views: '43K' },
-  { id: 7, rank: 7, headline: 'Conners Leads Canadian Open After Round 2', league: 'GOLF', views: '38K' },
+const FALLBACK_SCORES = [
+  { id: 1, league: 'nba', home: 'BOS', homeScore: 98, away: 'MIA', awayScore: 101, status: 'Q4 2:34', live: true, homeColor: '#007a33', awayColor: '#98002e' },
+  { id: 2, league: 'mlb', home: 'LAD', homeScore: 3, away: 'SF', awayScore: 3, status: 'BOT 7th', live: true, homeColor: '#005a9c', awayColor: '#fd5a1e' },
+  { id: 3, league: 'nhl', home: 'MTL', homeScore: 0, away: 'OTT', awayScore: 0, status: '7:00 PM ET', live: false, homeColor: '#af1e2d', awayColor: '#c52032' },
+  { id: 4, league: 'nba', home: 'DEN', homeScore: 0, away: 'OKC', awayScore: 0, status: '9:30 PM ET', live: false, homeColor: '#0e2240', awayColor: '#007ac1' },
+  { id: 5, league: 'mlb', home: 'NYY', homeScore: 0, away: 'BOS', awayScore: 0, status: '7:05 PM ET', live: false, homeColor: '#003087', awayColor: '#bd3039' },
 ];
 
 const LEAGUE_COLORS = {
-  NHL: '#0066cc', NBA: '#c8102e', MLB: '#002d72',
-  SOCCER: '#00a651', CFL: '#e03a3e', GOLF: '#2e7d32', TENNIS: '#f5a623',
+  nhl: '#0066cc', nba: '#c8102e', mlb: '#002d72',
+  soccer: '#00a651', cfl: '#e03a3e', golf: '#2e7d32', tennis: '#f5a623',
 };
 
-export default function Sidebar() {
+export default function Sidebar({ scores = [], news = [], loading = false }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
+  const displayScores = scores.length > 0 ? scores.slice(0, 6) : FALLBACK_SCORES;
+
+  // Build trending from news prop (top 7 by index as proxy for popularity)
+  const trending = news.slice(0, 7).map((item, i) => ({
+    id: item.id,
+    rank: i + 1,
+    headline: item.headline,
+    league: (item.league || '').toUpperCase(),
+    leagueColor: item.leagueColor || LEAGUE_COLORS[(item.league || '').toLowerCase()] || '#888',
+  }));
+
   const handleSubscribe = (e) => {
     e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-    }
+    if (email.trim()) setSubscribed(true);
   };
 
   return (
@@ -44,54 +43,59 @@ export default function Sidebar() {
           <h3 className="sidebar__widget-title">Live &amp; Upcoming</h3>
         </div>
         <div className="sidebar__scores">
-          {LIVE_GAMES.map((game) => (
-            <a key={game.id} href="#" className={`sb-game${game.live ? ' sb-game--live' : ''}`}>
-              <div className="sb-game__league">{game.league}</div>
-              <div className="sb-game__matchup">
-                <div className="sb-game__team">
-                  <span className="sb-game__dot" style={{ background: game.awayColor }} />
-                  <span className="sb-game__name">{game.away}</span>
-                  {game.live && <span className="sb-game__score">{game.awayScore}</span>}
+          {displayScores.map((game) => {
+            const leagueKey = (game.league || '').toLowerCase();
+            return (
+              <a key={game.id} href="#" className={`sb-game${game.live ? ' sb-game--live' : ''}`}>
+                <div className="sb-game__league">{leagueKey.toUpperCase()}</div>
+                <div className="sb-game__matchup">
+                  <div className="sb-game__team">
+                    <span className="sb-game__dot" style={{ background: game.awayColor || '#555' }} />
+                    <span className="sb-game__name">{game.away}</span>
+                    {(game.live || game.status === 'FINAL' || game.status?.includes('OT')) && (
+                      <span className="sb-game__score">{game.awayScore}</span>
+                    )}
+                  </div>
+                  <div className="sb-game__team">
+                    <span className="sb-game__dot" style={{ background: game.homeColor || '#555' }} />
+                    <span className="sb-game__name">{game.home}</span>
+                    {(game.live || game.status === 'FINAL' || game.status?.includes('OT')) && (
+                      <span className="sb-game__score">{game.homeScore}</span>
+                    )}
+                  </div>
                 </div>
-                <div className="sb-game__team">
-                  <span className="sb-game__dot" style={{ background: game.homeColor }} />
-                  <span className="sb-game__name">{game.home}</span>
-                  {game.live && <span className="sb-game__score">{game.homeScore}</span>}
+                <div className={`sb-game__status${game.live ? ' sb-game__status--live' : ''}`}>
+                  {game.live && <span className="sb-game__live-badge">LIVE</span>}
+                  {game.status}
                 </div>
-              </div>
-              <div className={`sb-game__status${game.live ? ' sb-game__status--live' : ''}`}>
-                {game.live && <span className="sb-game__live-badge">LIVE</span>}
-                {game.status}
-              </div>
-            </a>
-          ))}
+              </a>
+            );
+          })}
         </div>
         <a href="#" className="sidebar__view-all">View All Scores →</a>
       </div>
 
       {/* Trending */}
-      <div className="sidebar__widget">
-        <div className="sidebar__widget-header">
-          <h3 className="sidebar__widget-title">🔥 Trending Now</h3>
+      {trending.length > 0 && (
+        <div className="sidebar__widget">
+          <div className="sidebar__widget-header">
+            <h3 className="sidebar__widget-title">🔥 Trending Now</h3>
+          </div>
+          <div className="sidebar__trending">
+            {trending.map((item) => (
+              <a key={item.id} href="#" className="trending-item">
+                <span className="trending-item__rank">{item.rank}</span>
+                <div className="trending-item__body">
+                  <span className="trending-item__league" style={{ color: item.leagueColor }}>
+                    {item.league}
+                  </span>
+                  <span className="trending-item__headline">{item.headline}</span>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
-        <div className="sidebar__trending">
-          {TRENDING.map((item) => (
-            <a key={item.id} href="#" className="trending-item">
-              <span className="trending-item__rank">{item.rank}</span>
-              <div className="trending-item__body">
-                <span
-                  className="trending-item__league"
-                  style={{ color: LEAGUE_COLORS[item.league] || '#888' }}
-                >
-                  {item.league}
-                </span>
-                <span className="trending-item__headline">{item.headline}</span>
-              </div>
-              <span className="trending-item__views">{item.views}</span>
-            </a>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Newsletter */}
       <div className="sidebar__widget sidebar__widget--newsletter">
@@ -102,7 +106,7 @@ export default function Sidebar() {
         </p>
         {subscribed ? (
           <div className="sidebar__newsletter-success">
-            ✓ You're subscribed! Check your inbox.
+            ✓ You&apos;re subscribed! Check your inbox.
           </div>
         ) : (
           <form className="sidebar__newsletter-form" onSubmit={handleSubscribe}>
@@ -121,23 +125,12 @@ export default function Sidebar() {
         )}
       </div>
 
-      {/* Ad Block 1 */}
+      {/* Ad Block */}
       <div className="sidebar__ad">
         <span className="sidebar__ad-label">Advertisement</span>
         <div className="sidebar__ad-block">
           <div className="sidebar__ad-inner">
             <span className="sidebar__ad-text">300 × 250</span>
-            <span className="sidebar__ad-sub">Your Ad Here</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Ad Block 2 */}
-      <div className="sidebar__ad">
-        <span className="sidebar__ad-label">Advertisement</span>
-        <div className="sidebar__ad-block sidebar__ad-block--tall">
-          <div className="sidebar__ad-inner">
-            <span className="sidebar__ad-text">300 × 600</span>
             <span className="sidebar__ad-sub">Your Ad Here</span>
           </div>
         </div>

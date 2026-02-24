@@ -1,0 +1,321 @@
+.admin-page {
+  min-height: calc(100vh - 58px);
+  background: var(--bg);
+  padding: 40px 24px 80px;
+}
+
+.admin-page__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.admin-page__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+}
+
+.admin-page__breadcrumb-link {
+  color: var(--red);
+  transition: color 0.2s;
+}
+
+.admin-page__breadcrumb-link:hover {
+  color: #ff3355;
+}
+
+.admin-page__breadcrumb-sep {
+  color: #333;
+}
+
+.admin-page__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-page__header-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.admin-page__title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.admin-page__subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Alerts */
+.admin-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 8px;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.admin-alert--success {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.35);
+}
+
+.admin-alert--error {
+  background: rgba(200, 16, 46, 0.1);
+  border: 1px solid rgba(200, 16, 46, 0.35);
+}
+
+.admin-alert__icon {
+  font-size: 1.1rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.admin-alert--success .admin-alert__icon { color: #4caf50; }
+.admin-alert--error .admin-alert__icon { color: var(--red); }
+
+.admin-alert strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 3px;
+}
+
+.admin-alert p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.admin-alert__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.admin-alert__close:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Form */
+.admin-form__grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 28px;
+  align-items: start;
+}
+
+.admin-form__main {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.admin-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-form__label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-form__required {
+  color: var(--red);
+}
+
+.admin-form__optional {
+  color: var(--text-dim);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.admin-form__input,
+.admin-form__textarea,
+.admin-form__select {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 11px 14px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.admin-form__input:focus,
+.admin-form__textarea:focus,
+.admin-form__select:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.15);
+}
+
+.admin-form__input::placeholder,
+.admin-form__textarea::placeholder {
+  color: #444;
+}
+
+.admin-form__textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.6;
+}
+
+.admin-form__textarea--tall {
+  min-height: 220px;
+}
+
+.admin-form__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+.admin-form__select option {
+  background: #1a1a1a;
+}
+
+.admin-form__hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* Sidebar panel */
+.admin-form__sidebar {
+  position: sticky;
+  top: 78px;
+}
+
+.admin-form__panel {
+  background: #1a1a1a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.admin-form__panel-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-form__preview {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.admin-form__preview img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.admin-form__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 13px;
+  border-radius: 6px;
+  width: 100%;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 4px;
+}
+
+.admin-form__submit:hover:not(:disabled) {
+  background: var(--red-dark);
+  transform: translateY(-1px);
+}
+
+.admin-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-form__spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.admin-form__cancel {
+  display: block;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.admin-form__cancel:hover {
+  color: #ccc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form__sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .admin-page {
+    padding: 24px 16px 60px;
+  }
+}
