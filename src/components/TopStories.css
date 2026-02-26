@@ -22,7 +22,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #fff;
+  color: var(--text-primary);
   flex: 1;
 }
 
@@ -51,18 +51,18 @@
 .stories__card {
   display: flex;
   flex-direction: column;
-  background: var(--bg-card);
+  background: var(--card-bg);
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-color);
   text-decoration: none;
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 
 .stories__card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  border-color: #3a3a3a;
+  box-shadow: 0 10px 30px var(--shadow);
+  border-color: var(--border-color);
 }
 
 .stories__card--featured {
@@ -125,12 +125,12 @@
   font-size: 0.88rem;
   font-weight: 700;
   line-height: 1.35;
-  color: #eee;
+  color: var(--text-primary);
   transition: color 0.2s;
 }
 
 .stories__card:hover .stories__card-headline {
-  color: #fff;
+  color: var(--red);
 }
 
 .stories__card-headline--lg {

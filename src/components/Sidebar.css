@@ -39,7 +39,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #fff;
+  color: var(--text-primary);
 }
 
 /* Scores */
@@ -104,7 +104,7 @@
 .sb-game__score {
   font-size: 0.82rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text-primary);
   min-width: 16px;
   text-align: right;
 }
@@ -203,13 +203,13 @@
 .trending-item__headline {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #ccc;
+  color: var(--text-secondary);
   line-height: 1.3;
   transition: color 0.2s;
 }
 
 .trending-item:hover .trending-item__headline {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .trending-item__views {

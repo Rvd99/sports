@@ -1,25 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchLiveScores } from '../api';
 import './Sidebar.css';
 
 const FALLBACK_SCORES = [
-  { id: 1, league: 'nba', home: 'BOS', homeScore: 98, away: 'MIA', awayScore: 101, status: 'Q4 2:34', live: true, homeColor: '#007a33', awayColor: '#98002e' },
-  { id: 2, league: 'mlb', home: 'LAD', homeScore: 3, away: 'SF', awayScore: 3, status: 'BOT 7th', live: true, homeColor: '#005a9c', awayColor: '#fd5a1e' },
-  { id: 3, league: 'nhl', home: 'MTL', homeScore: 0, away: 'OTT', awayScore: 0, status: '7:00 PM ET', live: false, homeColor: '#af1e2d', awayColor: '#c52032' },
-  { id: 4, league: 'nba', home: 'DEN', homeScore: 0, away: 'OKC', awayScore: 0, status: '9:30 PM ET', live: false, homeColor: '#0e2240', awayColor: '#007ac1' },
-  { id: 5, league: 'mlb', home: 'NYY', homeScore: 0, away: 'BOS', awayScore: 0, status: '7:05 PM ET', live: false, homeColor: '#003087', awayColor: '#bd3039' },
+  { id: 1, league: 'cricket', home: 'IND', homeScore: 0, away: 'AUS', awayScore: 0, status: 'Scheduled', live: false, homeColor: '#1e3a8a', awayColor: '#991b1b' },
+  { id: 2, league: 'nba', home: 'LAL', homeScore: 0, away: 'GSW', awayScore: 0, status: 'Scheduled', live: false, homeColor: '#c8102e', awayColor: '#0066cc' },
+  { id: 3, league: 'cricket', home: 'ENG', homeScore: 0, away: 'PAK', awayScore: 0, status: 'Scheduled', live: false, homeColor: '#1e3a8a', awayColor: '#991b1b' },
+  { id: 4, league: 'nba', home: 'BOS', homeScore: 0, away: 'MIA', awayScore: 0, status: 'Scheduled', live: false, homeColor: '#007a33', awayColor: '#98002e' },
 ];
 
 const LEAGUE_COLORS = {
   nhl: '#0066cc', nba: '#c8102e', mlb: '#002d72',
   soccer: '#00a651', cfl: '#e03a3e', golf: '#2e7d32', tennis: '#f5a623',
+  cricket: '#1e3a8a'
 };
 
 export default function Sidebar({ scores = [], news = [], articles = [], loading = false }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [liveScores, setLiveScores] = useState([]);
 
-  const displayScores = scores.length > 0 ? scores.slice(0, 6) : FALLBACK_SCORES;
+  useEffect(() => {
+    const loadLiveScores = async () => {
+      console.log('🔄 Sidebar: Loading live scores...');
+      const data = await fetchLiveScores();
+      if (data) {
+        console.log('✅ Sidebar: Received live scores:', data);
+        setLiveScores(data);
+      } else {
+        console.log('⚠️ Sidebar: No live scores received, using fallback');
+      }
+    };
+    loadLiveScores();
+    // Refresh scores every 30 seconds
+    const interval = setInterval(loadLiveScores, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const displayScores = liveScores.length > 0 ? liveScores : (scores.length > 0 ? scores.slice(0, 6) : FALLBACK_SCORES);
 
   // Build trending from articles marked as trending + news
   const trendingArticles = (articles || []).filter(a => a.isTrending).map((item, i) => ({

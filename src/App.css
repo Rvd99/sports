@@ -1,16 +1,16 @@
 /* Theme Variables */
 :root[data-theme="light"] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #1a1a1a;
-  --text-secondary: #4a5568;
-  --text-tertiary: #718096;
-  --border-color: #e2e8f0;
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #111111;
+  --text-secondary: #333333;
+  --text-tertiary: #666666;
+  --border-color: #d4d4d4;
   --card-bg: #ffffff;
-  --navbar-bg: #ffffff;
+  --navbar-bg: #002f6c;
   --footer-bg: #1a1a1a;
-  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 :root[data-theme="dark"] {
@@ -29,17 +29,17 @@
 
 /* Default to light theme */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #1a1a1a;
-  --text-secondary: #4a5568;
-  --text-tertiary: #718096;
-  --border-color: #e2e8f0;
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e8e8e8;
+  --text-primary: #111111;
+  --text-secondary: #333333;
+  --text-tertiary: #666666;
+  --border-color: #d4d4d4;
   --card-bg: #ffffff;
-  --navbar-bg: #ffffff;
+  --navbar-bg: #002f6c;
   --footer-bg: #1a1a1a;
-  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 .app {

@@ -103,24 +103,14 @@ export default function Navbar() {
             )}
           </div>
           {canCreateContent && (
-            <>
-              <NavLink
-                to="/admin/articles"
-                className={({ isActive }) =>
-                  `navbar__link navbar__link--admin${isActive ? ' navbar__link--active' : ''}`
-                }
-              >
-                📚 Manage
-              </NavLink>
-              <NavLink
-                to="/admin/create-article"
-                className={({ isActive }) =>
-                  `navbar__link navbar__link--admin${isActive ? ' navbar__link--active' : ''}`
-                }
-              >
-                📝 Create Article
-              </NavLink>
-            </>
+            <NavLink
+              to="/admin/articles"
+              className={({ isActive }) =>
+                `navbar__link navbar__link--admin${isActive ? ' navbar__link--active' : ''}`
+              }
+            >
+              📚 Manage
+            </NavLink>
           )}
         </nav>
 

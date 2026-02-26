@@ -2,8 +2,8 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: var(--bg-nav);
-  border-bottom: 1px solid var(--border);
+  background: var(--navbar-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: box-shadow 0.3s;
 }
 
@@ -66,7 +66,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #ccc;
+  color: rgba(255, 255, 255, 0.85);
   border-radius: 3px;
   transition: color 0.2s, background 0.2s;
   white-space: nowrap;

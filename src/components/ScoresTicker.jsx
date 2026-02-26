@@ -1,22 +1,37 @@
+import { useState, useEffect } from 'react';
+import { fetchLiveScores } from '../api';
 import './ScoresTicker.css';
 
 const FALLBACK_SCORES = [
-  { id: 1, league: 'NHL', home: 'TOR', homeScore: 3, away: 'NYR', awayScore: 2, status: 'FINAL/OT', homeColor: '#00205b', awayColor: '#0038a8' },
-  { id: 2, league: 'NHL', home: 'EDM', homeScore: 5, away: 'VAN', awayScore: 1, status: 'FINAL', homeColor: '#041e42', awayColor: '#00843d' },
-  { id: 3, league: 'NBA', home: 'LAL', homeScore: 112, away: 'GSW', awayScore: 108, status: 'FINAL', homeColor: '#552583', awayColor: '#1d428a' },
-  { id: 4, league: 'NBA', home: 'BOS', homeScore: 98, away: 'MIA', awayScore: 101, status: 'Q4 2:34', homeColor: '#007a33', awayColor: '#98002e', live: true },
-  { id: 5, league: 'MLB', home: 'TOR', homeScore: 7, away: 'NYY', awayScore: 4, status: 'FINAL', homeColor: '#134a8e', awayColor: '#003087' },
-  { id: 6, league: 'MLB', home: 'LAD', homeScore: 3, away: 'SF', awayScore: 3, status: 'BOT 7th', homeColor: '#005a9c', awayColor: '#fd5a1e', live: true },
-  { id: 7, league: 'NHL', home: 'MTL', homeScore: 0, away: 'OTT', awayScore: 0, status: '7:00 PM', homeColor: '#af1e2d', awayColor: '#c52032', upcoming: true },
-  { id: 8, league: 'CFL', home: 'WPG', homeScore: 34, away: 'CGY', awayScore: 17, status: 'FINAL', homeColor: '#003087', awayColor: '#c8102e' },
-  { id: 9, league: 'NBA', home: 'DEN', homeScore: 0, away: 'OKC', awayScore: 0, status: '9:30 PM', homeColor: '#0e2240', awayColor: '#007ac1', upcoming: true },
-  { id: 10, league: 'MLB', home: 'CHC', homeScore: 5, away: 'STL', awayScore: 6, status: 'FINAL', homeColor: '#0e3386', awayColor: '#c41e3a' },
+  { id: 1, league: 'NBA', home: 'LAL', homeScore: 0, away: 'GSW', awayScore: 0, status: 'Scheduled', homeColor: '#552583', awayColor: '#1d428a', upcoming: true },
+  { id: 2, league: 'NBA', home: 'BOS', homeScore: 0, away: 'MIA', awayScore: 0, status: 'Scheduled', homeColor: '#007a33', awayColor: '#98002e', upcoming: true },
+  { id: 3, league: 'CRICKET', home: 'IND', homeScore: 0, away: 'AUS', awayScore: 0, status: 'Scheduled', homeColor: '#1e3a8a', awayColor: '#991b1b', upcoming: true },
+  { id: 4, league: 'CRICKET', home: 'ENG', homeScore: 0, away: 'PAK', awayScore: 0, status: 'Scheduled', homeColor: '#1e3a8a', awayColor: '#991b1b', upcoming: true },
 ];
 
 export default function ScoresTicker({ scores = [], loading = false }) {
-  const displayScores = scores.length > 0
-    ? scores.map(s => ({ ...s, league: (s.league || '').toUpperCase() }))
-    : FALLBACK_SCORES;
+  const [liveScores, setLiveScores] = useState([]);
+
+  useEffect(() => {
+    const loadLiveScores = async () => {
+      console.log('🎯 ScoresTicker: Fetching live scores...');
+      const data = await fetchLiveScores();
+      if (data) {
+        console.log('✅ ScoresTicker: Received live scores:', data);
+        setLiveScores(data);
+      }
+    };
+    loadLiveScores();
+    // Refresh every 30 seconds
+    const interval = setInterval(loadLiveScores, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const displayScores = liveScores.length > 0
+    ? liveScores.map(s => ({ ...s, league: (s.league || '').toUpperCase() }))
+    : (scores.length > 0
+      ? scores.map(s => ({ ...s, league: (s.league || '').toUpperCase() }))
+      : FALLBACK_SCORES);
 
   const doubled = [...displayScores, ...displayScores];
 
