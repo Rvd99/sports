@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './TopStories.css';
 
 const FALLBACK_STORIES = [
@@ -21,8 +22,23 @@ function getLeagueColor(league = '') {
   return LEAGUE_COLORS[league.toLowerCase()] || '#888';
 }
 
-export default function TopStories({ news = [], loading = false }) {
-  const stories = news.length > 0 ? news : FALLBACK_STORIES;
+export default function TopStories({ news = [], articles = [], loading = false }) {
+  // Combine top story articles with news
+  const topStoryArticles = (articles || []).filter(a => a.isTopStory).map(item => ({
+    id: item.id,
+    slug: item.slug,
+    image: item.imageUrl,
+    league: item.category,
+    leagueColor: item.categoryColor,
+    headline: item.title,
+    excerpt: item.excerpt,
+    time: item.time || 'Recently',
+    author: item.author,
+    isArticle: true
+  }));
+  
+  const combined = [...topStoryArticles, ...news];
+  const stories = combined.length > 0 ? combined : FALLBACK_STORIES;
   const featured = stories[0];
   const secondary = stories.slice(1, 5);
   const recent = stories.slice(5, 13);
@@ -54,58 +70,112 @@ export default function TopStories({ news = [], loading = false }) {
       {featured && (
         <div className="stories__grid">
           {/* Featured large card */}
-          <a href="#" className="stories__card stories__card--featured">
-            <div className="stories__card-img-wrap">
-              <img
-                src={featured.image || `https://picsum.photos/seed/${featured.id}/600/400`}
-                alt={featured.headline}
-                className="stories__card-img"
-                loading="lazy"
-              />
-              <span
-                className="stories__league-tag"
-                style={{ background: featured.leagueColor || getLeagueColor(featured.league) }}
-              >
-                {normalizeLeague(featured.league)}
-              </span>
-            </div>
-            <div className="stories__card-body">
-              <h3 className="stories__card-headline stories__card-headline--lg">
-                {featured.headline}
-              </h3>
-              <p className="stories__card-excerpt">{featured.excerpt}</p>
-              <div className="stories__card-meta">
-                <span className="stories__card-author">{featured.author || 'Staff'}</span>
-                <span className="stories__card-time">{featured.time}</span>
+          {featured.isArticle ? (
+            <Link to={`/article/${featured.slug}`} className="stories__card stories__card--featured">
+              <div className="stories__card-img-wrap">
+                <img
+                  src={featured.image || `https://picsum.photos/seed/${featured.id}/600/400`}
+                  alt={featured.headline}
+                  className="stories__card-img"
+                  loading="lazy"
+                />
+                <span
+                  className="stories__league-tag"
+                  style={{ background: featured.leagueColor || getLeagueColor(featured.league) }}
+                >
+                  {normalizeLeague(featured.league)}
+                </span>
               </div>
-            </div>
-          </a>
+              <div className="stories__card-body">
+                <h3 className="stories__card-headline stories__card-headline--lg">
+                  {featured.headline}
+                </h3>
+                <p className="stories__card-excerpt">{featured.excerpt}</p>
+                <div className="stories__card-meta">
+                  <span className="stories__card-author">{featured.author || 'Staff'}</span>
+                  <span className="stories__card-time">{featured.time}</span>
+                </div>
+              </div>
+            </Link>
+          ) : (
+            <a href="#" className="stories__card stories__card--featured">
+              <div className="stories__card-img-wrap">
+                <img
+                  src={featured.image || `https://picsum.photos/seed/${featured.id}/600/400`}
+                  alt={featured.headline}
+                  className="stories__card-img"
+                  loading="lazy"
+                />
+                <span
+                  className="stories__league-tag"
+                  style={{ background: featured.leagueColor || getLeagueColor(featured.league) }}
+                >
+                  {normalizeLeague(featured.league)}
+                </span>
+              </div>
+              <div className="stories__card-body">
+                <h3 className="stories__card-headline stories__card-headline--lg">
+                  {featured.headline}
+                </h3>
+                <p className="stories__card-excerpt">{featured.excerpt}</p>
+                <div className="stories__card-meta">
+                  <span className="stories__card-author">{featured.author || 'Staff'}</span>
+                  <span className="stories__card-time">{featured.time}</span>
+                </div>
+              </div>
+            </a>
+          )}
 
           {/* Secondary cards */}
           <div className="stories__secondary">
             {secondary.map((story) => (
-              <a key={story.id} href="#" className="stories__card stories__card--sm">
-                <div className="stories__card-img-wrap">
-                  <img
-                    src={story.image || `https://picsum.photos/seed/${story.id}/600/400`}
-                    alt={story.headline}
-                    className="stories__card-img"
-                    loading="lazy"
-                  />
-                  <span
-                    className="stories__league-tag"
-                    style={{ background: story.leagueColor || getLeagueColor(story.league) }}
-                  >
-                    {normalizeLeague(story.league)}
-                  </span>
-                </div>
-                <div className="stories__card-body">
-                  <h3 className="stories__card-headline">{story.headline}</h3>
-                  <div className="stories__card-meta">
-                    <span className="stories__card-time">{story.time}</span>
+              story.isArticle ? (
+                <Link key={story.id} to={`/article/${story.slug}`} className="stories__card stories__card--sm">
+                  <div className="stories__card-img-wrap">
+                    <img
+                      src={story.image || `https://picsum.photos/seed/${story.id}/600/400`}
+                      alt={story.headline}
+                      className="stories__card-img"
+                      loading="lazy"
+                    />
+                    <span
+                      className="stories__league-tag"
+                      style={{ background: story.leagueColor || getLeagueColor(story.league) }}
+                    >
+                      {normalizeLeague(story.league)}
+                    </span>
                   </div>
-                </div>
-              </a>
+                  <div className="stories__card-body">
+                    <h3 className="stories__card-headline">{story.headline}</h3>
+                    <div className="stories__card-meta">
+                      <span className="stories__card-time">{story.time}</span>
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <a key={story.id} href="#" className="stories__card stories__card--sm">
+                  <div className="stories__card-img-wrap">
+                    <img
+                      src={story.image || `https://picsum.photos/seed/${story.id}/600/400`}
+                      alt={story.headline}
+                      className="stories__card-img"
+                      loading="lazy"
+                    />
+                    <span
+                      className="stories__league-tag"
+                      style={{ background: story.leagueColor || getLeagueColor(story.league) }}
+                    >
+                      {normalizeLeague(story.league)}
+                    </span>
+                  </div>
+                  <div className="stories__card-body">
+                    <h3 className="stories__card-headline">{story.headline}</h3>
+                    <div className="stories__card-meta">
+                      <span className="stories__card-time">{story.time}</span>
+                    </div>
+                  </div>
+                </a>
+              )
             ))}
           </div>
         </div>

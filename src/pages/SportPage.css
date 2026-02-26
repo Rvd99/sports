@@ -1,0 +1,112 @@
+.sport-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+}
+
+.sport-header {
+  padding: 2rem 1rem;
+  border-bottom: 4px solid;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.sport-header__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sport-header__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sport-header__title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.sport-header__sub {
+  font-size: 1.125rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.sport-page__content {
+  padding: 2rem 1rem;
+}
+
+.sport-page__content-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+}
+
+.sport-page__main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sport-page__section-gap {
+  margin-top: 2rem;
+}
+
+.offline-banner {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+  padding: 1rem;
+  text-align: center;
+  margin: 0 1rem;
+  border-radius: 8px;
+}
+
+.offline-banner code {
+  background: rgba(245, 158, 11, 0.2);
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+@media (max-width: 1024px) {
+  .sport-page__content-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .sport-header__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .sport-header__title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .sport-header {
+    padding: 1.5rem 0.75rem;
+  }
+  
+  .sport-header__title {
+    font-size: 1.75rem;
+  }
+  
+  .sport-header__sub {
+    font-size: 1rem;
+  }
+  
+  .sport-page__content {
+    padding: 1.5rem 0.75rem;
+  }
+}

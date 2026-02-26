@@ -168,14 +168,27 @@
 }
 
 .navbar__icon-btn {
-  background: none;
-  color: #bbb;
-  padding: 6px;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s, background 0.2s;
+  transition: all 0.2s;
+  font-size: 1.25rem;
+}
+
+.navbar__theme-toggle {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar__theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
 }
 
 .navbar__icon-btn:hover {
@@ -219,15 +232,50 @@
 }
 
 .navbar__login {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #bbb;
-  white-space: nowrap;
-  transition: color 0.2s;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .navbar__login:hover {
-  color: #fff;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.navbar__user-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.navbar__user-name {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.navbar__logout {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.375rem 0.875rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navbar__logout:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .navbar__watch-btn {
@@ -345,9 +393,46 @@
 }
 
 .navbar__mobile-login {
+  background: none;
+  border: none;
   font-size: 0.85rem;
   font-weight: 600;
   color: #bbb;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+
+.navbar__mobile-login:hover {
+  color: #fff;
+}
+
+.navbar__mobile-user {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navbar__mobile-user-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.navbar__mobile-logout {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navbar__mobile-logout:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Responsive */

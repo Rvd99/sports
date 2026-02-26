@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Sidebar.css';
 
 const FALLBACK_SCORES = [
@@ -14,20 +15,32 @@ const LEAGUE_COLORS = {
   soccer: '#00a651', cfl: '#e03a3e', golf: '#2e7d32', tennis: '#f5a623',
 };
 
-export default function Sidebar({ scores = [], news = [], loading = false }) {
+export default function Sidebar({ scores = [], news = [], articles = [], loading = false }) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
   const displayScores = scores.length > 0 ? scores.slice(0, 6) : FALLBACK_SCORES;
 
-  // Build trending from news prop (top 7 by index as proxy for popularity)
-  const trending = news.slice(0, 7).map((item, i) => ({
+  // Build trending from articles marked as trending + news
+  const trendingArticles = (articles || []).filter(a => a.isTrending).map((item, i) => ({
     id: item.id,
+    slug: item.slug,
     rank: i + 1,
+    headline: item.title,
+    league: (item.category || '').toUpperCase(),
+    leagueColor: item.categoryColor || '#888',
+    isArticle: true
+  }));
+  
+  const trendingNews = news.slice(0, 7 - trendingArticles.length).map((item, i) => ({
+    id: item.id,
+    rank: trendingArticles.length + i + 1,
     headline: item.headline,
     league: (item.league || '').toUpperCase(),
     leagueColor: item.leagueColor || LEAGUE_COLORS[(item.league || '').toLowerCase()] || '#888',
   }));
+  
+  const trending = [...trendingArticles, ...trendingNews].slice(0, 7);
 
   const handleSubscribe = (e) => {
     e.preventDefault();
@@ -83,15 +96,27 @@ export default function Sidebar({ scores = [], news = [], loading = false }) {
           </div>
           <div className="sidebar__trending">
             {trending.map((item) => (
-              <a key={item.id} href="#" className="trending-item">
-                <span className="trending-item__rank">{item.rank}</span>
-                <div className="trending-item__body">
-                  <span className="trending-item__league" style={{ color: item.leagueColor }}>
-                    {item.league}
-                  </span>
-                  <span className="trending-item__headline">{item.headline}</span>
-                </div>
-              </a>
+              item.isArticle ? (
+                <Link key={item.id} to={`/article/${item.slug}`} className="trending-item">
+                  <span className="trending-item__rank">{item.rank}</span>
+                  <div className="trending-item__body">
+                    <span className="trending-item__league" style={{ color: item.leagueColor }}>
+                      {item.league}
+                    </span>
+                    <p className="trending-item__headline">{item.headline}</p>
+                  </div>
+                </Link>
+              ) : (
+                <a key={item.id} href="#" className="trending-item">
+                  <span className="trending-item__rank">{item.rank}</span>
+                  <div className="trending-item__body">
+                    <span className="trending-item__league" style={{ color: item.leagueColor }}>
+                      {item.league}
+                    </span>
+                    <p className="trending-item__headline">{item.headline}</p>
+                  </div>
+                </a>
+              )
             ))}
           </div>
         </div>

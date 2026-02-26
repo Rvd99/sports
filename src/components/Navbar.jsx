@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import Login from './Login';
 import './Navbar.css';
 
 const NAV_LINKS = [
@@ -13,13 +16,23 @@ const NAV_LINKS = [
 ];
 
 const MORE_LINKS = [
-  'MLS', 'UFC/MMA', 'NASCAR', 'Formula 1', 'Boxing', 'Rugby', 'Olympics', 'Esports',
+  { label: 'MLS', to: '/mls' },
+  { label: 'UFC/MMA', to: '/ufc-mma' },
+  { label: 'NASCAR', to: '/nascar' },
+  { label: 'Formula 1', to: '/formula-1' },
+  { label: 'Boxing', to: '/boxing' },
+  { label: 'Rugby', to: '/rugby' },
+  { label: 'Olympics', to: '/olympics' },
+  { label: 'Esports', to: '/esports' },
 ];
 
-export default function Navbar({ isAdmin = false }) {
+export default function Navbar() {
+  const { user, logout, canCreateContent } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const searchRef = useRef(null);
   const moreRef = useRef(null);
@@ -74,28 +87,54 @@ export default function Navbar({ isAdmin = false }) {
             </button>
             {moreOpen && (
               <div className="navbar__dropdown">
-                {MORE_LINKS.map((item) => (
-                  <a key={item} href="#" className="navbar__dropdown-item">
-                    {item}
-                  </a>
+                {MORE_LINKS.map((link) => (
+                  <NavLink
+                    key={link.label}
+                    to={link.to}
+                    className={({ isActive }) =>
+                      `navbar__dropdown-item${isActive ? ' navbar__dropdown-item--active' : ''}`
+                    }
+                    onClick={() => setMoreOpen(false)}
+                  >
+                    {link.label}
+                  </NavLink>
                 ))}
               </div>
             )}
           </div>
-          {isAdmin && (
-            <NavLink
-              to="/admin/add-post"
-              className={({ isActive }) =>
-                `navbar__link navbar__link--admin${isActive ? ' navbar__link--active' : ''}`
-              }
-            >
-              + Add Post
-            </NavLink>
+          {canCreateContent && (
+            <>
+              <NavLink
+                to="/admin/articles"
+                className={({ isActive }) =>
+                  `navbar__link navbar__link--admin${isActive ? ' navbar__link--active' : ''}`
+                }
+              >
+                📚 Manage
+              </NavLink>
+              <NavLink
+                to="/admin/create-article"
+                className={({ isActive }) =>
+                  `navbar__link navbar__link--admin${isActive ? ' navbar__link--active' : ''}`
+                }
+              >
+                📝 Create Article
+              </NavLink>
+            </>
           )}
         </nav>
 
         {/* Right Actions */}
         <div className="navbar__actions">
+          <button
+            className="navbar__icon-btn navbar__theme-toggle"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+          
           <div className="navbar__search-wrap" ref={searchRef}>
             <button
               className="navbar__icon-btn"
@@ -115,7 +154,20 @@ export default function Navbar({ isAdmin = false }) {
               </div>
             )}
           </div>
-          <a href="#" className="navbar__login">Login / Sign Up</a>
+          
+          {user ? (
+            <div className="navbar__user-menu">
+              <span className="navbar__user-name">{user.name}</span>
+              <button className="navbar__logout" onClick={logout}>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <button className="navbar__login" onClick={() => setLoginOpen(true)}>
+              Login / Sign Up
+            </button>
+          )}
+          
           <a href="#" className="navbar__watch-btn">
             <span className="navbar__watch-dot">●</span> Watch Live
           </a>
@@ -153,28 +205,58 @@ export default function Navbar({ isAdmin = false }) {
               {link.label}
             </NavLink>
           ))}
-          {MORE_LINKS.map((item) => (
-            <a key={item} href="#" className="navbar__mobile-link navbar__mobile-link--sub">
-              {item}
-            </a>
-          ))}
-          {isAdmin && (
-            <Link
-              to="/admin/add-post"
-              className="navbar__mobile-link navbar__mobile-link--admin"
+          {MORE_LINKS.map((link) => (
+            <NavLink
+              key={link.label}
+              to={link.to}
+              className={({ isActive }) =>
+                `navbar__mobile-link navbar__mobile-link--sub${isActive ? ' navbar__mobile-link--active' : ''}`
+              }
               onClick={closeMobile}
             >
-              + Add Post (Admin)
-            </Link>
+              {link.label}
+            </NavLink>
+          ))}
+          {canCreateContent && (
+            <>
+              <Link
+                to="/admin/articles"
+                className="navbar__mobile-link navbar__mobile-link--admin"
+                onClick={closeMobile}
+              >
+                📚 Manage Articles
+              </Link>
+              <Link
+                to="/admin/create-article"
+                className="navbar__mobile-link navbar__mobile-link--admin"
+                onClick={closeMobile}
+              >
+                📝 Create Article ({user?.role || 'Admin'})
+              </Link>
+            </>
           )}
           <div className="navbar__mobile-actions">
-            <a href="#" className="navbar__mobile-login">Login / Sign Up</a>
+            {user ? (
+              <div className="navbar__mobile-user">
+                <span className="navbar__mobile-user-name">{user.name}</span>
+                <button className="navbar__mobile-logout" onClick={logout}>
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button className="navbar__mobile-login" onClick={() => setLoginOpen(true)}>
+                Login / Sign Up
+              </button>
+            )}
             <a href="#" className="navbar__watch-btn">
               <span className="navbar__watch-dot">●</span> Watch Live
             </a>
           </div>
         </div>
       )}
+      
+      {/* Login Modal */}
+      {loginOpen && <Login onClose={() => setLoginOpen(false)} />}
     </header>
   );
 }

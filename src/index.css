@@ -7,6 +7,10 @@
 :root {
   --red: #c8102e;
   --red-dark: #a00d24;
+  --accent: #c8102e;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Legacy dark mode variables for existing components */
   --bg: #111111;
   --bg-card: #1a1a1a;
   --bg-card2: #222222;
@@ -16,8 +20,6 @@
   --text: #f0f0f0;
   --text-muted: #999999;
   --text-dim: #666666;
-  --accent: #c8102e;
-  --font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 html {
@@ -26,8 +28,8 @@ html {
 
 body {
   font-family: var(--font);
-  background-color: var(--bg);
-  color: var(--text);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
   min-width: 320px;
   line-height: 1.5;

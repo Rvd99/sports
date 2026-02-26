@@ -1,0 +1,31 @@
+.league-page__content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 36px 24px 0;
+  width: 100%;
+}
+
+.league-page__content-inner {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
+
+.league-page__main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.league-page__section-gap {
+  margin-top: 40px;
+}
+
+@media (max-width: 1024px) {
+  .league-page__content-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

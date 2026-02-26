@@ -73,20 +73,26 @@
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .stories__card--featured .stories__card-img-wrap {
-  height: 260px;
+  aspect-ratio: 16 / 9;
 }
 
 .stories__card--sm .stories__card-img-wrap {
-  height: 130px;
+  aspect-ratio: 16 / 9;
 }
 
 .stories__card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.4s ease;
 }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import './Hero.css';
 
 const FALLBACK_SLIDES = [
@@ -9,23 +10,42 @@ const FALLBACK_SLIDES = [
   { id: 5, image: 'https://picsum.photos/seed/football5/1400/700', league: 'CFL', leagueColor: '#e03a3e', headline: 'Winnipeg Blue Bombers Dominate Grey Cup Rematch in Season Opener', excerpt: 'Zach Collaros throws for 320 yards and 3 TDs in a commanding 34-17 victory', time: '10 hours ago' },
 ];
 
-export default function Hero({ news = [], loading = false }) {
+export default function Hero({ news = [], articles = [], loading = false }) {
   const [current, setCurrent] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [paused, setPaused] = useState(false);
 
   const slides = useMemo(() => {
-    if (!news || news.length === 0) return FALLBACK_SLIDES;
-    return news.slice(0, 5).map((item) => ({
-      id: item.id,
-      image: item.image || `https://picsum.photos/seed/${item.id}/1400/700`,
-      league: (item.league || 'NEWS').toUpperCase(),
-      leagueColor: item.leagueColor || '#c8102e',
-      headline: item.headline,
-      excerpt: item.excerpt,
-      time: item.time || 'Recently',
-    }));
-  }, [news]);
+    // Combine featured articles with featured news
+    const featuredArticles = (articles || []).filter(a => a.isFeatured);
+    const featuredNews = (news || []).filter(n => n.featured);
+    
+    const combined = [
+      ...featuredArticles.map(item => ({
+        id: item.id,
+        slug: item.slug,
+        image: item.imageUrl || `https://picsum.photos/seed/${item.id}/1400/700`,
+        league: (item.category || 'NEWS').toUpperCase(),
+        leagueColor: item.categoryColor || '#c8102e',
+        headline: item.title,
+        excerpt: item.excerpt,
+        time: item.time || 'Recently',
+        isArticle: true
+      })),
+      ...featuredNews.map(item => ({
+        id: item.id,
+        image: item.image || `https://picsum.photos/seed/${item.id}/1400/700`,
+        league: (item.league || 'NEWS').toUpperCase(),
+        leagueColor: item.leagueColor || '#c8102e',
+        headline: item.headline,
+        excerpt: item.excerpt,
+        time: item.time || 'Recently',
+      }))
+    ];
+    
+    if (combined.length === 0) return FALLBACK_SLIDES;
+    return combined.slice(0, 5);
+  }, [news, articles]);
 
   useEffect(() => {
     setCurrent(0);
@@ -82,7 +102,13 @@ export default function Hero({ news = [], loading = false }) {
           >
             {slide.league}
           </span>
-          <h1 className="hero__headline">{slide.headline}</h1>
+          {slide.isArticle ? (
+            <Link to={`/article/${slide.slug}`} className="hero__headline-link">
+              <h1 className="hero__headline">{slide.headline}</h1>
+            </Link>
+          ) : (
+            <h1 className="hero__headline">{slide.headline}</h1>
+          )}
           <p className="hero__subheadline">{slide.excerpt}</p>
           <div className="hero__meta">
             <span className="hero__time">{slide.time}</span>

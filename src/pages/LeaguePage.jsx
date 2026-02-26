@@ -5,7 +5,9 @@ import TopStories from '../components/TopStories';
 import VideoHighlights from '../components/VideoHighlights';
 import Sidebar from '../components/Sidebar';
 import FeaturedLeagues from '../components/FeaturedLeagues';
-import { fetchNews, fetchScores, fetchVideos } from '../api';
+import Articles from '../components/Articles';
+import { fetchNews, fetchScores, fetchVideos, fetchArticles } from '../api';
+import './LeaguePage.css';
 
 const LEAGUE_LABELS = {
   all: 'Top Sports News',
@@ -33,6 +35,7 @@ export default function LeaguePage({ league }) {
   const [news, setNews] = useState([]);
   const [scores, setScores] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -43,11 +46,13 @@ export default function LeaguePage({ league }) {
       fetchNews(league),
       fetchScores(league),
       fetchVideos(league),
+      fetchArticles(league === 'all' ? 'all' : league, 6, league === 'all'),
     ])
-      .then(([newsData, scoresData, videosData]) => {
+      .then(([newsData, scoresData, videosData, articlesData]) => {
         setNews(newsData);
         setScores(scoresData);
         setVideos(videosData);
+        setArticles(articlesData);
         setLoading(false);
       })
       .catch((err) => {
@@ -75,8 +80,8 @@ export default function LeaguePage({ league }) {
         </div>
       )}
 
-      {/* Hero Carousel */}
-      <Hero news={news} league={league} loading={loading} />
+      {/* Hero Section */}
+      <Hero news={news} articles={articles} loading={loading} />
 
       {/* Scores Ticker */}
       <ScoresTicker scores={scores} loading={loading} />
@@ -88,16 +93,26 @@ export default function LeaguePage({ league }) {
         </div>
       )}
 
-      {/* Main content + sidebar */}
-      <div className="app__content-wrap">
-        <div className="app__content-inner">
-          <div className="app__main-col">
-            <TopStories news={news} loading={loading} />
-            <div className="app__section-gap">
+      {/* Main content */}
+      <div className="league-page__content">
+        <div className="league-page__content-inner">
+          <div className="league-page__main-col">
+            {/* Articles Section */}
+            <Articles articles={articles} loading={loading} />
+            
+            {/* Top Stories */}
+            <div className="league-page__section-gap">
+              <TopStories news={news} articles={articles} loading={loading} />
+            </div>
+            
+            {/* Video Highlights */}
+            <div className="league-page__section-gap">
               <VideoHighlights videos={videos} loading={loading} />
             </div>
           </div>
-          <Sidebar scores={scores} news={news} loading={loading} />
+          
+          {/* Sidebar */}
+          <Sidebar scores={scores} news={news} articles={articles} loading={loading} />
         </div>
       </div>
 
