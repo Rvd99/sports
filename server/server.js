@@ -18,8 +18,17 @@ app.use(express.json());
 
 // Serve static files from public/uploads
 const uploadsDir = path.join(__dirname, '../public/uploads/articles');
+const videoUploadsDir = path.join(__dirname, '../public/uploads/videos');
+const thumbnailUploadsDir = path.join(__dirname, '../public/uploads/thumbnails');
+
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+}
+if (!fs.existsSync(videoUploadsDir)) {
+  fs.mkdirSync(videoUploadsDir, { recursive: true });
+}
+if (!fs.existsSync(thumbnailUploadsDir)) {
+  fs.mkdirSync(thumbnailUploadsDir, { recursive: true });
 }
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
@@ -36,6 +45,54 @@ const upload = multer({
       return cb(null, true);
     } else {
       cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp)'));
+    }
+  }
+});
+
+// Configure multer for video and thumbnail uploads
+const videoUpload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      if (file.fieldname === 'video') {
+        cb(null, videoUploadsDir);
+      } else if (file.fieldname === 'thumbnail') {
+        cb(null, thumbnailUploadsDir);
+      }
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      if (file.fieldname === 'video') {
+        cb(null, 'video-' + uniqueSuffix + ext);
+      } else if (file.fieldname === 'thumbnail') {
+        cb(null, 'thumb-' + uniqueSuffix + ext);
+      }
+    }
+  }),
+  limits: { fileSize: 500 * 1024 * 1024 }, // 500MB limit for videos
+  fileFilter: function (req, file, cb) {
+    if (file.fieldname === 'video') {
+      const allowedTypes = /mp4|mov|avi|mkv|webm/;
+      const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+      const mimetype = /video/.test(file.mimetype);
+      
+      if (mimetype && extname) {
+        return cb(null, true);
+      } else {
+        cb(new Error('Only video files are allowed (mp4, mov, avi, mkv, webm)'));
+      }
+    } else if (file.fieldname === 'thumbnail') {
+      const allowedTypes = /jpeg|jpg|png|gif|webp/;
+      const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+      const mimetype = allowedTypes.test(file.mimetype);
+      
+      if (mimetype && extname) {
+        return cb(null, true);
+      } else {
+        cb(new Error('Only image files are allowed for thumbnails'));
+      }
+    } else {
+      cb(null, true);
     }
   }
 });
@@ -127,6 +184,37 @@ let videos = [
 ];
 
 let posts = [];
+
+// Video storage with file persistence
+const videosDataFile = path.join(__dirname, 'uploaded-videos.json');
+
+// Load videos from file on startup
+let uploadedVideos = [];
+let videoIdCounter = 1;
+
+try {
+  if (fs.existsSync(videosDataFile)) {
+    const data = fs.readFileSync(videosDataFile, 'utf8');
+    const parsed = JSON.parse(data);
+    uploadedVideos = parsed.videos || [];
+    videoIdCounter = parsed.nextId || 1;
+    console.log(`Loaded ${uploadedVideos.length} videos from storage`);
+  }
+} catch (err) {
+  console.error('Error loading videos:', err.message);
+}
+
+// Save videos to file
+function saveVideos() {
+  try {
+    fs.writeFileSync(videosDataFile, JSON.stringify({
+      videos: uploadedVideos,
+      nextId: videoIdCounter
+    }, null, 2));
+  } catch (err) {
+    console.error('Error saving videos:', err.message);
+  }
+}
 
 let articles = [
   {
@@ -326,14 +414,6 @@ app.get('/api/scores', (req, res) => {
     return res.json(scores.filter(s => s.league === league.toLowerCase()));
   }
   res.json(scores);
-});
-
-app.get('/api/videos', (req, res) => {
-  const { league } = req.query;
-  if (league && league !== 'all') {
-    return res.json(videos.filter(v => v.league === league.toLowerCase()));
-  }
-  res.json(videos);
 });
 
 app.get('/api/posts', (req, res) => {
@@ -581,6 +661,175 @@ app.delete('/api/articles/:id', adminAuth, async (req, res) => {
   }
 });
 
+// ─── Video Routes ─────────────────────────────────────────────────────────────
+
+app.get('/api/videos', (req, res) => {
+  const { category } = req.query;
+  
+  // Filter uploaded videos by category
+  let filtered = uploadedVideos;
+  if (category === 'all') {
+    filtered = uploadedVideos.filter(v => 
+      v.categories && v.categories.some(cat => cat.toLowerCase() === 'homepage')
+    );
+  } else if (category) {
+    const catLower = category.toLowerCase();
+    filtered = uploadedVideos.filter(v =>
+      v.categories && v.categories.some(cat => cat.toLowerCase() === catLower)
+    );
+  }
+  
+  // Combine and sort
+  const result = [...filtered, ...videos];
+  result.sort((a, b) => {
+    const dateA = new Date(a.createdAt || '1970-01-01');
+    const dateB = new Date(b.createdAt || '1970-01-01');
+    return dateB - dateA;
+  });
+  
+  res.json(result);
+});
+
+app.post('/api/videos', adminAuth, videoUpload.fields([
+  { name: 'video', maxCount: 1 },
+  { name: 'thumbnail', maxCount: 1 }
+]), async (req, res) => {
+  try {
+    console.log('\n=== POST /api/videos ===');
+    console.log('Request body:', req.body);
+    console.log('Files:', req.files);
+    
+    const { title, description, videoUrl, thumbnailUrl, categories } = req.body;
+    
+    if (!title) {
+      return res.status(400).json({ error: 'Title is required' });
+    }
+    
+    // Parse categories (can be JSON string or array)
+    let categoryArray = [];
+    if (categories) {
+      try {
+        categoryArray = typeof categories === 'string' ? JSON.parse(categories) : categories;
+      } catch (e) {
+        categoryArray = [categories];
+      }
+    }
+    
+    console.log('Parsed categories:', categoryArray);
+    
+    if (!Array.isArray(categoryArray) || categoryArray.length === 0) {
+      return res.status(400).json({ error: 'At least one category is required' });
+    }
+    
+    // Handle video source (uploaded file or URL)
+    let finalVideoUrl = videoUrl;
+    let uploadedVideoPath = null;
+    
+    if (req.files && req.files.video && req.files.video[0]) {
+      const videoFile = req.files.video[0];
+      uploadedVideoPath = videoFile.filename;
+      finalVideoUrl = `http://localhost:${PORT}/uploads/videos/${videoFile.filename}`;
+    }
+    
+    if (!finalVideoUrl && !uploadedVideoPath) {
+      return res.status(400).json({ error: 'Either video file or video URL is required' });
+    }
+    
+    // Handle thumbnail (uploaded file or URL)
+    let finalThumbnailUrl = thumbnailUrl;
+    let uploadedThumbnailPath = null;
+    
+    if (req.files && req.files.thumbnail && req.files.thumbnail[0]) {
+      const thumbnailFile = req.files.thumbnail[0];
+      uploadedThumbnailPath = thumbnailFile.filename;
+      finalThumbnailUrl = `http://localhost:${PORT}/uploads/thumbnails/${thumbnailFile.filename}`;
+    }
+    
+    if (!finalThumbnailUrl) {
+      // Use placeholder if no thumbnail provided
+      finalThumbnailUrl = `https://picsum.photos/seed/video${Date.now()}/600/340`;
+    }
+    
+    const now = new Date().toISOString();
+    
+    const newVideo = {
+      id: videoIdCounter++,
+      title,
+      description: description || '',
+      videoUrl: finalVideoUrl,
+      uploadedVideoPath,
+      thumbnailUrl: finalThumbnailUrl,
+      uploadedThumbnailPath,
+      categories: categoryArray,
+      isPublished: true,
+      createdAt: now,
+      updatedAt: now,
+      author: req.user.name || 'Admin',
+      views: '0',
+      duration: '0:00', // Could be calculated from video file
+      time: 'Just now'
+    };
+    
+    console.log('Created video:', newVideo);
+    console.log('Total uploaded videos:', uploadedVideos.length + 1);
+    console.log('========================\n');
+    
+    uploadedVideos.unshift(newVideo);
+    saveVideos(); // Persist to disk
+    res.status(201).json(newVideo);
+  } catch (error) {
+    console.error('Error creating video:', error);
+    res.status(500).json({ error: 'Failed to create video: ' + error.message });
+  }
+});
+
+app.delete('/api/videos/:id', adminAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const videoIndex = uploadedVideos.findIndex(v => v.id === parseInt(id));
+    
+    if (videoIndex === -1) {
+      return res.status(404).json({ error: 'Video not found' });
+    }
+    
+    const video = uploadedVideos[videoIndex];
+    
+    // Delete associated video file if it exists
+    if (video.uploadedVideoPath) {
+      const videoPath = path.join(videoUploadsDir, video.uploadedVideoPath);
+      try {
+        if (fs.existsSync(videoPath)) {
+          fs.unlinkSync(videoPath);
+          console.log(`Deleted video file: ${video.uploadedVideoPath}`);
+        }
+      } catch (err) {
+        console.error(`Failed to delete video file: ${err.message}`);
+      }
+    }
+    
+    // Delete associated thumbnail file if it exists
+    if (video.uploadedThumbnailPath) {
+      const thumbnailPath = path.join(thumbnailUploadsDir, video.uploadedThumbnailPath);
+      try {
+        if (fs.existsSync(thumbnailPath)) {
+          fs.unlinkSync(thumbnailPath);
+          console.log(`Deleted thumbnail file: ${video.uploadedThumbnailPath}`);
+        }
+      } catch (err) {
+        console.error(`Failed to delete thumbnail file: ${err.message}`);
+      }
+    }
+    
+    uploadedVideos.splice(videoIndex, 1);
+    saveVideos(); // Persist to disk
+    res.json({ message: 'Video deleted successfully', deletedVideo: { id: video.id, title: video.title } });
+  } catch (error) {
+    console.error('Error deleting video:', error);
+    res.status(500).json({ error: 'Failed to delete video' });
+  }
+});
+
 app.listen(PORT, () => {
-  console.log(`\nDEGEN Sports API running at http://localhost:${PORT}\n`);
+  console.log(`\nDEGEN Sports API running at http://localhost:${PORT}`);
+  console.log(`Uploaded videos in memory: ${uploadedVideos.length}\n`);
 });

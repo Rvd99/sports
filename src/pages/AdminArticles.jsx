@@ -92,9 +92,17 @@ export default function AdminArticles() {
           <h1 className="admin-articles__title">📚 Manage Articles</h1>
           <p className="admin-articles__subtitle">View, edit, and delete published articles</p>
         </div>
-        <Link to="/admin/create-article" className="admin-articles__create-btn">
-          ➕ Create New Article
-        </Link>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <Link to="/admin/categories" className="admin-articles__create-btn" style={{ background: '#2196f3' }}>
+            🏷️ Manage Categories
+          </Link>
+          <Link to="/admin/videos" className="admin-articles__create-btn" style={{ background: '#9c27b0' }}>
+            🎥 Manage Videos
+          </Link>
+          <Link to="/admin/create-article" className="admin-articles__create-btn">
+            ➕ Create New Article
+          </Link>
+        </div>
       </div>
 
       {error && (

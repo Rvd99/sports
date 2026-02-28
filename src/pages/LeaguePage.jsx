@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Hero from '../components/Hero';
-import ScoresTicker from '../components/ScoresTicker';
 import TopStories from '../components/TopStories';
 import VideoHighlights from '../components/VideoHighlights';
 import Sidebar from '../components/Sidebar';
@@ -11,24 +10,30 @@ import './LeaguePage.css';
 
 const LEAGUE_LABELS = {
   all: 'Top Sports News',
-  nhl: 'NHL Hockey',
-  nba: 'NBA Basketball',
-  mlb: 'MLB Baseball',
-  cfl: 'CFL Football',
-  soccer: 'Soccer',
-  golf: 'Golf',
+  cricket: 'Cricket',
+  basketball: 'Basketball',
+  hockey: 'Hockey',
+  football: 'Football',
+  athletics: 'Athletics',
+  domestic: 'Domestic Sports',
   tennis: 'Tennis',
+  golf: 'Golf',
+  boxing: 'Boxing',
+  rugby: 'Rugby',
 };
 
 const LEAGUE_COLORS = {
   all: '#c8102e',
-  nhl: '#0066cc',
-  nba: '#c8102e',
-  mlb: '#002d72',
-  cfl: '#e03a3e',
-  soccer: '#00a651',
+  cricket: '#1e3a8a',
+  basketball: '#c8102e',
+  hockey: '#0066cc',
+  football: '#00a651',
+  athletics: '#f5a623',
+  domestic: '#8b4513',
+  tennis: '#9c27b0',
   golf: '#2e7d32',
-  tennis: '#f5a623',
+  boxing: '#d4af37',
+  rugby: '#0081c8',
 };
 
 export default function LeaguePage({ league }) {
@@ -83,9 +88,6 @@ export default function LeaguePage({ league }) {
       {/* Hero Section */}
       <Hero news={news} articles={articles} loading={loading} />
 
-      {/* Scores Ticker */}
-      <ScoresTicker scores={scores} loading={loading} />
-
       {/* Offline warning */}
       {error === 'backend-offline' && (
         <div className="offline-banner">
@@ -97,17 +99,17 @@ export default function LeaguePage({ league }) {
       <div className="league-page__content">
         <div className="league-page__content-inner">
           <div className="league-page__main-col">
-            {/* Articles Section */}
-            <Articles articles={articles} loading={loading} />
-            
             {/* Top Stories */}
+            <TopStories news={news} articles={articles} loading={loading} />
+            
+            {/* Articles Section */}
             <div className="league-page__section-gap">
-              <TopStories news={news} articles={articles} loading={loading} />
+              <Articles articles={articles} loading={loading} />
             </div>
             
             {/* Video Highlights */}
             <div className="league-page__section-gap">
-              <VideoHighlights videos={videos} loading={loading} />
+              <VideoHighlights category={league} />
             </div>
           </div>
           

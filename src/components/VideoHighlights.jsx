@@ -1,21 +1,52 @@
+import { useState, useEffect } from 'react';
 import './VideoHighlights.css';
 
-const FALLBACK_VIDEOS = [
-  { id: 1, thumb: 'https://picsum.photos/seed/vid1/600/340', league: 'nhl', leagueColor: '#0066cc', title: 'Matthews OT Winner — Full Highlight Package', duration: '4:32', views: '248K', time: '2 hours ago' },
-  { id: 2, thumb: 'https://picsum.photos/seed/vid2/600/340', league: 'nba', leagueColor: '#c8102e', title: "LeBron's 42-Point Masterclass — Every Bucket", duration: '6:18', views: '1.2M', time: '4 hours ago' },
-  { id: 3, thumb: 'https://picsum.photos/seed/vid3/600/340', league: 'soccer', leagueColor: '#00a651', title: "Davies' World Cup Qualifier Goal — Slow Motion", duration: '2:05', views: '890K', time: '6 hours ago' },
-  { id: 4, thumb: 'https://picsum.photos/seed/vid4/600/340', league: 'mlb', leagueColor: '#002d72', title: "Guerrero Jr.'s Walk-Off Homer — Full Reaction", duration: '3:47', views: '412K', time: '8 hours ago' },
-  { id: 5, thumb: 'https://picsum.photos/seed/vid5/600/340', league: 'cfl', leagueColor: '#e03a3e', title: 'Collaros 3-TD Performance — Best Plays', duration: '5:12', views: '156K', time: '10 hours ago' },
-  { id: 6, thumb: 'https://picsum.photos/seed/vid6/600/340', league: 'nhl', leagueColor: '#0066cc', title: 'Top 10 Saves of the Week — NHL Highlights', duration: '3:28', views: '320K', time: '12 hours ago' },
-];
-
 const LEAGUE_COLORS = {
-  nhl: '#0066cc', nba: '#c8102e', mlb: '#002d72',
-  soccer: '#00a651', cfl: '#e03a3e', golf: '#2e7d32', tennis: '#f5a623',
+  cricket: '#1e3a8a',
+  basketball: '#c8102e',
+  hockey: '#0066cc',
+  football: '#00a651',
+  athletics: '#f5a623',
+  domestic: '#8b4513',
+  tennis: '#9c27b0',
+  golf: '#2e7d32',
+  boxing: '#d4af37',
+  rugby: '#0081c8',
+  nhl: '#0066cc',
+  nba: '#c8102e',
+  mlb: '#002d72',
+  soccer: '#00a651',
+  cfl: '#e03a3e',
 };
 
-export default function VideoHighlights({ videos = [], loading = false }) {
-  const displayVideos = videos.length > 0 ? videos.slice(0, 6) : FALLBACK_VIDEOS;
+export default function VideoHighlights({ category = 'all' }) {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchVideos();
+  }, [category]);
+
+  const fetchVideos = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:5001/api/videos?category=${category}`);
+      if (!response.ok) throw new Error('Failed to fetch videos');
+      const data = await response.json();
+      console.log(`Fetched ${data.length} videos for category: ${category}`, data);
+      setVideos(data.slice(0, 6)); // Show max 6 videos
+    } catch (err) {
+      console.error('Error fetching videos:', err);
+      setError(err.message);
+      setVideos([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const displayVideos = videos.slice(0, 6);
 
   if (loading) {
     return (
@@ -31,22 +62,36 @@ export default function VideoHighlights({ videos = [], loading = false }) {
     );
   }
 
+  if (displayVideos.length === 0 && !loading) {
+    return null; // Don't show section if no videos
+  }
+
   return (
     <div className="videos">
       <div className="section-header">
         <span className="section-header__bar" />
         <h2 className="section-header__title">Video Highlights</h2>
-        <a href="#" className="section-header__link">Watch More →</a>
       </div>
 
       <div className="videos__grid">
         {displayVideos.map((video) => {
-          const leagueKey = (video.league || '').toLowerCase();
-          const leagueColor = video.leagueColor || LEAGUE_COLORS[leagueKey] || '#888';
-          const leagueLabel = leagueKey.toUpperCase();
-          const thumb = video.thumb || `https://picsum.photos/seed/v${video.id}/600/340`;
+          // Handle both uploaded videos (categories array) and mock videos (league field)
+          const categoryKey = video.categories && video.categories.length > 0 
+            ? video.categories[0].toLowerCase() 
+            : (video.league || '').toLowerCase();
+          const categoryColor = video.leagueColor || LEAGUE_COLORS[categoryKey] || '#888';
+          const categoryLabel = categoryKey.toUpperCase();
+          const thumb = video.thumbnailUrl || video.thumb || `https://picsum.photos/seed/v${video.id}/600/340`;
+          const videoLink = video.videoUrl || '#';
+          
           return (
-            <a key={video.id} href="#" className="video-card">
+            <a 
+              key={video.id} 
+              href={videoLink} 
+              className="video-card"
+              target={video.videoUrl ? "_blank" : "_self"}
+              rel={video.videoUrl ? "noopener noreferrer" : ""}
+            >
               <div className="video-card__thumb-wrap">
                 <img
                   src={thumb}
@@ -60,8 +105,8 @@ export default function VideoHighlights({ videos = [], loading = false }) {
                   </div>
                 </div>
                 <span className="video-card__duration">{video.duration || '—'}</span>
-                <span className="video-card__league" style={{ background: leagueColor }}>
-                  {leagueLabel}
+                <span className="video-card__league" style={{ background: categoryColor }}>
+                  {categoryLabel}
                 </span>
               </div>
               <div className="video-card__body">

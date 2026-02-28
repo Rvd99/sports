@@ -2,12 +2,16 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import './App.css';
 import Navbar from './components/Navbar';
+import ScoresTicker from './components/ScoresTicker';
 import Footer from './components/Footer';
 import LeaguePage from './pages/LeaguePage';
 import AdminAddPost from './pages/AdminAddPost';
 import CreateArticle from './pages/CreateArticle';
 import ArticleDetail from './pages/ArticleDetail';
 import AdminArticles from './pages/AdminArticles';
+import ManageCategories from './pages/ManageCategories';
+import AddVideo from './pages/AddVideo';
+import ManageVideos from './pages/ManageVideos';
 import SportPage from './pages/SportPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -19,17 +23,21 @@ function App() {
         <ThemeProvider>
           <AuthProvider>
             <div className="app">
+            <ScoresTicker />
             <Navbar />
             <main className="app__main">
             <Routes>
               <Route path="/" element={<LeaguePage league="all" />} />
-              <Route path="/nhl" element={<LeaguePage league="nhl" />} />
-              <Route path="/nba" element={<LeaguePage league="nba" />} />
-              <Route path="/mlb" element={<LeaguePage league="mlb" />} />
-              <Route path="/cfl" element={<LeaguePage league="cfl" />} />
-              <Route path="/soccer" element={<LeaguePage league="soccer" />} />
-              <Route path="/golf" element={<LeaguePage league="golf" />} />
+              <Route path="/cricket" element={<LeaguePage league="cricket" />} />
+              <Route path="/basketball" element={<LeaguePage league="basketball" />} />
+              <Route path="/hockey" element={<LeaguePage league="hockey" />} />
+              <Route path="/football" element={<LeaguePage league="football" />} />
+              <Route path="/athletics" element={<LeaguePage league="athletics" />} />
+              <Route path="/domestic" element={<LeaguePage league="domestic" />} />
               <Route path="/tennis" element={<LeaguePage league="tennis" />} />
+              <Route path="/golf" element={<LeaguePage league="golf" />} />
+              <Route path="/boxing" element={<LeaguePage league="boxing" />} />
+              <Route path="/rugby" element={<LeaguePage league="rugby" />} />
               
               {/* Additional Sports Pages */}
               <Route path="/mls" element={<SportPage sport="mls" />} />
@@ -45,6 +53,9 @@ function App() {
               <Route path="/admin/add-post" element={<AdminAddPost />} />
               <Route path="/admin/create-article" element={<CreateArticle />} />
               <Route path="/admin/articles" element={<AdminArticles />} />
+              <Route path="/admin/categories" element={<ManageCategories />} />
+              <Route path="/admin/videos" element={<ManageVideos />} />
+              <Route path="/admin/add-video" element={<AddVideo />} />
               <Route path="/article/:slug" element={<ArticleDetail />} />
             </Routes>
           </main>

@@ -1,0 +1,45 @@
+{
+  "videos": [
+    {
+      "id": 2,
+      "title": "test ",
+      "description": "jhghjhjjhkkjh",
+      "videoUrl": "https://www.youtube.com/watch?v=iyumNfa5cd8",
+      "uploadedVideoPath": null,
+      "thumbnailUrl": "http://localhost:5001/uploads/thumbnails/thumb-1772191413183-917824463.png",
+      "uploadedThumbnailPath": "thumb-1772191413183-917824463.png",
+      "categories": [
+        "Homepage",
+        "Cricket"
+      ],
+      "isPublished": true,
+      "createdAt": "2026-02-27T11:23:33.206Z",
+      "updatedAt": "2026-02-27T11:23:33.206Z",
+      "author": "Admin User",
+      "views": "0",
+      "duration": "0:00",
+      "time": "Just now"
+    },
+    {
+      "id": 1,
+      "title": "Cricket Highlights - YouTube Test",
+      "description": "",
+      "videoUrl": "https://www.youtube.com/watch?v=iVHn8hhY8nY",
+      "uploadedVideoPath": null,
+      "thumbnailUrl": "https://picsum.photos/seed/video1772186320770/600/340",
+      "uploadedThumbnailPath": null,
+      "categories": [
+        "Homepage",
+        "Cricket"
+      ],
+      "isPublished": true,
+      "createdAt": "2026-02-27T09:58:40.770Z",
+      "updatedAt": "2026-02-27T09:58:40.770Z",
+      "author": "Admin User",
+      "views": "0",
+      "duration": "0:00",
+      "time": "Just now"
+    }
+  ],
+  "nextId": 3
+}

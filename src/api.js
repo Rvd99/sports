@@ -68,15 +68,40 @@ export async function fetchLiveScores() {
       console.error('❌ NBA API Error:', nbaError);
     }
     
-    // Fetch Cricket scores from ESPN Cricket API
+    // Fetch Cricket scores from ESPN Cricket API (today and yesterday)
     try {
-      const cricketRes = await fetch('https://site.api.espn.com/apis/site/v2/sports/cricket/icc/scoreboard');
-      const cricketData = await cricketRes.json();
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
       
-      console.log('🏏 Cricket API Response:', cricketData?.events ? `${cricketData.events.length} matches` : 'No matches');
+      const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}${month}${day}`;
+      };
       
-      if (cricketData?.events && Array.isArray(cricketData.events)) {
-        cricketData.events.slice(0, 3).forEach(event => {
+      const todayStr = formatDate(today);
+      const yesterdayStr = formatDate(yesterday);
+      
+      // Try both today and yesterday's matches
+      const [todayCricket, yesterdayCricket] = await Promise.all([
+        fetch(`https://site.api.espn.com/apis/site/v2/sports/cricket/icc/scoreboard?dates=${todayStr}`),
+        fetch(`https://site.api.espn.com/apis/site/v2/sports/cricket/icc/scoreboard?dates=${yesterdayStr}`)
+      ]);
+      
+      const todayData = await todayCricket.json();
+      const yesterdayData = await yesterdayCricket.json();
+      
+      const allCricketEvents = [
+        ...(todayData?.events || []),
+        ...(yesterdayData?.events || [])
+      ];
+      
+      console.log('🏏 Cricket API Response:', allCricketEvents.length > 0 ? `${allCricketEvents.length} matches` : 'No matches');
+      
+      if (allCricketEvents.length > 0) {
+        allCricketEvents.slice(0, 3).forEach(event => {
           const competition = event.competitions?.[0];
           if (competition) {
             const homeTeam = competition.competitors?.find(c => c.homeAway === 'home');
@@ -91,7 +116,7 @@ export async function fetchLiveScores() {
                 homeScore: parseInt(homeTeam.score) || 0,
                 away: awayTeam.team.abbreviation || awayTeam.team.displayName.substring(0, 3).toUpperCase(),
                 awayScore: parseInt(awayTeam.score) || 0,
-                status: status.type.completed ? 'FINAL' : (status.type.state === 'in' ? status.type.shortDetail : status.type.shortDetail),
+                status: status.type.completed ? 'FINAL' : (status.type.state === 'in' ? 'LIVE' : status.type.shortDetail),
                 live: status.type.state === 'in',
                 homeColor: '#1e3a8a',
                 awayColor: '#991b1b'
@@ -101,17 +126,17 @@ export async function fetchLiveScores() {
         });
       }
       
-      // If no cricket from ESPN, add sample cricket data to show the feature works
+      // If no cricket from ESPN, add recent T20 sample data
       if (scores.filter(s => s.league === 'cricket').length === 0) {
-        console.log('⚠️ No live cricket matches, adding sample data');
+        console.log('⚠️ No cricket matches from API, adding recent T20 sample data');
         scores.push(
           {
             id: 'cricket-sample-1',
             league: 'cricket',
-            home: 'IND',
-            homeScore: 185,
-            away: 'AUS',
-            awayScore: 178,
+            home: 'AUS',
+            homeScore: 178,
+            away: 'IND',
+            awayScore: 185,
             status: 'FINAL',
             live: false,
             homeColor: '#1e3a8a',
@@ -120,10 +145,10 @@ export async function fetchLiveScores() {
           {
             id: 'cricket-sample-2',
             league: 'cricket',
-            home: 'ENG',
-            homeScore: 156,
-            away: 'PAK',
-            awayScore: 142,
+            home: 'PAK',
+            homeScore: 142,
+            away: 'ENG',
+            awayScore: 156,
             status: 'FINAL',
             live: false,
             homeColor: '#1e3a8a',
@@ -138,10 +163,10 @@ export async function fetchLiveScores() {
         {
           id: 'cricket-fallback-1',
           league: 'cricket',
-          home: 'IND',
-          homeScore: 185,
-          away: 'AUS',
-          awayScore: 178,
+          home: 'AUS',
+          homeScore: 178,
+          away: 'IND',
+          awayScore: 185,
           status: 'FINAL',
           live: false,
           homeColor: '#1e3a8a',
@@ -150,10 +175,10 @@ export async function fetchLiveScores() {
         {
           id: 'cricket-fallback-2',
           league: 'cricket',
-          home: 'ENG',
-          homeScore: 156,
-          away: 'PAK',
-          awayScore: 142,
+          home: 'PAK',
+          homeScore: 142,
+          away: 'ENG',
+          awayScore: 156,
           status: 'FINAL',
           live: false,
           homeColor: '#1e3a8a',
