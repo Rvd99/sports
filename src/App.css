@@ -1,19 +1,19 @@
 /* Theme Variables */
 :root[data-theme="light"] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f8f8;
-  --bg-tertiary: #fafafa;
+  --bg-primary: #d6d8da;
+  --bg-secondary: #c8cacc;
+  --bg-tertiary: #e0e2e4;
   --text-primary: #000000;
   --text-secondary: #333333;
   --text-tertiary: #666666;
-  --border-color: #e0e0e0;
+  --border-color: #c0c2c4;
   --card-bg: #ffffff;
-  --navbar-bg: #ffffff;
-  --navbar-text: #1a1a1a;
-  --navbar-hover: #da020e;
-  --footer-bg: #f8f8f8;
-  --shadow: rgba(0, 0, 0, 0.08);
-  --bg-ticker: #f8f8f8;
+  --navbar-bg: #003366;
+  --navbar-text: #ffffff;
+  --navbar-hover: #ffcc00;
+  --footer-bg: #003366;
+  --shadow: rgba(0, 0, 0, 0.10);
+  --bg-ticker: #d6d8da;
   --red: #da020e;
 }
 
@@ -26,10 +26,10 @@
   --text-tertiary: #94a3b8;
   --border-color: rgba(255, 255, 255, 0.1);
   --card-bg: rgba(255, 255, 255, 0.03);
-  --navbar-bg: #0a0a0a;
+  --navbar-bg: #003366;
   --navbar-text: #ffffff;
-  --navbar-hover: #da020e;
-  --footer-bg: #000000;
+  --navbar-hover: #ffcc00;
+  --footer-bg: #003366;
   --shadow: rgba(0, 0, 0, 0.3);
   --bg-ticker: #0a0a0a;
   --red: #da020e;
@@ -37,20 +37,20 @@
 
 /* Default to light theme */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f8f8;
-  --bg-tertiary: #fafafa;
+  --bg-primary: #d6d8da;
+  --bg-secondary: #c8cacc;
+  --bg-tertiary: #e0e2e4;
   --text-primary: #000000;
   --text-secondary: #333333;
   --text-tertiary: #666666;
-  --border-color: #e0e0e0;
+  --border-color: #c0c2c4;
   --card-bg: #ffffff;
-  --navbar-bg: #ffffff;
-  --navbar-text: #1a1a1a;
-  --navbar-hover: #da020e;
-  --footer-bg: #f8f8f8;
-  --shadow: rgba(0, 0, 0, 0.08);
-  --bg-ticker: #f8f8f8;
+  --navbar-bg: #003366;
+  --navbar-text: #ffffff;
+  --navbar-hover: #ffcc00;
+  --footer-bg: #003366;
+  --shadow: rgba(0, 0, 0, 0.10);
+  --bg-ticker: #d6d8da;
   --red: #da020e;
 }
 
@@ -69,6 +69,7 @@
 
 .app__main {
   flex: 1;
+  background: var(--bg-primary);
 }
 
 /* Content area with max-width container */

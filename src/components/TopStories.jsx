@@ -22,20 +22,22 @@ function getLeagueColor(league = '') {
   return LEAGUE_COLORS[league.toLowerCase()] || '#888';
 }
 
-export default function TopStories({ news = [], articles = [], loading = false }) {
-  // Combine top story articles with news
-  const topStoryArticles = (articles || []).filter(a => a.isTopStory).map(item => ({
-    id: item.id,
-    slug: item.slug,
-    image: item.imageUrl,
-    league: item.category,
-    leagueColor: item.categoryColor,
-    headline: item.title,
-    excerpt: item.excerpt,
-    time: item.time || 'Recently',
-    author: item.author,
-    isArticle: true
-  }));
+export default function TopStories({ news = [], articles = [], loading = false, sectionTitle = 'Featured Stories' }) {
+  // Combine top story articles + featured story articles with news
+  const topStoryArticles = (articles || [])
+    .filter(a => a.isTopStory || a.isFeaturedStory)
+    .map(item => ({
+      id: item.id,
+      slug: item.slug,
+      image: item.imageUrl,
+      league: item.category,
+      leagueColor: item.categoryColor,
+      headline: item.title,
+      excerpt: item.excerpt,
+      time: item.time || 'Recently',
+      author: item.author,
+      isArticle: true
+    }));
   
   const combined = [...topStoryArticles, ...news];
   const stories = combined.length > 0 ? combined : FALLBACK_STORIES;
@@ -48,7 +50,7 @@ export default function TopStories({ news = [], articles = [], loading = false }
       <div className="stories">
         <div className="section-header">
           <span className="section-header__bar" />
-          <h2 className="section-header__title">Top Stories</h2>
+          <h2 className="section-header__title">{sectionTitle}</h2>
         </div>
         <div className="stories__skeleton-grid">
           {[1,2,3,4,5].map(i => <div key={i} className="stories__skeleton-card" />)}
@@ -62,7 +64,7 @@ export default function TopStories({ news = [], articles = [], loading = false }
       {/* Section Header */}
       <div className="section-header">
         <span className="section-header__bar" />
-        <h2 className="section-header__title">Top Stories</h2>
+        <h2 className="section-header__title">{sectionTitle}</h2>
         <a href="#" className="section-header__link">View All →</a>
       </div>
 

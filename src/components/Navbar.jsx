@@ -6,24 +6,19 @@ import Login from './Login';
 import './Navbar.css';
 
 const NAV_LINKS = [
-  { label: 'NHL', to: '/nhl' },
-  { label: 'MLB', to: '/mlb' },
-  { label: 'NBA', to: '/nba' },
-  { label: 'CFL', to: '/cfl' },
-  { label: 'Soccer', to: '/soccer' },
-  { label: 'Golf', to: '/golf' },
-  { label: 'Tennis', to: '/tennis' },
+  { label: 'Cricket', to: '/cricket' },
+  { label: 'Basketball', to: '/basketball' },
+  { label: 'Hockey', to: '/hockey' },
+  { label: 'Football', to: '/football' },
+  { label: 'Athletics', to: '/athletics' },
+  { label: 'Domestic', to: '/domestic' },
 ];
 
 const MORE_LINKS = [
-  { label: 'MLS', to: '/mls' },
-  { label: 'UFC/MMA', to: '/ufc-mma' },
-  { label: 'NASCAR', to: '/nascar' },
-  { label: 'Formula 1', to: '/formula-1' },
+  { label: 'Tennis', to: '/tennis' },
+  { label: 'Golf', to: '/golf' },
   { label: 'Boxing', to: '/boxing' },
   { label: 'Rugby', to: '/rugby' },
-  { label: 'Olympics', to: '/olympics' },
-  { label: 'Esports', to: '/esports' },
 ];
 
 export default function Navbar() {

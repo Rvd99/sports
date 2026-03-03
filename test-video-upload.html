@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Video Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #da020e;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #c8102e;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎥 Test Video Upload</h1>
+        
+        <form id="videoForm">
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="title" value="Test Video - Cricket Highlights" required>
+            </div>
+
+            <div class="form-group">
+                <label>Video URL *</label>
+                <input type="text" id="videoUrl" value="https://www.youtube.com/watch?v=iVHn8hhY8nY" required>
+            </div>
+
+            <div class="form-group">
+                <label>Thumbnail Image (Upload from Computer)</label>
+                <input type="file" id="thumbnail" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label>Categories * (Select at least one)</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="category" value="Homepage" checked> Homepage
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="category" value="Cricket" checked> Cricket
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="category" value="Basketball"> Basketball
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="category" value="Hockey"> Hockey
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="category" value="Football"> Football
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="category" value="Athletics"> Athletics
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn">Upload Video</button>
+            <button type="button" id="testGetBtn">Test GET Videos</button>
+        </form>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('videoForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const testGetBtn = document.getElementById('testGetBtn');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading...';
+            resultDiv.style.display = 'none';
+
+            try {
+                const formData = new FormData();
+                formData.append('title', document.getElementById('title').value);
+                formData.append('videoUrl', document.getElementById('videoUrl').value);
+                
+                // Get selected categories
+                const categories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+                    .map(cb => cb.value);
+                
+                if (categories.length === 0) {
+                    throw new Error('Please select at least one category');
+                }
+                
+                formData.append('categories', JSON.stringify(categories));
+
+                // Add thumbnail if selected
+                const thumbnailFile = document.getElementById('thumbnail').files[0];
+                if (thumbnailFile) {
+                    formData.append('thumbnail', thumbnailFile);
+                }
+
+                console.log('Uploading video with categories:', categories);
+
+                const response = await fetch('http://localhost:5001/api/videos', {
+                    method: 'POST',
+                    headers: {
+                        'x-user-role': 'admin'
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Upload failed');
+                }
+
+                resultDiv.className = 'result success';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <strong>✅ Success!</strong><br>
+                    Video uploaded successfully!<br>
+                    <strong>ID:</strong> ${data.id}<br>
+                    <strong>Title:</strong> ${data.title}<br>
+                    <strong>Categories:</strong> ${data.categories.join(', ')}<br>
+                    <strong>Video URL:</strong> ${data.videoUrl}<br>
+                    <strong>Thumbnail:</strong> ${data.thumbnailUrl}<br><br>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+
+                console.log('Upload successful:', data);
+
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+                console.error('Upload error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Upload Video';
+            }
+        });
+
+        testGetBtn.addEventListener('click', async () => {
+            testGetBtn.disabled = true;
+            testGetBtn.textContent = 'Testing...';
+            resultDiv.style.display = 'none';
+
+            try {
+                // Test multiple endpoints
+                const tests = [
+                    { name: 'Homepage (all)', url: 'http://localhost:5001/api/videos?category=all' },
+                    { name: 'Cricket', url: 'http://localhost:5001/api/videos?category=cricket' },
+                    { name: 'All videos', url: 'http://localhost:5001/api/videos' }
+                ];
+
+                let results = '<strong>📊 GET Videos Test Results:</strong><br><br>';
+
+                for (const test of tests) {
+                    const response = await fetch(test.url);
+                    const data = await response.json();
+                    results += `<strong>${test.name}:</strong> ${data.length} videos<br>`;
+                    if (data.length > 0) {
+                        results += `<pre>${JSON.stringify(data.map(v => ({
+                            id: v.id,
+                            title: v.title,
+                            categories: v.categories || v.league
+                        })), null, 2)}</pre>`;
+                    }
+                    results += '<br>';
+                }
+
+                resultDiv.className = 'result success';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = results;
+
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+                console.error('Test error:', error);
+            } finally {
+                testGetBtn.disabled = false;
+                testGetBtn.textContent = 'Test GET Videos';
+            }
+        });
+    </script>
+</body>
+</html>

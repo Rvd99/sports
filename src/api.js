@@ -313,3 +313,69 @@ export async function deleteArticle(id) {
   }
   return res.json();
 }
+
+// ─── Sections ─────────────────────────────────────────────────────────────────
+
+export async function fetchSections() {
+  const res = await fetch(`${BASE}/sections`);
+  if (!res.ok) throw new Error('Failed to fetch sections');
+  return res.json();
+}
+
+export async function createSection(data) {
+  const userRole = getUserRole();
+  const res = await fetch(`${BASE}/sections`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-admin-token': ADMIN_TOKEN,
+      ...(userRole ? { 'x-user-role': userRole } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to create section');
+  }
+  return res.json();
+}
+
+export async function updateSection(id, data) {
+  const userRole = getUserRole();
+  const res = await fetch(`${BASE}/sections/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-admin-token': ADMIN_TOKEN,
+      ...(userRole ? { 'x-user-role': userRole } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to update section');
+  }
+  return res.json();
+}
+
+export async function deleteSection(id) {
+  const userRole = getUserRole();
+  const res = await fetch(`${BASE}/sections/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'x-admin-token': ADMIN_TOKEN,
+      ...(userRole ? { 'x-user-role': userRole } : {}),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete section');
+  }
+  return res.json();
+}
+
+export async function fetchSectionArticles(slug) {
+  const res = await fetch(`${BASE}/sections/${slug}/articles`);
+  if (!res.ok) throw new Error('Failed to fetch section articles');
+  return res.json();
+}

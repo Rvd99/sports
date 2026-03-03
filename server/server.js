@@ -360,6 +360,10 @@ let articles = [
 ];
 let articleIdCounter = 6;
 
+// ─── Sections (admin-created content containers) ──────────────────────────────
+let sections = [];
+let sectionIdCounter = 1;
+
 // ─── Admin Authentication Middleware ──────────────────────────────────────────
 
 const adminAuth = (req, res, next) => {
@@ -554,7 +558,9 @@ app.post('/api/articles', adminAuth, upload.single('image'), async (req, res) =>
       isTopStory: isTopStory === 'true' || isTopStory === true,
       isTrending: isTrending === 'true' || isTrending === true,
       isLatestNews: isLatestNews === 'true' || isLatestNews === true,
-      showOnHomepage: showOnHomepage === undefined ? true : (showOnHomepage === 'true' || showOnHomepage === true),
+      isFeaturedStory: req.body.isFeaturedStory === 'true' || req.body.isFeaturedStory === true,
+      showOnHomepage: showOnHomepage === 'true' || showOnHomepage === true,
+      sectionIds: req.body.sectionIds ? (typeof req.body.sectionIds === 'string' ? JSON.parse(req.body.sectionIds) : req.body.sectionIds) : [],
       views: 0,
     };
     
@@ -622,6 +628,10 @@ app.put('/api/articles/:id', adminAuth, (req, res) => {
   if (isTrending !== undefined) article.isTrending = isTrending;
   if (isLatestNews !== undefined) article.isLatestNews = isLatestNews;
   if (showOnHomepage !== undefined) article.showOnHomepage = showOnHomepage;
+  if (req.body.isFeaturedStory !== undefined) article.isFeaturedStory = req.body.isFeaturedStory;
+  if (req.body.sectionIds !== undefined) {
+    article.sectionIds = typeof req.body.sectionIds === 'string' ? JSON.parse(req.body.sectionIds) : req.body.sectionIds;
+  }
   
   article.updatedAt = new Date().toISOString();
   
@@ -827,6 +837,89 @@ app.delete('/api/videos/:id', adminAuth, async (req, res) => {
     console.error('Error deleting video:', error);
     res.status(500).json({ error: 'Failed to delete video' });
   }
+});
+
+// ─── Section Routes ───────────────────────────────────────────────────────────
+
+app.get('/api/sections', (req, res) => {
+  const sorted = [...sections].sort((a, b) => a.order - b.order);
+  res.json(sorted);
+});
+
+app.post('/api/sections', adminAuth, (req, res) => {
+  const { title, description, page, position } = req.body;
+  if (!title || !title.trim()) {
+    return res.status(400).json({ error: 'title is required' });
+  }
+  const slug = slugify(title.trim(), { lower: true, strict: true });
+  if (sections.find(s => s.slug === slug)) {
+    return res.status(400).json({ error: 'A section with this title already exists' });
+  }
+  const newSection = {
+    id: sectionIdCounter++,
+    title: title.trim(),
+    slug,
+    description: description || '',
+    page: page || 'home',
+    position: position !== undefined ? parseInt(position) : sections.length,
+    order: sections.length,
+    createdAt: new Date().toISOString(),
+  };
+  sections.push(newSection);
+  res.status(201).json(newSection);
+});
+
+app.put('/api/sections/:id', adminAuth, (req, res) => {
+  const { id } = req.params;
+  const idx = sections.findIndex(s => s.id === parseInt(id));
+  if (idx === -1) return res.status(404).json({ error: 'Section not found' });
+  const { title, description, order, page, position } = req.body;
+  if (title) {
+    sections[idx].title = title.trim();
+    sections[idx].slug = slugify(title.trim(), { lower: true, strict: true });
+  }
+  if (description !== undefined) sections[idx].description = description;
+  if (order !== undefined) sections[idx].order = parseInt(order);
+  if (page !== undefined) sections[idx].page = page;
+  if (position !== undefined) sections[idx].position = parseInt(position);
+  res.json(sections[idx]);
+});
+
+app.delete('/api/sections/:id', adminAuth, (req, res) => {
+  const { id } = req.params;
+  const idx = sections.findIndex(s => s.id === parseInt(id));
+  if (idx === -1) return res.status(404).json({ error: 'Section not found' });
+  const removed = sections.splice(idx, 1)[0];
+  res.json({ message: 'Section deleted', section: removed });
+});
+
+// Get articles for a specific section by slug
+app.get('/api/sections/:slug/articles', (req, res) => {
+  const { slug } = req.params;
+  const section = sections.find(s => s.slug === slug);
+  if (!section) return res.status(404).json({ error: 'Section not found' });
+  const sectionArticles = articles.filter(a =>
+    a.isPublished && Array.isArray(a.sectionIds) && a.sectionIds.includes(section.id)
+  );
+  sectionArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+  res.json(sectionArticles);
+});
+
+// Get categories for footer
+app.get('/api/categories', (req, res) => {
+  const categories = [
+    { name: 'Cricket', slug: 'cricket' },
+    { name: 'Basketball', slug: 'basketball' },
+    { name: 'Hockey', slug: 'hockey' },
+    { name: 'Football', slug: 'football' },
+    { name: 'Athletics', slug: 'athletics' },
+    { name: 'Domestic Sports', slug: 'domestic' },
+    { name: 'Tennis', slug: 'tennis' },
+    { name: 'Golf', slug: 'golf' },
+    { name: 'Boxing', slug: 'boxing' },
+    { name: 'Rugby', slug: 'rugby' },
+  ];
+  res.json(categories);
 });
 
 app.listen(PORT, () => {

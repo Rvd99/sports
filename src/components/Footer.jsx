@@ -1,11 +1,16 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
-const FOOTER_LINKS = {
-  Leagues: ['NHL', 'NBA', 'MLB', 'CFL', 'MLS', 'Golf', 'Tennis', 'UFC', 'Formula 1', 'Olympics'],
-  News: ['Top Stories', 'Video Highlights', 'Scores', 'Standings', 'Stats', 'Schedules', 'Injuries', 'Trades'],
-  Company: ['About DEGEN', 'Advertise With Us', 'Contact Us', 'Careers', 'Privacy Policy', 'Terms of Use', 'Accessibility'],
-  Watch: ['Watch Live', 'On Demand', 'Podcasts', 'Newsletters', 'Mobile App', 'Smart TV'],
-};
+const COMPANY_LINKS = [
+  { name: 'About DEGEN', href: '/about' },
+  { name: 'Advertise With Us', href: '/advertise' },
+  { name: 'Contact Us', href: '/contact' },
+  { name: 'Careers', href: '/careers' },
+  { name: 'Privacy Policy', href: '/privacy' },
+  { name: 'Terms of Use', href: '/terms' },
+  { name: 'Accessibility', href: '/accessibility' },
+];
 
 const SOCIAL = [
   { name: 'Twitter / X', href: '#', icon: XIcon },
@@ -16,17 +21,26 @@ const SOCIAL = [
 ];
 
 export default function Footer() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5001/api/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error('Failed to fetch categories:', err));
+  }, []);
+
   return (
     <footer className="footer">
       <div className="footer__top">
         <div className="footer__inner">
           {/* Brand */}
           <div className="footer__brand">
-            <a href="#" className="footer__logo">
+            <Link to="/" className="footer__logo">
               <span className="footer__logo-degen">DEGEN</span>
               <span className="footer__logo-dot">●</span>
               <span className="footer__logo-sports">SPORTS</span>
-            </a>
+            </Link>
             <p className="footer__tagline">
               Canada's home for sports news, live scores, video highlights and expert analysis — 24/7.
             </p>
@@ -39,19 +53,33 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Link Columns */}
-          {Object.entries(FOOTER_LINKS).map(([category, links]) => (
-            <div key={category} className="footer__col">
-              <h4 className="footer__col-title">{category}</h4>
-              <ul className="footer__col-list">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="footer__col-link">{link}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Categories Column */}
+          <div className="footer__col">
+            <h4 className="footer__col-title">CATEGORIES</h4>
+            <ul className="footer__col-list">
+              {categories.map((category) => (
+                <li key={category.slug}>
+                  <Link to={`/${category.slug}`} className="footer__col-link">
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company Column */}
+          <div className="footer__col">
+            <h4 className="footer__col-title">COMPANY</h4>
+            <ul className="footer__col-list">
+              {COMPANY_LINKS.map((link) => (
+                <li key={link.name}>
+                  <Link to={link.href} className="footer__col-link">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -62,10 +90,10 @@ export default function Footer() {
             © {new Date().getFullYear()} DEGEN Sports Media Inc. All rights reserved.
           </p>
           <div className="footer__bottom-links">
-            <a href="#" className="footer__bottom-link">Privacy Policy</a>
-            <a href="#" className="footer__bottom-link">Terms of Use</a>
-            <a href="#" className="footer__bottom-link">Cookie Settings</a>
-            <a href="#" className="footer__bottom-link">Accessibility</a>
+            <Link to="/privacy" className="footer__bottom-link">Privacy Policy</Link>
+            <Link to="/terms" className="footer__bottom-link">Terms of Use</Link>
+            <Link to="/cookies" className="footer__bottom-link">Cookie Settings</Link>
+            <Link to="/accessibility" className="footer__bottom-link">Accessibility</Link>
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
 .navbar {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
   background: var(--navbar-bg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: box-shadow 0.3s;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: box-shadow 0.2s, background-color 0.3s;
 }
 
 .navbar--scrolled {
@@ -63,10 +64,10 @@
 .navbar__link {
   padding: 6px 11px;
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--navbar-text);
   border-radius: 3px;
   transition: color 0.2s, background 0.2s;
   white-space: nowrap;
@@ -74,12 +75,12 @@
 }
 
 .navbar__link:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.07);
+  color: var(--navbar-hover);
+  background: rgba(218, 2, 14, 0.05);
 }
 
 .navbar__link--active {
-  color: #fff !important;
+  color: var(--navbar-hover) !important;
   border-bottom: 2px solid var(--red);
 }
 
@@ -103,10 +104,10 @@
 .navbar__more-btn {
   background: none;
   font-size: 0.82rem;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #ccc;
+  color: var(--navbar-text);
   padding: 6px 11px;
   border-radius: 3px;
   transition: color 0.2s, background 0.2s;
@@ -116,8 +117,8 @@
 }
 
 .navbar__more-btn:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.07);
+  color: var(--navbar-hover);
+  background: rgba(218, 2, 14, 0.05);
 }
 
 .navbar__chevron {
@@ -129,12 +130,12 @@
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  background: #1c1c1c;
-  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   min-width: 160px;
   padding: 6px 0;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 30px var(--shadow);
   z-index: 200;
   animation: fadeDown 0.15s ease;
 }
@@ -149,13 +150,19 @@
   padding: 9px 18px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: #bbb;
+  color: var(--text-secondary);
   transition: color 0.15s, background 0.15s;
+  text-decoration: none;
 }
 
 .navbar__dropdown-item:hover {
-  color: #fff;
-  background: rgba(200, 16, 46, 0.15);
+  color: var(--navbar-hover);
+  background: rgba(218, 2, 14, 0.08);
+}
+
+.navbar__dropdown-item--active {
+  color: var(--navbar-hover);
+  font-weight: 700;
 }
 
 /* Right Actions */
@@ -171,9 +178,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: #fff;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--navbar-text);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -183,17 +190,17 @@
 }
 
 .navbar__theme-toggle {
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--bg-tertiary);
 }
 
 .navbar__theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--bg-secondary);
   transform: scale(1.1);
 }
 
 .navbar__icon-btn:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  color: var(--navbar-hover);
+  background: var(--bg-secondary);
 }
 
 .navbar__search-wrap {
@@ -204,25 +211,25 @@
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  background: #1c1c1c;
-  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 10px;
   width: 280px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 30px var(--shadow);
   animation: fadeDown 0.15s ease;
   z-index: 200;
 }
 
 .navbar__search-input {
   width: 100%;
-  background: #111;
-  border: 1px solid #333;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 8px 12px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.85rem;
-  font-family: var(--font);
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
   outline: none;
   transition: border-color 0.2s;
 }

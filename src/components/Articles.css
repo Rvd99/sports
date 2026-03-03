@@ -28,21 +28,21 @@
 }
 
 .article-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  text-decoration: none;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  background: var(--card-bg);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  text-decoration: none;
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .article-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px var(--shadow);
-  border-color: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+  border-color: var(--red);
 }
 
 .article-card__image-wrap {

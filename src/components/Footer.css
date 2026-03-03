@@ -1,5 +1,5 @@
 .footer {
-  background: #080808;
+  background: var(--footer-bg);
   border-top: 1px solid var(--border);
   margin-top: 60px;
 }
@@ -53,7 +53,7 @@
 
 .footer__tagline {
   font-size: 0.78rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;
 }
 
@@ -109,13 +109,13 @@
 
 .footer__col-link {
   font-size: 0.78rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.7);
   transition: color 0.2s;
   text-decoration: none;
 }
 
 .footer__col-link:hover {
-  color: #ccc;
+  color: rgba(255, 255, 255, 1);
 }
 
 /* Bottom Bar */
@@ -137,7 +137,7 @@
 
 .footer__copyright {
   font-size: 0.72rem;
-  color: #444;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .footer__bottom-links {
@@ -148,13 +148,13 @@
 
 .footer__bottom-link {
   font-size: 0.72rem;
-  color: #444;
+  color: rgba(255, 255, 255, 0.6);
   transition: color 0.2s;
   text-decoration: none;
 }
 
 .footer__bottom-link:hover {
-  color: #888;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Responsive */

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import Hero from '../components/Hero';
+import HeroCards from '../components/HeroCards';
 import TopStories from '../components/TopStories';
+import SectionContainer from '../components/SectionContainer';
 import VideoHighlights from '../components/VideoHighlights';
 import Sidebar from '../components/Sidebar';
 import FeaturedLeagues from '../components/FeaturedLeagues';
-import Articles from '../components/Articles';
-import { fetchNews, fetchScores, fetchVideos, fetchArticles } from '../api';
+import { fetchNews, fetchScores, fetchVideos, fetchArticles, fetchSections } from '../api';
 import './LeaguePage.css';
 
 const LEAGUE_LABELS = {
@@ -41,6 +41,7 @@ export default function LeaguePage({ league }) {
   const [scores, setScores] = useState([]);
   const [videos, setVideos] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -52,12 +53,14 @@ export default function LeaguePage({ league }) {
       fetchScores(league),
       fetchVideos(league),
       fetchArticles(league === 'all' ? 'all' : league, 6, league === 'all'),
+      fetchSections(),
     ])
-      .then(([newsData, scoresData, videosData, articlesData]) => {
+      .then(([newsData, scoresData, videosData, articlesData, sectionsData]) => {
         setNews(newsData);
         setScores(scoresData);
         setVideos(videosData);
         setArticles(articlesData);
+        setSections(sectionsData);
         setLoading(false);
       })
       .catch((err) => {
@@ -70,8 +73,27 @@ export default function LeaguePage({ league }) {
   const label = LEAGUE_LABELS[league] || league.toUpperCase();
   const color = LEAGUE_COLORS[league] || '#c8102e';
 
+  // Map league prop to page key used in sections
+  const pageKey = league === 'all' ? 'home' : league;
+
+  // Filter sections for this page, sorted by position
+  const pageSections = sections
+    .filter(s => (s.page || 'home') === pageKey)
+    .sort((a, b) => (a.position ?? a.order ?? 0) - (b.position ?? b.order ?? 0));
+
+  const sectionsAt = (pos) => pageSections
+    .filter(s => (s.position ?? 1) === pos)
+    .map(section => (
+      <div key={section.id} className="league-page__section-container">
+        <SectionContainer section={section} />
+      </div>
+    ));
+
   return (
     <>
+      {/* Position 0 — Above hero */}
+      {sectionsAt(0)}
+
       {/* League page banner (non-homepage) */}
       {league !== 'all' && (
         <div className="league-banner" style={{ borderBottomColor: color }}>
@@ -85,8 +107,8 @@ export default function LeaguePage({ league }) {
         </div>
       )}
 
-      {/* Hero Section */}
-      <Hero news={news} articles={articles} loading={loading} />
+      {/* Hero Cards Section */}
+      <HeroCards news={news} articles={articles} loading={loading} showTopNewsLabel={league === 'all'} />
 
       {/* Offline warning */}
       {error === 'backend-offline' && (
@@ -95,22 +117,26 @@ export default function LeaguePage({ league }) {
         </div>
       )}
 
+      {/* Position 1 — After hero */}
+      {sectionsAt(1)}
+
       {/* Main content */}
       <div className="league-page__content">
         <div className="league-page__content-inner">
           <div className="league-page__main-col">
             {/* Top Stories */}
             <TopStories news={news} articles={articles} loading={loading} />
-            
-            {/* Articles Section */}
-            <div className="league-page__section-gap">
-              <Articles articles={articles} loading={loading} />
-            </div>
+
+            {/* Position 2 — After Top Stories */}
+            {sectionsAt(2)}
             
             {/* Video Highlights */}
             <div className="league-page__section-gap">
               <VideoHighlights category={league} />
             </div>
+
+            {/* Position 3 — After Videos */}
+            {sectionsAt(3)}
           </div>
           
           {/* Sidebar */}
@@ -118,12 +144,13 @@ export default function LeaguePage({ league }) {
         </div>
       </div>
 
-      {/* Featured leagues (homepage only) */}
-      {league === 'all' && (
-        <div className="app__full-width">
-          <FeaturedLeagues />
-        </div>
-      )}
+      {/* Position 4 — Bottom of page */}
+      {sectionsAt(4)}
+
+      {/* Featured leagues section */}
+      <div className="app__full-width">
+        <FeaturedLeagues />
+      </div>
     </>
   );
 }

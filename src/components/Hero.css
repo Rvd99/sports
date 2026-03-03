@@ -15,6 +15,7 @@
   opacity: 0;
   transition: opacity 0.7s ease, transform 0.7s ease;
   transform: scale(1.04);
+  filter: brightness(1.4) contrast(1.15);
 }
 
 .hero__slide--active {
@@ -22,19 +23,19 @@
   transform: scale(1);
 }
 
-/* Gradient overlay */
+/* Gradient overlay - lightened for sunny/vibrant feel */
 .hero__overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.85) 0%,
-    rgba(0, 0, 0, 0.55) 50%,
-    rgba(0, 0, 0, 0.15) 100%
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.25) 50%,
+    rgba(0, 0, 0, 0.05) 100%
   ),
   linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 0%,
     transparent 60%
   );
   z-index: 1;

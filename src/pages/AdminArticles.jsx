@@ -99,6 +99,9 @@ export default function AdminArticles() {
           <Link to="/admin/videos" className="admin-articles__create-btn" style={{ background: '#9c27b0' }}>
             🎥 Manage Videos
           </Link>
+          <Link to="/admin/sections" className="admin-articles__create-btn" style={{ background: '#0d9488' }}>
+            📋 Manage Sections
+          </Link>
           <Link to="/admin/create-article" className="admin-articles__create-btn">
             ➕ Create New Article
           </Link>

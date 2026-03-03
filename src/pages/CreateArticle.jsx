@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createArticle } from '../api';
+import { createArticle, fetchSections } from '../api';
 import './CreateArticle.css';
 
 const CATEGORIES = [
@@ -49,15 +49,44 @@ export default function CreateArticle() {
     isPublished: true,
     isFeatured: false,
     isTopStory: false,
+    isFeaturedStory: false,
     isTrending: false,
     isLatestNews: true,
-    showOnHomepage: true,
+    showOnHomepage: false,
+    sectionIds: [],
   });
+  const [sections, setSections] = useState([]);
+  const [newSectionTitle, setNewSectionTitle] = useState('');
+  const [addingSec, setAddingSec] = useState(false);
+  const [showAddSec, setShowAddSec] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [status, setStatus] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [previewMode, setPreviewMode] = useState(false);
+
+  useEffect(() => {
+    fetchSections().then(setSections).catch(() => {});
+  }, []);
+
+  async function handleAddSection(e) {
+    e.preventDefault();
+    const title = newSectionTitle.trim();
+    if (!title) return;
+    setAddingSec(true);
+    try {
+      const { createSection } = await import('../api');
+      const created = await createSection({ title });
+      setSections(prev => [...prev, created]);
+      setForm(prev => ({ ...prev, sectionIds: [...prev.sectionIds, created.id] }));
+      setNewSectionTitle('');
+      setShowAddSec(false);
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to create section');
+    } finally {
+      setAddingSec(false);
+    }
+  }
 
   const getVisibilityInfo = () => {
     const category = form.category;
@@ -181,9 +210,11 @@ export default function CreateArticle() {
       // Add placement options
       formData.append('isFeatured', form.isFeatured);
       formData.append('isTopStory', form.isTopStory);
+      formData.append('isFeaturedStory', form.isFeaturedStory);
       formData.append('isTrending', form.isTrending);
       formData.append('isLatestNews', form.isLatestNews);
       formData.append('showOnHomepage', form.showOnHomepage);
+      formData.append('sectionIds', JSON.stringify(form.sectionIds));
       
       // Add image file if selected
       if (imageFile) {
@@ -228,9 +259,10 @@ export default function CreateArticle() {
           <div className="create-article-info-banner__content">
             <h3 className="create-article-info-banner__title">Where will my article appear?</h3>
             <p className="create-article-info-banner__text">
-              <strong>All articles appear on the Homepage.</strong> If you select a category with a dedicated page 
-              (NHL, NBA, MLB, CFL, Soccer, Golf, Tennis), your article will also appear on that specific league page. 
-              Categories like Cricket, Football, Kabaddi, IPL, and ISL currently only appear on the Homepage.
+              Articles appear on their category page based on the sport you select. 
+              If you select a category with a dedicated page (NHL, NBA, MLB, CFL, Soccer, Golf, Tennis), 
+              your article will appear on that specific league page. 
+              <strong> To also show the article on the Homepage, check the "Show on Homepage" option below.</strong>
             </p>
           </div>
         </div>
@@ -470,11 +502,25 @@ export default function CreateArticle() {
                       ))}
                     </ul>
                     <p className="article-form__visibility-note">
-                      💡 Tip: All articles always appear on the Homepage. 
+                      💡 Tip: Check "Show on Homepage" below to display this article on the homepage.
                       {getVisibilityInfo().route !== '/' && (
-                        <> This article will also appear on the <Link to={getVisibilityInfo().route} className="article-form__visibility-link">{form.category} page</Link>.</>
+                        <> This article will appear on the <Link to={getVisibilityInfo().route} className="article-form__visibility-link">{form.category} page</Link>.</>
                       )}
                     </p>
+                    
+                    <div className="article-form__field" style={{ marginTop: '1rem' }}>
+                      <label className="article-form__checkbox-label">
+                        <input
+                          type="checkbox"
+                          name="showOnHomepage"
+                          checked={form.showOnHomepage}
+                          onChange={handleChange}
+                          className="article-form__checkbox"
+                        />
+                        <span>✓ Show on Homepage</span>
+                      </label>
+                      <span className="article-form__hint">Check this to display the article on the homepage</span>
+                    </div>
                   </div>
                 </div>
 
@@ -622,20 +668,6 @@ export default function CreateArticle() {
                     <span className="article-form__hint">Article will be published at this date/time</span>
                   </div>
                 )}
-
-                <div className="article-form__field">
-                  <label className="article-form__checkbox-label">
-                    <input
-                      type="checkbox"
-                      name="showOnHomepage"
-                      checked={form.showOnHomepage}
-                      onChange={handleChange}
-                      className="article-form__checkbox"
-                    />
-                    <span>Show on Homepage</span>
-                  </label>
-                  <span className="article-form__hint">Uncheck to hide this article from the homepage</span>
-                </div>
               </div>
 
               <div className="article-form__panel">
@@ -676,6 +708,20 @@ export default function CreateArticle() {
                   <label className="article-form__placement-label">
                     <input
                       type="checkbox"
+                      name="isFeaturedStory"
+                      checked={form.isFeaturedStory}
+                      onChange={handleChange}
+                      className="article-form__checkbox"
+                    />
+                    <div className="article-form__placement-info">
+                      <span className="article-form__placement-name">🌟 Featured Stories</span>
+                      <span className="article-form__placement-desc">Featured Stories section</span>
+                    </div>
+                  </label>
+
+                  <label className="article-form__placement-label">
+                    <input
+                      type="checkbox"
                       name="isTrending"
                       checked={form.isTrending}
                       onChange={handleChange}
@@ -700,6 +746,66 @@ export default function CreateArticle() {
                       <span className="article-form__placement-desc">Latest news feed (default)</span>
                     </div>
                   </label>
+
+                  <div className="article-form__placement-divider">
+                    Custom Sections
+                    <button
+                      type="button"
+                      className="article-form__add-section-btn"
+                      onClick={() => setShowAddSec(v => !v)}
+                    >
+                      {showAddSec ? '✕ Cancel' : '+ Add Section'}
+                    </button>
+                  </div>
+
+                  {showAddSec && (
+                    <form className="article-form__new-section" onSubmit={handleAddSection}>
+                      <input
+                        className="article-form__new-section-input"
+                        type="text"
+                        placeholder="Section title (e.g. Weekend Recap)"
+                        value={newSectionTitle}
+                        onChange={e => setNewSectionTitle(e.target.value)}
+                        maxLength={60}
+                        autoFocus
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="article-form__new-section-submit"
+                        disabled={addingSec || !newSectionTitle.trim()}
+                      >
+                        {addingSec ? '…' : 'Create'}
+                      </button>
+                    </form>
+                  )}
+
+                  {sections.map(section => {
+                    const checked = form.sectionIds.includes(section.id);
+                    return (
+                      <label key={section.id} className="article-form__placement-label">
+                        <input
+                          type="checkbox"
+                          className="article-form__checkbox"
+                          checked={checked}
+                          onChange={() => {
+                            setForm(prev => ({
+                              ...prev,
+                              sectionIds: checked
+                                ? prev.sectionIds.filter(id => id !== section.id)
+                                : [...prev.sectionIds, section.id],
+                            }));
+                          }}
+                        />
+                        <div className="article-form__placement-info">
+                          <span className="article-form__placement-name">📂 {section.title}</span>
+                          <span className="article-form__placement-desc">
+                            {section.description || `Appears under "${section.title}" on the homepage`}
+                          </span>
+                        </div>
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
 

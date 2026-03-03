@@ -6,10 +6,11 @@
 
 /* Widget */
 .sidebar__widget {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .sidebar__widget-header {
@@ -97,7 +98,7 @@
 .sb-game__name {
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text-primary);
   flex: 1;
 }
 

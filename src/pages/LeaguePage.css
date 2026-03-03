@@ -1,8 +1,26 @@
+.league-page__section-container {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.top-news-section {
+  width: 100%;
+  background: var(--bg-primary);
+  padding: 32px 0 0;
+}
+
+.top-news-section__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
 .league-page__content {
   max-width: 1400px;
   margin: 0 auto;
   padding: 36px 24px 0;
   width: 100%;
+  background: var(--bg-primary);
 }
 
 .league-page__content-inner {

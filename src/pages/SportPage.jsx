@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchArticles, fetchNews, fetchScores, fetchVideos } from '../api';
+import { fetchArticles, fetchNews, fetchScores, fetchVideos, fetchSections } from '../api';
 import Hero from '../components/Hero';
-import ScoresTicker from '../components/ScoresTicker';
 import TopStories from '../components/TopStories';
 import VideoHighlights from '../components/VideoHighlights';
+import SectionContainer from '../components/SectionContainer';
 import Sidebar from '../components/Sidebar';
-import Articles from '../components/Articles';
 import './SportPage.css';
 
 const SPORT_CONFIG = {
@@ -26,6 +25,7 @@ export default function SportPage() {
   const [news, setNews] = useState([]);
   const [scores, setScores] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -44,12 +44,14 @@ export default function SportPage() {
       fetchNews(sport, 5),
       fetchScores(sport, 5),
       fetchVideos(sport, 4),
+      fetchSections(),
     ])
-      .then(([articlesData, newsData, scoresData, videosData]) => {
+      .then(([articlesData, newsData, scoresData, videosData, sectionsData]) => {
         setArticles(articlesData);
         setNews(newsData);
         setScores(scoresData);
         setVideos(videosData);
+        setSections(sectionsData);
         setLoading(false);
       })
       .catch((err) => {
@@ -74,8 +76,24 @@ export default function SportPage() {
     return date.toLocaleDateString();
   };
 
+  // Filter sections assigned to this sport page
+  const pageSections = sections
+    .filter(s => s.page === sport)
+    .sort((a, b) => (a.position ?? a.order ?? 0) - (b.position ?? b.order ?? 0));
+
+  const sectionsAt = (pos) => pageSections
+    .filter(s => (s.position ?? 1) === pos)
+    .map(section => (
+      <div key={section.id} style={{ width: '100%' }}>
+        <SectionContainer section={section} />
+      </div>
+    ));
+
   return (
     <div className="sport-page">
+      {/* Position 0 — Above header */}
+      {sectionsAt(0)}
+
       {/* Sport Header */}
       <div className="sport-header" style={{ borderBottomColor: sportConfig.color }}>
         <div className="sport-header__inner">
@@ -90,9 +108,6 @@ export default function SportPage() {
       {/* Hero Section */}
       <Hero news={news} loading={loading} />
 
-      {/* Scores Ticker */}
-      <ScoresTicker scores={scores} loading={loading} />
-
       {/* Offline warning */}
       {error === 'backend-offline' && (
         <div className="offline-banner">
@@ -100,28 +115,35 @@ export default function SportPage() {
         </div>
       )}
 
+      {/* Position 1 — After hero */}
+      {sectionsAt(1)}
+
       {/* Main content */}
       <div className="sport-page__content">
         <div className="sport-page__content-inner">
           <div className="sport-page__main-col">
-            {/* Articles Section */}
-            <Articles articles={articles} loading={loading} />
-            
             {/* News Section */}
-            <div className="sport-page__section-gap">
-              <TopStories news={news} loading={loading} />
-            </div>
+            <TopStories news={news} loading={loading} sectionTitle="Featured Stories" />
+
+            {/* Position 2 — After Top Stories */}
+            {sectionsAt(2)}
             
             {/* Videos Section */}
             <div className="sport-page__section-gap">
               <VideoHighlights videos={videos} loading={loading} />
             </div>
+
+            {/* Position 3 — After Videos */}
+            {sectionsAt(3)}
           </div>
           
           {/* Sidebar */}
           <Sidebar scores={scores} news={news} loading={loading} />
         </div>
       </div>
+
+      {/* Position 4 — Bottom of page */}
+      {sectionsAt(4)}
     </div>
   );
 }

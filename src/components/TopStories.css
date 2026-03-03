@@ -1,3 +1,7 @@
+.stories {
+  background: var(--bg-primary);
+}
+
 /* Section Header */
 .section-header {
   display: flex;
@@ -52,17 +56,17 @@
   display: flex;
   flex-direction: column;
   background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid var(--border-color);
-  text-decoration: none;
-  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
 .stories__card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 30px var(--shadow);
-  border-color: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow);
+  border-color: var(--red);
 }
 
 .stories__card--featured {
@@ -207,13 +211,13 @@
 .recent-feed__headline {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #ddd;
+  color: var(--text-primary);
   line-height: 1.35;
   transition: color 0.2s;
 }
 
 .recent-feed__item:hover .recent-feed__headline {
-  color: #fff;
+  color: var(--red);
 }
 
 .recent-feed__time {

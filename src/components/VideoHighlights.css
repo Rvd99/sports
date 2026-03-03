@@ -1,19 +1,93 @@
-.videos__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+.videos {
+  background: var(--bg-primary);
 }
+
+/* ── Carousel Wrapper ─────────────────────── */
+.videos__carousel-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Scrollable Track ─────────────────────── */
+.videos__track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px 2px 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.videos__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Arrow Buttons ─────────────────────────── */
+.videos__arrow {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s, opacity 0.2s;
+  z-index: 2;
+  position: relative;
+}
+
+.videos__arrow:hover {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  transform: scale(1.08);
+}
+
+.videos__arrow--prev {
+  margin-right: 10px;
+}
+
+.videos__arrow--next {
+  margin-left: 10px;
+}
+
+.videos__arrow--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Empty State ───────────────────────────── */
+.videos__empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ── Video Cards (carousel items) ─────────── */
 
 .video-card {
   display: flex;
   flex-direction: column;
+  flex: 0 0 calc(33.333% - 11px);
+  min-width: 240px;
   background: var(--card-bg);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--border-color);
   text-decoration: none;
   transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
   box-shadow: 0 1px 3px var(--shadow);
+  scroll-snap-align: start;
 }
 
 .video-card:hover {
@@ -146,13 +220,26 @@
 }
 
 @media (max-width: 900px) {
-  .videos__grid {
-    grid-template-columns: repeat(2, 1fr);
+  .video-card {
+    flex: 0 0 calc(50% - 8px);
   }
 }
 
-@media (max-width: 500px) {
-  .videos__grid {
-    grid-template-columns: 1fr;
+@media (max-width: 560px) {
+  .video-card {
+    flex: 0 0 85%;
+  }
+
+  .videos__arrow {
+    width: 32px;
+    height: 32px;
+  }
+
+  .videos__arrow--prev {
+    margin-right: 6px;
+  }
+
+  .videos__arrow--next {
+    margin-left: 6px;
   }
 }

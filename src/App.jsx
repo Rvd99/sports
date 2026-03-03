@@ -12,7 +12,16 @@ import AdminArticles from './pages/AdminArticles';
 import ManageCategories from './pages/ManageCategories';
 import AddVideo from './pages/AddVideo';
 import ManageVideos from './pages/ManageVideos';
+import ManageSections from './pages/ManageSections';
 import SportPage from './pages/SportPage';
+import About from './pages/About';
+import Advertise from './pages/Advertise';
+import Contact from './pages/Contact';
+import Careers from './pages/Careers';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Accessibility from './pages/Accessibility';
+import Cookies from './pages/Cookies';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
@@ -56,7 +65,18 @@ function App() {
               <Route path="/admin/categories" element={<ManageCategories />} />
               <Route path="/admin/videos" element={<ManageVideos />} />
               <Route path="/admin/add-video" element={<AddVideo />} />
+              <Route path="/admin/sections" element={<ManageSections />} />
               <Route path="/article/:slug" element={<ArticleDetail />} />
+              
+              {/* Static Pages */}
+              <Route path="/about" element={<About />} />
+              <Route path="/advertise" element={<Advertise />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/accessibility" element={<Accessibility />} />
+              <Route path="/cookies" element={<Cookies />} />
             </Routes>
           </main>
           <Footer />
