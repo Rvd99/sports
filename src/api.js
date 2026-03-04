@@ -379,3 +379,46 @@ export async function fetchSectionArticles(slug) {
   if (!res.ok) throw new Error('Failed to fetch section articles');
   return res.json();
 }
+
+// ─── Twitter Posts ─────────────────────────────────────────────────────────────
+
+export async function fetchTwitterPosts(page) {
+  const url = page ? `${BASE}/twitter-posts?page=${page}` : `${BASE}/twitter-posts`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch twitter posts');
+  return res.json();
+}
+
+export async function addTwitterPost(data) {
+  const userRole = getUserRole();
+  const res = await fetch(`${BASE}/twitter-posts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-admin-token': ADMIN_TOKEN,
+      ...(userRole ? { 'x-user-role': userRole } : {}),
+    },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to add twitter post');
+  }
+  return res.json();
+}
+
+export async function deleteTwitterPost(id) {
+  const userRole = getUserRole();
+  const res = await fetch(`${BASE}/twitter-posts/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'x-admin-token': ADMIN_TOKEN,
+      ...(userRole ? { 'x-user-role': userRole } : {}),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete twitter post');
+  }
+  return res.json();
+}

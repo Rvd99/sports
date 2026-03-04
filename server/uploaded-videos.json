@@ -1,6 +1,26 @@
 {
   "videos": [
     {
+      "id": 3,
+      "title": "test",
+      "description": "fd fdsf dsfds fdsf sdfds fdfc ",
+      "videoUrl": "https://www.youtube.com/watch?v=fIWilqXcXV8",
+      "uploadedVideoPath": null,
+      "thumbnailUrl": "http://localhost:5001/uploads/thumbnails/thumb-1772590502651-907251132.png",
+      "uploadedThumbnailPath": "thumb-1772590502651-907251132.png",
+      "categories": [
+        "Homepage",
+        "Cricket"
+      ],
+      "isPublished": true,
+      "createdAt": "2026-03-04T02:15:02.680Z",
+      "updatedAt": "2026-03-04T02:15:02.680Z",
+      "author": "Admin User",
+      "views": "0",
+      "duration": "0:00",
+      "time": "Just now"
+    },
+    {
       "id": 2,
       "title": "test ",
       "description": "jhghjhjjhkkjh",
@@ -41,5 +61,5 @@
       "time": "Just now"
     }
   ],
-  "nextId": 3
+  "nextId": 4
 }

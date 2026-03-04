@@ -364,6 +364,10 @@ let articleIdCounter = 6;
 let sections = [];
 let sectionIdCounter = 1;
 
+// ─── Twitter Posts (admin-curated tweet links) ────────────────────────────────
+let twitterPosts = [];
+let twitterPostIdCounter = 1;
+
 // ─── Admin Authentication Middleware ──────────────────────────────────────────
 
 const adminAuth = (req, res, next) => {
@@ -903,6 +907,43 @@ app.get('/api/sections/:slug/articles', (req, res) => {
   );
   sectionArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
   res.json(sectionArticles);
+});
+
+// ─── Twitter Post Routes ──────────────────────────────────────────────────────
+
+app.get('/api/twitter-posts', (req, res) => {
+  const { page } = req.query;
+  let result = [...twitterPosts].reverse();
+  if (page) {
+    result = result.filter(p => !p.pages || p.pages.length === 0 || p.pages.includes(page) || p.pages.includes('all'));
+  }
+  res.json(result);
+});
+
+app.post('/api/twitter-posts', adminAuth, (req, res) => {
+  const { url, label, pages } = req.body;
+  if (!url || !url.trim()) return res.status(400).json({ error: 'url is required' });
+  const tweetUrlPattern = /https?:\/\/(www\.)?(twitter|x)\.com\/\w+\/status\/\d+/;
+  if (!tweetUrlPattern.test(url.trim())) {
+    return res.status(400).json({ error: 'Please provide a valid Twitter/X post URL' });
+  }
+  const newPost = {
+    id: twitterPostIdCounter++,
+    url: url.trim(),
+    label: label ? label.trim() : '',
+    pages: Array.isArray(pages) ? pages : ['all'],
+    addedAt: new Date().toISOString(),
+  };
+  twitterPosts.push(newPost);
+  res.status(201).json(newPost);
+});
+
+app.delete('/api/twitter-posts/:id', adminAuth, (req, res) => {
+  const { id } = req.params;
+  const idx = twitterPosts.findIndex(p => p.id === parseInt(id));
+  if (idx === -1) return res.status(404).json({ error: 'Post not found' });
+  const removed = twitterPosts.splice(idx, 1)[0];
+  res.json({ message: 'Post removed', post: removed });
 });
 
 // Get categories for footer

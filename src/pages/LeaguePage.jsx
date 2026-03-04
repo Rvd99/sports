@@ -124,23 +124,23 @@ export default function LeaguePage({ league }) {
       <div className="league-page__content">
         <div className="league-page__content-inner">
           <div className="league-page__main-col">
-            {/* Top Stories */}
-            <TopStories news={news} articles={articles} loading={loading} />
-
-            {/* Position 2 — After Top Stories */}
-            {sectionsAt(2)}
-            
-            {/* Video Highlights */}
+            {/* Video Highlights — above Featured Stories */}
             <div className="league-page__section-gap">
               <VideoHighlights category={league} />
             </div>
 
-            {/* Position 3 — After Videos */}
+            {/* Position 2 — After Videos */}
+            {sectionsAt(2)}
+
+            {/* Top Stories */}
+            <TopStories news={news} articles={articles} loading={loading} />
+
+            {/* Position 3 — After Top Stories */}
             {sectionsAt(3)}
           </div>
           
           {/* Sidebar */}
-          <Sidebar scores={scores} news={news} articles={articles} loading={loading} />
+          <Sidebar scores={scores} news={news} articles={articles} loading={loading} page={pageKey} />
         </div>
       </div>
 

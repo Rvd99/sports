@@ -122,23 +122,23 @@ export default function SportPage() {
       <div className="sport-page__content">
         <div className="sport-page__content-inner">
           <div className="sport-page__main-col">
-            {/* News Section */}
-            <TopStories news={news} loading={loading} sectionTitle="Featured Stories" />
-
-            {/* Position 2 — After Top Stories */}
-            {sectionsAt(2)}
-            
-            {/* Videos Section */}
+            {/* Videos Section — above Featured Stories */}
             <div className="sport-page__section-gap">
               <VideoHighlights videos={videos} loading={loading} />
             </div>
 
-            {/* Position 3 — After Videos */}
+            {/* Position 2 — After Videos */}
+            {sectionsAt(2)}
+
+            {/* News Section */}
+            <TopStories news={news} loading={loading} sectionTitle="Featured Stories" />
+
+            {/* Position 3 — After Top Stories */}
             {sectionsAt(3)}
           </div>
           
           {/* Sidebar */}
-          <Sidebar scores={scores} news={news} loading={loading} />
+          <Sidebar scores={scores} news={news} loading={loading} page={sport} />
         </div>
       </div>
 
