@@ -7,20 +7,20 @@
 
 :root[data-theme="light"] {
   /* ── Background & Surface ───────────────────────────── */
-  --bg-primary:     #0c1425;        /* deep ocean navy page bg */
-  --bg-secondary:   #0f172a;        /* slightly lighter navy for panels */
-  --bg-tertiary:    #1e293b;        /* slate for subtle section bg */
-  --card-bg:        #1e293b;        /* slate card surfaces */
-  --card-hover:     #253349;        /* lighter slate on hover */
-  --input-bg:       #1e293b;
+  --bg-primary:     #FFFFFF;        /* pure white page background */
+  --bg-secondary:   #F8FAFC;        /* very light cool white for panels */
+  --bg-tertiary:    #F1F5F9;        /* subtle section backgrounds */
+  --card-bg:        #F1F5F9;        /* grey card surfaces */
+  --card-hover:     #E2E8F0;        /* slightly darker grey on hover */
+  --input-bg:       #F1F5F9;
 
   /* ── Text ───────────────────────────────────────────── */
-  --text-primary:   #f1f5f9;        /* bright off-white for body content */
-  --text-secondary: #e2e8f0;        /* near-white for headings/labels */
-  --text-tertiary:  #94a3b8;        /* cool gray for captions/meta */
+  --text-primary:   #0F172A;        /* deep slate for body content */
+  --text-secondary: #1E293B;        /* dark slate for headings/labels */
+  --text-tertiary:  #64748B;        /* mid-gray for captions/meta */
 
   /* ── Borders & Dividers ─────────────────────────────── */
-  --border-color:   #334155;        /* subtle cyan-tinted slate border */
+  --border-color:   #E2E8F0;        /* subtle light border */
 
   /* ── Navbar & Footer — kept from blue/orange scheme ─── */
   --navbar-bg:      #245b8a;
@@ -29,37 +29,37 @@
   --footer-bg:      #245b8a;
 
   /* ── Shadows ────────────────────────────────────────── */
-  --shadow:         rgba(0, 0, 0, 0.25);
-  --shadow-md:      rgba(0, 0, 0, 0.40);
-  --shadow-lg:      rgba(0, 0, 0, 0.60);
+  --shadow:         rgba(15, 23, 42, 0.06);
+  --shadow-md:      rgba(15, 23, 42, 0.10);
+  --shadow-lg:      rgba(15, 23, 42, 0.18);
 
   /* ── Primary Accent: Surf Cyan ──────────────────────── */
-  --primary:        #00d4ff;        /* vibrant surf turquoise */
-  --primary-hover:  #00b8e0;        /* slightly deeper cyan on hover */
-  --primary-glow:   rgba(0, 212, 255, 0.18);
+  --primary:        #0891b2;        /* deeper cyan readable on white */
+  --primary-hover:  #0e7490;
+  --primary-glow:   rgba(8, 145, 178, 0.15);
 
   /* ── Danger / Score highlight ───────────────────────── */
-  --red:            #f87171;        /* coral red-orange (no pure red) */
-  --red-dark:       #ef4444;
-  --red-glow:       rgba(248, 113, 113, 0.18);
+  --red:            #ef4444;        /* coral red */
+  --red-dark:       #dc2626;
+  --red-glow:       rgba(239, 68, 68, 0.15);
 
   /* ── Live / Success ─────────────────────────────────── */
-  --live-color:     #a3e635;        /* lime-aqua live indicator */
+  --live-color:     #65a30d;        /* darker lime, readable on white */
 
   /* ── Other Accents ──────────────────────────────────── */
-  --accent-gold:    #fbbf24;
-  --accent-blue:    #22d3ee;        /* electric cyan */
+  --accent-gold:    #d97706;
+  --accent-blue:    #0891b2;
   --bg-ticker:      #64748B;
 
   /* ── Design Tokens ──────────────────────────────────── */
-  --background-main:  #0c1425;
-  --header-bg:        #0f172a;
-  --menu-text:        #f1f5f9;
-  --body-text:        #f1f5f9;
-  --headings:         #f1f5f9;
-  --secondary-gray:   #94a3b8;
-  --border-light:     #334155;
-  --success-hover:    #00b8e0;
+  --background-main:  #FFFFFF;
+  --header-bg:        #F8FAFC;
+  --menu-text:        #0F172A;
+  --body-text:        #0F172A;
+  --headings:         #0F172A;
+  --secondary-gray:   #64748B;
+  --border-light:     #E2E8F0;
+  --success-hover:    #0e7490;
 }
 
 :root[data-theme="dark"] {
