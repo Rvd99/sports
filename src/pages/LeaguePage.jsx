@@ -105,18 +105,6 @@ export default function LeaguePage({ league }) {
       {/* Position 0 — Above hero */}
       {sectionsAt(0)}
 
-      {/* League page banner (non-homepage) */}
-      {league !== 'all' && (
-        <div className="league-banner" style={{ borderBottomColor: color }}>
-          <div className="league-banner__inner">
-            <span className="league-banner__dot" style={{ background: color }} />
-            <h1 className="league-banner__title" style={{ color }}>
-              {label}
-            </h1>
-            <span className="league-banner__sub">Latest News, Scores &amp; Highlights</span>
-          </div>
-        </div>
-      )}
 
       {/* Offline warning */}
       {error === 'backend-offline' && (

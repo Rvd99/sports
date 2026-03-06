@@ -21,10 +21,10 @@
   --border-color:   #E2E8F0;        /* subtle light borders */
 
   /* ── Navbar & Footer ────────────────────────────────── */
-  --navbar-bg:      #F9FBFD;        /* very light cool white header */
-  --navbar-text:    #0F172A;        /* deep slate menu links */
+  --navbar-bg:      #245b8a;        /* steel blue header */
+  --navbar-text:    #FFFFFF;         /* white text on blue header */
   --navbar-hover:   #10B981;        /* emerald green hover */
-  --footer-bg:      #F9FBFD;        /* matches header — light cool white */
+  --footer-bg:      #245b8a;        /* matches header */
 
   /* ── Shadows ────────────────────────────────────────── */
   --shadow:         rgba(15, 23, 42, 0.06);
@@ -44,7 +44,7 @@
   /* ── Other Accents ──────────────────────────────────── */
   --accent-gold:    #f59e0b;
   --accent-blue:    #2563eb;
-  --bg-ticker:      #0F172A;
+  --bg-ticker:      #64748B;
 
   /* ── Design Tokens ──────────────────────────────────── */
   --background-main:  #FFFFFF;
@@ -113,10 +113,10 @@
   --border-color:   #E2E8F0;
 
   /* ── Navbar & Footer ────────────────────────────────── */
-  --navbar-bg:      #F9FBFD;
-  --navbar-text:    #0F172A;
+  --navbar-bg:      #245b8a;
+  --navbar-text:    #FFFFFF;
   --navbar-hover:   #10B981;
-  --footer-bg:      #F9FBFD;
+  --footer-bg:      #245b8a;
 
   /* ── Shadows ────────────────────────────────────────── */
   --shadow:         rgba(15, 23, 42, 0.06);
@@ -136,7 +136,7 @@
   /* ── Other Accents ──────────────────────────────────── */
   --accent-gold:    #f59e0b;
   --accent-blue:    #2563eb;
-  --bg-ticker:      #0F172A;
+  --bg-ticker:      #64748B;        /* slate-gray ticker bar */
 
   /* ── Named Design Tokens ────────────────────────────── */
   --background-main:  #FFFFFF;
