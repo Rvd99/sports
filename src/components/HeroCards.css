@@ -24,18 +24,18 @@
 .hero-cards__heading-bar-line {
   display: inline-block;
   width: 4px;
-  height: 18px;
-  background: var(--red);
+  height: 22px;
+  background: var(--primary);
   border-radius: 2px;
   flex-shrink: 0;
 }
 
 .hero-cards__heading-title {
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-primary);
+  color: var(--headings);
   margin: 0;
   font-family: var(--font-label);
 }
@@ -190,6 +190,7 @@
   font-family: var(--font-heading);
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -229,6 +230,7 @@
   font-family: var(--font-heading);
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -348,6 +350,7 @@
   color: var(--text-primary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-family: var(--font-heading);
@@ -443,6 +446,7 @@
   .hero-card--large .hero-card__headline {
     font-size: 1.1rem;
     -webkit-line-clamp: 2;
+  line-clamp: 2;
   }
   
   .hero-card__text {
@@ -452,6 +456,7 @@
   .hero-card__headline--small {
     font-size: 0.85rem;
     -webkit-line-clamp: 2;
+  line-clamp: 2;
   }
   
   .hero-card__badge--small {

@@ -8,8 +8,8 @@
   --bg-primary:     #FFFFFF;        /* pure white page background */
   --bg-secondary:   #F9FBFD;        /* very light cool white for panels */
   --bg-tertiary:    #F1F5F9;        /* subtle section backgrounds */
-  --card-bg:        #FFFFFF;        /* card surfaces */
-  --card-hover:     #F0FDF9;        /* card hover — light mint tint */
+  --card-bg:        #F1F5F9;        /* light grey card surfaces */
+  --card-hover:     #E8EEF5;        /* slightly darker grey on hover */
   --input-bg:       #F1F5F9;
 
   /* ── Text ───────────────────────────────────────────── */
@@ -24,7 +24,7 @@
   --navbar-bg:      #F9FBFD;        /* very light cool white header */
   --navbar-text:    #0F172A;        /* deep slate menu links */
   --navbar-hover:   #10B981;        /* emerald green hover */
-  --footer-bg:      #0F172A;        /* deep slate footer */
+  --footer-bg:      #F9FBFD;        /* matches header — light cool white */
 
   /* ── Shadows ────────────────────────────────────────── */
   --shadow:         rgba(15, 23, 42, 0.06);
@@ -100,8 +100,8 @@
   --bg-primary:     #FFFFFF;
   --bg-secondary:   #F9FBFD;
   --bg-tertiary:    #F1F5F9;
-  --card-bg:        #FFFFFF;
-  --card-hover:     #F0FDF9;
+  --card-bg:        #F1F5F9;
+  --card-hover:     #E8EEF5;
   --input-bg:       #F1F5F9;
 
   /* ── Text ───────────────────────────────────────────── */
@@ -116,7 +116,7 @@
   --navbar-bg:      #F9FBFD;
   --navbar-text:    #0F172A;
   --navbar-hover:   #10B981;
-  --footer-bg:      #0F172A;
+  --footer-bg:      #F9FBFD;
 
   /* ── Shadows ────────────────────────────────────────── */
   --shadow:         rgba(15, 23, 42, 0.06);

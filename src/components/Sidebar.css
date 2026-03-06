@@ -26,7 +26,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--red);
+  background: var(--primary);
   animation: pulse 1.5s infinite;
   flex-shrink: 0;
 }
@@ -37,11 +37,12 @@
 }
 
 .sidebar__widget-title {
-  font-size: 0.82rem;
-  font-weight: 800;
+  font-size: 1.1rem;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-primary);
+  letter-spacing: 0.08em;
+  color: var(--headings);
+  font-family: var(--font-label);
 }
 
 /* Scores */

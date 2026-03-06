@@ -15,25 +15,26 @@
 .section-header__bar {
   display: block;
   width: 4px;
-  height: 22px;
-  background: var(--red);
+  height: 24px;
+  background: var(--primary);
   border-radius: 2px;
   flex-shrink: 0;
 }
 
 .section-header__title {
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-size: 1.25rem;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-primary);
+  letter-spacing: 0.08em;
+  color: var(--headings);
+  font-family: var(--font-label);
   flex: 1;
 }
 
 .section-header__link {
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--red);
+  color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: color 0.2s;
@@ -41,7 +42,7 @@
 }
 
 .section-header__link:hover {
-  color: var(--red);
+  color: var(--primary-hover);
 }
 
 /* Stories Grid */
