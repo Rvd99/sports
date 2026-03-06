@@ -25,7 +25,37 @@
   100% { background-position: -200% 0; }
 }
 
+.tweet-embed__loading-text {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-left: 10px;
+}
+
 .tweet-embed iframe {
   border-radius: 12px !important;
   max-width: 100% !important;
+}
+
+.tweet-embed--invalid,
+.tweet-embed--fallback {
+  padding: 10px 14px;
+}
+
+.tweet-embed__fallback-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: #1d9bf0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.tweet-embed__fallback-link:hover {
+  background: var(--card-hover);
 }

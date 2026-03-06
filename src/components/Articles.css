@@ -106,7 +106,7 @@
 }
 
 .article-card:hover .article-card__title {
-  color: #c8102e;
+  color: var(--red);
 }
 
 .article-card__excerpt {
@@ -133,16 +133,16 @@
 }
 
 .article-card__author {
-  color: #e2e8f0;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .article-card__dot {
-  color: #475569;
+  color: var(--text-tertiary);
 }
 
 .article-card__time {
-  color: #64748b;
+  color: var(--text-tertiary);
 }
 
 @media (max-width: 768px) {

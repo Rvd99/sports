@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { fetchArticle } from '../api';
+import CommentsSection from '../components/CommentsSection';
 import './ArticleDetail.css';
 
 export default function ArticleDetail() {
@@ -126,6 +127,8 @@ export default function ArticleDetail() {
             </div>
           )}
         </article>
+
+        <CommentsSection articleSlug={slug} />
 
         <div className="article-detail__footer">
           <Link to="/" className="article-detail__back-btn">

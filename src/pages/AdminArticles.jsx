@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchArticles, deleteArticle, updateArticle } from '../api';
+import { fetchArticles, deleteArticle, updateArticle, deleteComment, deleteVideo } from '../api';
 import { useAuth } from '../contexts/AuthContext';
 import './AdminArticles.css';
 
 export default function AdminArticles() {
   const { user, canCreateContent } = useAuth();
+  const [activeTab, setActiveTab] = useState('articles');
+
+  // Articles state
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -15,9 +18,93 @@ export default function AdminArticles() {
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
 
+  // Videos state
+  const [videos, setVideos] = useState([]);
+  const [videosLoading, setVideosLoading] = useState(false);
+  const [videosError, setVideosError] = useState('');
+  const [deletingVideo, setDeletingVideo] = useState(null);
+
+  // Comments state
+  const [comments, setComments] = useState([]);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentsError, setCommentsError] = useState('');
+  const [deletingComment, setDeletingComment] = useState(null);
+
   useEffect(() => {
     loadArticles();
   }, []);
+
+  const loadVideos = async () => {
+    if (videosLoading) return;
+    setVideosLoading(true);
+    setVideosError('');
+    try {
+      const res = await fetch('http://localhost:5001/api/videos');
+      const data = await res.json();
+      setVideos(data.filter(v => v.categories && Array.isArray(v.categories)));
+    } catch {
+      setVideosError('Failed to load videos');
+    } finally {
+      setVideosLoading(false);
+    }
+  };
+
+  const loadComments = async () => {
+    if (commentsLoading) return;
+    setCommentsLoading(true);
+    setCommentsError('');
+    try {
+      const res = await fetch('http://localhost:5001/api/comments/all', {
+        headers: { 'x-admin-token': 'admin-secret-token' },
+      });
+      if (!res.ok) throw new Error('Failed');
+      const data = await res.json();
+      setComments(data);
+    } catch {
+      setCommentsError('Failed to load comments');
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'videos' && videos.length === 0) loadVideos();
+    if (tab === 'comments' && comments.length === 0) loadComments();
+  };
+
+  const handleDeleteVideo = async (id, title) => {
+    if (!window.confirm(`Delete video "${title}"?`)) return;
+    setDeletingVideo(id);
+    setVideosError('');
+    try {
+      const userRole = user?.role || 'admin';
+      const res = await fetch(`http://localhost:5001/api/videos/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-token': 'admin-secret-token', 'x-user-role': userRole },
+      });
+      if (!res.ok) throw new Error((await res.json()).error || 'Failed');
+      setVideos(prev => prev.filter(v => v.id !== id));
+    } catch (err) {
+      setVideosError(err.message);
+    } finally {
+      setDeletingVideo(null);
+    }
+  };
+
+  const handleDeleteComment = async (id) => {
+    if (!window.confirm('Delete this comment?')) return;
+    setDeletingComment(id);
+    setCommentsError('');
+    try {
+      await deleteComment(id);
+      setComments(prev => prev.filter(c => c.id !== id));
+    } catch (err) {
+      setCommentsError(err.message);
+    } finally {
+      setDeletingComment(null);
+    }
+  };
 
   const loadArticles = async () => {
     try {
@@ -89,44 +176,53 @@ export default function AdminArticles() {
     <div className="admin-articles">
       <div className="admin-articles__header">
         <div className="admin-articles__header-content">
-          <h1 className="admin-articles__title">📚 Manage Articles</h1>
-          <p className="admin-articles__subtitle">View, edit, and delete published articles</p>
+          <h1 className="admin-articles__title">📚 Admin Dashboard</h1>
+          <p className="admin-articles__subtitle">Manage articles, videos, and comments</p>
         </div>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           <Link to="/admin/categories" className="admin-articles__create-btn" style={{ background: '#2196f3' }}>
-            🏷️ Manage Categories
-          </Link>
-          <Link to="/admin/videos" className="admin-articles__create-btn" style={{ background: '#9c27b0' }}>
-            🎥 Manage Videos
+            🏷️ Categories
           </Link>
           <Link to="/admin/sections" className="admin-articles__create-btn" style={{ background: '#0d9488' }}>
-            📋 Manage Sections
+            📋 Sections
+          </Link>
+          <Link to="/admin/add-video" className="admin-articles__create-btn" style={{ background: '#9c27b0' }}>
+            🎥 Add Video
           </Link>
           <Link to="/admin/create-article" className="admin-articles__create-btn">
-            ➕ Create New Article
+            ➕ Create Article
           </Link>
         </div>
       </div>
 
-      {error && (
-        <div className="admin-articles__error">
-          ⚠️ {error}
-        </div>
-      )}
+      {/* Tabs */}
+      <div className="admin-articles__tabs">
+        <button className={`admin-articles__tab${activeTab === 'articles' ? ' admin-articles__tab--active' : ''}`} onClick={() => handleTabChange('articles')}>
+          📝 Articles <span className="admin-articles__tab-count">{articles.length}</span>
+        </button>
+        <button className={`admin-articles__tab${activeTab === 'videos' ? ' admin-articles__tab--active' : ''}`} onClick={() => handleTabChange('videos')}>
+          🎥 Videos <span className="admin-articles__tab-count">{videos.length}</span>
+        </button>
+        <button className={`admin-articles__tab${activeTab === 'comments' ? ' admin-articles__tab--active' : ''}`} onClick={() => handleTabChange('comments')}>
+          💬 Comments <span className="admin-articles__tab-count">{comments.length}</span>
+        </button>
+      </div>
 
-      {loading ? (
-        <div className="admin-articles__loading">
-          <div className="admin-articles__spinner"></div>
-          <p>Loading articles...</p>
-        </div>
-      ) : articles.length === 0 ? (
-        <div className="admin-articles__empty">
-          <p>No articles found. Create your first article!</p>
-          <Link to="/admin/create-article" className="admin-articles__create-btn">
-            Create Article
-          </Link>
-        </div>
-      ) : (
+      {/* ── Articles Tab ── */}
+      {activeTab === 'articles' && (
+        <>
+          {error && <div className="admin-articles__error">⚠️ {error}</div>}
+          {loading ? (
+            <div className="admin-articles__loading">
+              <div className="admin-articles__spinner"></div>
+              <p>Loading articles...</p>
+            </div>
+          ) : articles.length === 0 ? (
+            <div className="admin-articles__empty">
+              <p>No articles found. Create your first article!</p>
+              <Link to="/admin/create-article" className="admin-articles__create-btn">Create Article</Link>
+            </div>
+          ) : (
         <div className="admin-articles__table-container">
           <table className="admin-articles__table">
             <thead>
@@ -217,6 +313,114 @@ export default function AdminArticles() {
               ))}
             </tbody>
           </table>
+        </div>
+          )}
+        </>
+      )}
+
+      {/* ── Videos Tab ── */}
+      {activeTab === 'videos' && (
+        <div className="admin-articles__tab-panel">
+          {videosError && <div className="admin-articles__error">⚠️ {videosError}</div>}
+          {videosLoading ? (
+            <div className="admin-articles__loading"><div className="admin-articles__spinner" /><p>Loading videos…</p></div>
+          ) : videos.length === 0 ? (
+            <div className="admin-articles__empty">
+              <p>No uploaded videos found.</p>
+              <Link to="/admin/add-video" className="admin-articles__create-btn">🎥 Add Video</Link>
+            </div>
+          ) : (
+            <div className="admin-articles__card-grid">
+              {videos.map(v => (
+                <div key={v.id} className="admin-articles__media-card">
+                  {v.thumbnailUrl && (
+                    <div className="admin-articles__media-thumb">
+                      <img src={v.thumbnailUrl} alt={v.title} />
+                      {v.duration && <span className="admin-articles__media-duration">{v.duration}</span>}
+                    </div>
+                  )}
+                  <div className="admin-articles__media-body">
+                    <h4 className="admin-articles__media-title">{v.title}</h4>
+                    <div className="admin-articles__media-meta">
+                      <span>👤 {v.author || 'Admin'}</span>
+                      <span>📅 {v.createdAt ? new Date(v.createdAt).toLocaleDateString() : 'N/A'}</span>
+                      {v.views && <span>👁️ {v.views}</span>}
+                    </div>
+                    {v.categories && (
+                      <div className="admin-articles__media-tags">
+                        {v.categories.map(c => <span key={c} className="admin-articles__badge">{c}</span>)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="admin-articles__media-actions">
+                    {v.videoUrl && (
+                      <a href={v.videoUrl} target="_blank" rel="noopener noreferrer" className="admin-articles__action-btn admin-articles__action-btn--view" title="View">▶️</a>
+                    )}
+                    <button
+                      onClick={() => handleDeleteVideo(v.id, v.title)}
+                      disabled={deletingVideo === v.id}
+                      className="admin-articles__action-btn admin-articles__action-btn--delete"
+                      title="Delete Video"
+                    >
+                      {deletingVideo === v.id ? '⏳' : '🗑️'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Comments Tab ── */}
+      {activeTab === 'comments' && (
+        <div className="admin-articles__tab-panel">
+          {commentsError && <div className="admin-articles__error">⚠️ {commentsError}</div>}
+          {commentsLoading ? (
+            <div className="admin-articles__loading"><div className="admin-articles__spinner" /><p>Loading comments…</p></div>
+          ) : comments.length === 0 ? (
+            <div className="admin-articles__empty"><p>No comments found.</p></div>
+          ) : (
+            <div className="admin-articles__table-container">
+              <table className="admin-articles__table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Comment</th>
+                    <th>Article</th>
+                    <th>Date</th>
+                    <th>Likes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comments.map(c => (
+                    <tr key={c.id}>
+                      <td><strong style={{ color: 'var(--text-primary)' }}>{c.username || 'Anonymous'}</strong></td>
+                      <td style={{ maxWidth: 280 }}>
+                        <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                          {c.text && c.text.length > 100 ? c.text.slice(0, 100) + '…' : c.text}
+                        </span>
+                      </td>
+                      <td><span className="admin-articles__category">{c.articleSlug || '—'}</span></td>
+                      <td><span className="admin-articles__date">{c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '—'}</span></td>
+                      <td><span className="admin-articles__views">{c.likes || 0}</span></td>
+                      <td>
+                        <button
+                          onClick={() => handleDeleteComment(c.id)}
+                          disabled={deletingComment === c.id}
+                          className="admin-articles__action-btn admin-articles__action-btn--delete"
+                          title="Delete Comment"
+                        >
+                          {deletingComment === c.id ? '⏳' : '🗑️'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 

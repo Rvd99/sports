@@ -24,11 +24,11 @@
 }
 
 .admin-page__breadcrumb-link:hover {
-  color: #ff3355;
+  color: var(--red);
 }
 
 .admin-page__breadcrumb-sep {
-  color: #333;
+  color: var(--border);
 }
 
 .admin-page__header {
@@ -49,7 +49,7 @@
 .admin-page__title {
   font-size: 1.6rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 4px;
 }
 
@@ -161,13 +161,13 @@
 .admin-form__input,
 .admin-form__textarea,
 .admin-form__select {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 11px 14px;
-  color: #fff;
+  color: var(--text-primary);
   font-size: 0.9rem;
-  font-family: var(--font);
+  font-family: var(--font-ui);
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
@@ -182,7 +182,7 @@
 
 .admin-form__input::placeholder,
 .admin-form__textarea::placeholder {
-  color: #444;
+  color: var(--text-tertiary);
 }
 
 .admin-form__textarea {
@@ -204,7 +204,8 @@
 }
 
 .admin-form__select option {
-  background: #1a1a1a;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .admin-form__hint {
@@ -219,8 +220,8 @@
 }
 
 .admin-form__panel {
-  background: #1a1a1a;
-  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 20px;
   display: flex;

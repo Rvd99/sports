@@ -1,26 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchTwitterPosts } from '../api';
 import TweetEmbed from './TweetEmbed';
+import PollWidget from './PollWidget';
 import './Sidebar.css';
 
 export default function Sidebar({ scores = [], news = [], articles = [], loading = false, page = '' }) {
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
   const [twitterPosts, setTwitterPosts] = useState([]);
 
   useEffect(() => {
     fetchTwitterPosts(page || undefined).then(setTwitterPosts).catch(() => {});
   }, [page]);
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email.trim()) setSubscribed(true);
-  };
-
   return (
     <aside className="sidebar">
-      {/* Trending Now — Twitter Feed */}
-      <div className="sidebar__widget sidebar__widget--twitter">
+
+      {/* Polls — above Twitter */}
+      <PollWidget position="above-twitter" />
+
+      {/* X / Twitter Trending Now — fills the rest of sidebar */}
+      <div className="sidebar__widget sidebar__widget--twitter sidebar__widget--twitter-full">
         <div className="sidebar__widget-header">
           <span className="sidebar__twitter-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -35,7 +33,7 @@ export default function Sidebar({ scores = [], news = [], articles = [], loading
             <p>No posts yet. Add Twitter/X links in <strong>Manage Sections</strong>.</p>
           </div>
         ) : (
-          <div className="sidebar__twitter-feed">
+          <div className="sidebar__twitter-feed sidebar__twitter-feed--infinite">
             {twitterPosts.map(post => (
               <div key={post.id} className="sidebar__tweet-wrap">
                 <TweetEmbed url={post.url} />
@@ -45,44 +43,9 @@ export default function Sidebar({ scores = [], news = [], articles = [], loading
         )}
       </div>
 
-      {/* Newsletter */}
-      <div className="sidebar__widget sidebar__widget--newsletter">
-        <div className="sidebar__newsletter-icon">✉</div>
-        <h3 className="sidebar__newsletter-title">Stay in the Game</h3>
-        <p className="sidebar__newsletter-desc">
-          Get the latest sports news, scores and highlights delivered to your inbox every morning.
-        </p>
-        {subscribed ? (
-          <div className="sidebar__newsletter-success">
-            ✓ You&apos;re subscribed! Check your inbox.
-          </div>
-        ) : (
-          <form className="sidebar__newsletter-form" onSubmit={handleSubscribe}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="sidebar__newsletter-input"
-              required
-            />
-            <button type="submit" className="sidebar__newsletter-btn">
-              Subscribe
-            </button>
-          </form>
-        )}
-      </div>
+      {/* Polls — below Twitter */}
+      <PollWidget position="below-twitter" />
 
-      {/* Ad Block */}
-      <div className="sidebar__ad">
-        <span className="sidebar__ad-label">Advertisement</span>
-        <div className="sidebar__ad-block">
-          <div className="sidebar__ad-inner">
-            <span className="sidebar__ad-text">300 × 250</span>
-            <span className="sidebar__ad-sub">Your Ad Here</span>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }

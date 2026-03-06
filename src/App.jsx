@@ -22,6 +22,9 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Accessibility from './pages/Accessibility';
 import Cookies from './pages/Cookies';
+import UserProfile from './pages/UserProfile';
+import ForumPage from './pages/ForumPage';
+import ThreadPage from './pages/ThreadPage';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
@@ -67,6 +70,10 @@ function App() {
               <Route path="/admin/add-video" element={<AddVideo />} />
               <Route path="/admin/sections" element={<ManageSections />} />
               <Route path="/article/:slug" element={<ArticleDetail />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/forums" element={<ForumPage />} />
+              <Route path="/forums/thread/:threadId" element={<ThreadPage />} />
+              <Route path="/forums/:leagueId" element={<ForumPage />} />
               
               {/* Static Pages */}
               <Route path="/about" element={<About />} />

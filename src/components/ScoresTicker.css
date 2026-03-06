@@ -176,7 +176,7 @@
 }
 
 .ticker__status--upcoming {
-  color: #888;
+  color: var(--text-tertiary);
 }
 
 .ticker__live-dot {

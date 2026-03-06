@@ -250,7 +250,7 @@
   padding: 0.875rem 2rem;
   font-size: 1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #fff;
   background: var(--red);
   border: none;
   border-radius: 6px;
@@ -259,9 +259,9 @@
 }
 
 .add-video__submit:hover:not(:disabled) {
-  background: #c8102e;
+  background: var(--red-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(218, 2, 14, 0.3);
+  box-shadow: 0 4px 12px rgba(229, 25, 42, 0.3);
 }
 
 .add-video__submit:disabled {

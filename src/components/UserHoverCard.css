@@ -1,0 +1,192 @@
+/* ── User Hover Card — Discord style ─────────────────────────────────────── */
+
+.uhc-trigger {
+  position: relative;
+  display: inline;
+  cursor: pointer;
+}
+
+/* Card shell — position:fixed + z-index set inline by portal */
+.uhc-card {
+  width: 280px;
+  background: var(--card-bg, #1e2535);
+  border: 1px solid var(--border-color, rgba(255,255,255,0.1));
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  pointer-events: auto;
+  animation: uhc-pop 0.15s ease;
+}
+
+@keyframes uhc-pop {
+  from { opacity: 0; transform: scale(0.95) translateY(4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.uhc-card--flip {
+  animation: uhc-pop-up 0.15s ease;
+}
+
+@keyframes uhc-pop-up {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Loading state */
+.uhc-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+}
+
+.uhc-spinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--border-color);
+  border-top-color: var(--red);
+  border-radius: 50%;
+  animation: uhc-spin 0.7s linear infinite;
+}
+
+.uhc-loading-text {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+}
+
+@keyframes uhc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Banner */
+.uhc-banner {
+  height: 64px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Avatar positioned over banner */
+.uhc-avatar-wrap {
+  margin: -28px 0 0 14px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 4px solid var(--card-bg);
+  overflow: hidden;
+  background: var(--card-bg);
+  flex-shrink: 0;
+}
+
+.uhc-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #fff;
+  font-family: var(--font-heading);
+  user-select: none;
+}
+
+.uhc-avatar--img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Body */
+.uhc-body {
+  padding: 6px 14px 14px;
+}
+
+.uhc-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.uhc-username {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
+
+.uhc-role-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.uhc-role-badge--admin  { background: rgba(229,25,42,0.15); color: var(--red); border: 1px solid rgba(229,25,42,0.3); }
+.uhc-role-badge--editor { background: rgba(59,130,246,0.15); color: var(--accent-blue); border: 1px solid rgba(59,130,246,0.3); }
+
+/* Prediction pill */
+.uhc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
+}
+
+.uhc-pill--high { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+.uhc-pill--mid  { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+.uhc-pill--low  { background: rgba(229,25,42,0.10);  color: var(--red); border: 1px solid rgba(229,25,42,0.2); }
+.uhc-pill--none { background: var(--bg-secondary);   color: var(--text-tertiary); border: 1px solid var(--border-color); }
+
+/* Stats row */
+.uhc-stats-row {
+  display: flex;
+  align-items: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.uhc-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7px 4px;
+  gap: 1px;
+}
+
+.uhc-stat-icon { font-size: 0.85rem; line-height: 1; }
+.uhc-stat-num  { font-size: 0.82rem; font-weight: 800; color: var(--text-primary); line-height: 1.2; }
+.uhc-stat-lbl  { font-size: 0.55rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.uhc-stat-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border-color);
+  flex-shrink: 0;
+}
+
+/* Fallback */
+.uhc-fallback {
+  overflow: hidden;
+}
+
+.uhc-fallback .uhc-body {
+  padding-top: 8px;
+}

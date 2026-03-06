@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createArticle, fetchSections } from '../api';
+import { createArticle, fetchSections, createSection } from '../api';
 import './CreateArticle.css';
 
 const CATEGORIES = [
@@ -52,6 +52,8 @@ export default function CreateArticle() {
     isFeaturedStory: false,
     isTrending: false,
     isLatestNews: true,
+    isMustSee: false,
+    isFanForums: false,
     showOnHomepage: false,
     sectionIds: [],
   });
@@ -75,7 +77,6 @@ export default function CreateArticle() {
     if (!title) return;
     setAddingSec(true);
     try {
-      const { createSection } = await import('../api');
       const created = await createSection({ title });
       setSections(prev => [...prev, created]);
       setForm(prev => ({ ...prev, sectionIds: [...prev.sectionIds, created.id] }));
@@ -213,6 +214,8 @@ export default function CreateArticle() {
       formData.append('isFeaturedStory', form.isFeaturedStory);
       formData.append('isTrending', form.isTrending);
       formData.append('isLatestNews', form.isLatestNews);
+      formData.append('isMustSee', form.isMustSee);
+      formData.append('isFanForums', form.isFanForums);
       formData.append('showOnHomepage', form.showOnHomepage);
       formData.append('sectionIds', JSON.stringify(form.sectionIds));
       
@@ -744,6 +747,34 @@ export default function CreateArticle() {
                     <div className="article-form__placement-info">
                       <span className="article-form__placement-name">📰 Latest News</span>
                       <span className="article-form__placement-desc">Latest news feed (default)</span>
+                    </div>
+                  </label>
+
+                  <label className="article-form__placement-label">
+                    <input
+                      type="checkbox"
+                      name="isMustSee"
+                      checked={form.isMustSee}
+                      onChange={handleChange}
+                      className="article-form__checkbox"
+                    />
+                    <div className="article-form__placement-info">
+                      <span className="article-form__placement-name">👁️ Must See</span>
+                      <span className="article-form__placement-desc">Must See section at bottom of homepage</span>
+                    </div>
+                  </label>
+
+                  <label className="article-form__placement-label">
+                    <input
+                      type="checkbox"
+                      name="isFanForums"
+                      checked={form.isFanForums}
+                      onChange={handleChange}
+                      className="article-form__checkbox"
+                    />
+                    <div className="article-form__placement-info">
+                      <span className="article-form__placement-name">💬 Fan Forums</span>
+                      <span className="article-form__placement-desc">Featured in Fan Forums section</span>
                     </div>
                   </label>
 

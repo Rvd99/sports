@@ -158,8 +158,8 @@
 
 .manage-categories__save-btn {
   padding: 0.75rem 1.5rem;
-  background: #4caf50;
-  color: white;
+  background: #22c55e;
+  color: #fff;
   border: none;
   border-radius: 6px;
   font-size: 0.9375rem;
@@ -268,23 +268,24 @@
 }
 
 .manage-categories__action-btn--edit {
-  background: #2196f3;
-  color: white;
+  background: var(--accent-blue);
+  color: #fff;
 }
 
 .manage-categories__action-btn--delete {
-  background: #f44336;
-  color: white;
+  background: var(--red);
+  color: #fff;
 }
 
 .manage-categories__action-btn--save {
-  background: #4caf50;
-  color: white;
+  background: #22c55e;
+  color: #fff;
 }
 
 .manage-categories__action-btn--cancel {
-  background: #757575;
-  color: white;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .manage-categories__edit-input {

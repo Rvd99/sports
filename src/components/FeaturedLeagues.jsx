@@ -1,16 +1,19 @@
+import { Link } from 'react-router-dom';
 import './FeaturedLeagues.css';
 
 const LEAGUES = [
-  { id: 1, name: 'NHL', abbr: 'NHL', color: '#0066cc', bg: '#001a40', icon: '🏒', desc: 'National Hockey League' },
-  { id: 2, name: 'NBA', abbr: 'NBA', color: '#c8102e', bg: '#2d0008', icon: '🏀', desc: 'National Basketball Assoc.' },
-  { id: 3, name: 'MLB', abbr: 'MLB', color: '#002d72', bg: '#000d1f', icon: '⚾', desc: 'Major League Baseball' },
-  { id: 4, name: 'CFL', abbr: 'CFL', color: '#e03a3e', bg: '#2d0002', icon: '🏈', desc: 'Canadian Football League' },
-  { id: 5, name: 'MLS', abbr: 'MLS', color: '#00a651', bg: '#001a0d', icon: '⚽', desc: 'Major League Soccer' },
-  { id: 6, name: 'PGA', abbr: 'GOLF', color: '#2e7d32', bg: '#001500', icon: '⛳', desc: 'PGA Tour' },
-  { id: 7, name: 'ATP', abbr: 'TENNIS', color: '#f5a623', bg: '#1a0e00', icon: '🎾', desc: 'ATP / WTA Tour' },
-  { id: 8, name: 'UFC', abbr: 'UFC', color: '#d4af37', bg: '#1a1500', icon: '🥊', desc: 'UFC / MMA' },
-  { id: 9, name: 'F1', abbr: 'F1', color: '#e8002d', bg: '#2d0000', icon: '🏎', desc: 'Formula 1' },
-  { id: 10, name: 'Olympics', abbr: 'OLY', color: '#0081c8', bg: '#001a2d', icon: '🏅', desc: '2026 Olympics' },
+  { id: 1, name: 'NHL',      abbr: 'NHL',    color: '#0066cc', bg: '#001a40', icon: '🏒', desc: 'National Hockey League',    slug: 'nhl' },
+  { id: 2, name: 'NBA',      abbr: 'NBA',    color: '#c8102e', bg: '#2d0008', icon: '🏀', desc: 'National Basketball Assoc.', slug: 'nba' },
+  { id: 3, name: 'MLB',      abbr: 'MLB',    color: '#002d72', bg: '#000d1f', icon: '⚾', desc: 'Major League Baseball',      slug: 'mlb' },
+  { id: 4, name: 'CFL',      abbr: 'CFL',    color: '#e03a3e', bg: '#2d0002', icon: '🏈', desc: 'Canadian Football League',   slug: 'cfl' },
+  { id: 5, name: 'Soccer',   abbr: 'SOCCER', color: '#00a651', bg: '#001a0d', icon: '⚽', desc: 'MLS & International',        slug: 'soccer' },
+  { id: 6, name: 'Golf',     abbr: 'GOLF',   color: '#2e7d32', bg: '#001500', icon: '⛳', desc: 'PGA Tour',                   slug: 'golf' },
+  { id: 7, name: 'Tennis',   abbr: 'TENNIS', color: '#f5a623', bg: '#1a0e00', icon: '🎾', desc: 'ATP / WTA Tour',             slug: 'tennis' },
+  { id: 8, name: 'UFC',      abbr: 'UFC',    color: '#d4af37', bg: '#1a1500', icon: '🥊', desc: 'UFC / MMA',                  slug: 'ufc' },
+  { id: 9, name: 'F1',       abbr: 'F1',     color: '#e8002d', bg: '#2d0000', icon: '🏎', desc: 'Formula 1',                  slug: 'f1' },
+  { id: 10, name: 'Cricket', abbr: 'CRICKET',color: '#00a8cc', bg: '#001a22', icon: '🏏', desc: 'International Cricket',      slug: 'cricket' },
+  { id: 11, name: 'Olympics',abbr: 'OLY',    color: '#0081c8', bg: '#001a2d', icon: '🏅', desc: '2026 Olympics',              slug: 'olympics' },
+  { id: 12, name: 'General', abbr: 'GENERAL',color: '#7c3aed', bg: '#1a0d2d', icon: '💬', desc: 'All Sports Talk',            slug: 'general' },
 ];
 
 const MUST_SEE = [
@@ -55,18 +58,19 @@ const MUST_SEE = [
 export default function FeaturedLeagues() {
   return (
     <div className="featured-leagues-section">
-      {/* Featured Leagues Scroll */}
+      {/* Fan Forums / Browse by League */}
       <div className="section-header">
         <span className="section-header__bar" />
-        <h2 className="section-header__title">Browse by League</h2>
+        <h2 className="section-header__title">Fan Forums</h2>
+        <Link to="/forums" className="section-header__link">All Forums →</Link>
       </div>
 
       <div className="leagues-scroll-wrap">
         <div className="leagues-scroll">
           {LEAGUES.map((league) => (
-            <a
+            <Link
               key={league.id}
-              href="#"
+              to={`/forums/${league.slug}`}
               className="league-pill"
               style={{ '--league-color': league.color, '--league-bg': league.bg }}
             >
@@ -75,45 +79,11 @@ export default function FeaturedLeagues() {
                 <span className="league-pill__abbr">{league.abbr}</span>
                 <span className="league-pill__desc">{league.desc}</span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
 
-      {/* Must See Section */}
-      <div className="section-header" style={{ marginTop: '40px' }}>
-        <span className="section-header__bar" />
-        <h2 className="section-header__title">Must See</h2>
-        <a href="#" className="section-header__link">View All →</a>
-      </div>
-
-      <div className="must-see-grid">
-        {MUST_SEE.map((item) => (
-          <a key={item.id} href="#" className="must-see-card">
-            <div className="must-see-card__img-wrap">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="must-see-card__img"
-                loading="lazy"
-              />
-              <span
-                className="must-see-card__label"
-                style={{ background: item.labelColor }}
-              >
-                {item.label}
-              </span>
-            </div>
-            <div className="must-see-card__body">
-              <h4 className="must-see-card__title">{item.title}</h4>
-              <div className="must-see-card__meta">
-                <span className="must-see-card__league">{item.league}</span>
-                <span className="must-see-card__time">{item.time}</span>
-              </div>
-            </div>
-          </a>
-        ))}
-      </div>
     </div>
   );
 }

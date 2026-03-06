@@ -8,9 +8,10 @@
 .sidebar__widget {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 16px;
-  box-shadow: 0 1px 3px var(--shadow);
+  box-shadow: 0 2px 12px var(--shadow);
+  overflow: hidden;
 }
 
 .sidebar__widget-header {
@@ -55,13 +56,13 @@
   align-items: center;
   gap: 8px;
   padding: 10px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--border-color);
   text-decoration: none;
   transition: background 0.15s;
 }
 
 .sb-game:hover {
-  background: rgba(255,255,255,0.04);
+  background: var(--card-hover);
 }
 
 .sb-game--live {
@@ -167,7 +168,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--border-color);
   text-decoration: none;
   transition: background 0.15s;
 }
@@ -177,7 +178,7 @@
 }
 
 .trending-item:hover {
-  background: rgba(255,255,255,0.04);
+  background: var(--card-hover);
 }
 
 .trending-item__rank {
@@ -225,6 +226,10 @@
   overflow: hidden;
 }
 
+.sidebar__widget--twitter-full {
+  flex: 1;
+}
+
 .sidebar__widget--twitter .sidebar__widget-header {
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-color);
@@ -241,11 +246,13 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  max-height: 700px;
-  overflow-y: auto;
+  overflow-y: visible;
   padding: 8px 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border-color) transparent;
+}
+
+.sidebar__twitter-feed--infinite {
+  overflow-y: visible;
+  max-height: none;
 }
 
 .sidebar__twitter-feed::-webkit-scrollbar {
@@ -277,8 +284,8 @@
 /* Newsletter */
 .sidebar__widget--newsletter {
   padding: 20px 18px;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  border-color: #2a2a4a;
+  background: linear-gradient(135deg, #1a2740 0%, #0f1d3a 100%);
+  border-color: rgba(255,255,255,0.1);
   text-align: center;
 }
 
@@ -290,13 +297,13 @@
 .sidebar__newsletter-title {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--navbar-text);
   margin-bottom: 8px;
 }
 
 .sidebar__newsletter-desc {
   font-size: 0.78rem;
-  color: #8888aa;
+  color: var(--text-tertiary);
   line-height: 1.5;
   margin-bottom: 16px;
 }
@@ -310,11 +317,11 @@
 .sidebar__newsletter-input {
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 4px;
+  border-radius: 6px;
   padding: 10px 12px;
-  color: #fff;
+  color: var(--navbar-text);
   font-size: 0.82rem;
-  font-family: var(--font);
+  font-family: var(--font-ui);
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
@@ -325,7 +332,7 @@
 }
 
 .sidebar__newsletter-input::placeholder {
-  color: #666;
+  color: rgba(232,237,245,0.35);
 }
 
 .sidebar__newsletter-btn {
@@ -364,16 +371,16 @@
 
 .sidebar__ad-label {
   font-size: 0.6rem;
-  color: var(--text-dim);
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-align: center;
 }
 
 .sidebar__ad-block {
-  background: var(--bg-card);
-  border: 1px dashed #333;
-  border-radius: 4px;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
   height: 250px;
   display: flex;
   align-items: center;
@@ -394,10 +401,10 @@
 .sidebar__ad-text {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-tertiary);
 }
 
 .sidebar__ad-sub {
   font-size: 0.7rem;
-  color: #2a2a2a;
+  color: var(--text-tertiary);
 }

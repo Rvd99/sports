@@ -244,6 +244,16 @@ export async function fetchArticle(identifier) {
   return res.json();
 }
 
+export async function fetchArticlesByPlacement(flag, { limit, category } = {}) {
+  const params = new URLSearchParams();
+  if (limit) params.append('limit', limit);
+  if (category && category !== 'all') params.append('category', category);
+  const url = `${BASE}/articles/placement/${flag}${params.toString() ? `?${params.toString()}` : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Failed to fetch placement articles');
+  return res.json();
+}
+
 export async function createArticle(formData) {
   const userRole = getUserRole();
   const headers = {
@@ -420,5 +430,295 @@ export async function deleteTwitterPost(id) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.error || 'Failed to delete twitter post');
   }
+  return res.json();
+}
+
+// ─── Auth ──────────────────────────────────────────────────────────────────────
+
+export async function registerUser(data) {
+  const res = await fetch(`${BASE}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Registration failed');
+  return json;
+}
+
+export async function loginUser(email, password) {
+  const res = await fetch(`${BASE}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Login failed');
+  return json;
+}
+
+// ─── Polls ─────────────────────────────────────────────────────────────────────
+
+export async function fetchPolls(params = {}) {
+  const q = new URLSearchParams();
+  if (params.sidebar) q.set('sidebar', 'true');
+  if (params.active) q.set('active', 'true');
+  const res = await fetch(`${BASE}/polls?${q}`);
+  if (!res.ok) throw new Error('Failed to fetch polls');
+  return res.json();
+}
+
+export async function createPoll(data) {
+  const res = await fetch(`${BASE}/polls`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to create poll');
+  return json;
+}
+
+export async function updatePoll(id, data) {
+  const res = await fetch(`${BASE}/polls/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to update poll');
+  return json;
+}
+
+export async function deleteVideo(id) {
+  const userRole = getUserRole();
+  const res = await fetch(`${BASE}/videos/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'x-admin-token': ADMIN_TOKEN,
+      ...(userRole ? { 'x-user-role': userRole } : {}),
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete video');
+  }
+  return res.json();
+}
+
+export async function deletePoll(id) {
+  const res = await fetch(`${BASE}/polls/${id}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-token': ADMIN_TOKEN },
+  });
+  if (!res.ok) throw new Error('Failed to delete poll');
+  return res.json();
+}
+
+export async function votePoll(pollId, optionId, userId) {
+  const res = await fetch(`${BASE}/polls/${pollId}/vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ optionId, userId }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Vote failed');
+  return json;
+}
+
+export async function getMyVote(pollId, userId) {
+  const res = await fetch(`${BASE}/polls/${pollId}/myvote?userId=${userId}`);
+  if (!res.ok) return { userVote: null };
+  return res.json();
+}
+
+// ─── Comments ──────────────────────────────────────────────────────────────────
+
+export async function fetchComments(slug) {
+  const res = await fetch(`${BASE}/comments?slug=${encodeURIComponent(slug)}`);
+  if (!res.ok) throw new Error('Failed to fetch comments');
+  return res.json();
+}
+
+export async function postComment(data) {
+  const res = await fetch(`${BASE}/comments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to post comment');
+  return json;
+}
+
+export async function likeComment(commentId, userId) {
+  const res = await fetch(`${BASE}/comments/${commentId}/like`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
+  if (!res.ok) throw new Error('Failed to like comment');
+  return res.json();
+}
+
+export async function deleteComment(id) {
+  const res = await fetch(`${BASE}/comments/${id}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-token': ADMIN_TOKEN },
+  });
+  if (!res.ok) throw new Error('Failed to delete comment');
+  return res.json();
+}
+
+export async function dislikeComment(commentId, userId) {
+  const res = await fetch(`${BASE}/comments/${commentId}/dislike`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
+  if (!res.ok) throw new Error('Failed to dislike comment');
+  return res.json();
+}
+
+// ─── User Profile ──────────────────────────────────────────────────────────────
+
+export async function fetchUserProfile(identifier) {
+  const res = await fetch(`${BASE}/users/${identifier}/profile`);
+  if (!res.ok) throw new Error('Failed to fetch user profile');
+  return res.json();
+}
+
+export async function fetchUserComments(userId) {
+  const res = await fetch(`${BASE}/users/${userId}/comments`);
+  if (!res.ok) throw new Error('Failed to fetch user comments');
+  return res.json();
+}
+
+export async function fetchUserPredictions(userId) {
+  const res = await fetch(`${BASE}/users/${userId}/predictions`);
+  if (!res.ok) throw new Error('Failed to fetch user predictions');
+  return res.json();
+}
+
+export async function uploadAvatar(userId, file) {
+  const form = new FormData();
+  form.append('avatar', file);
+  const res = await fetch(`${BASE}/users/${userId}/avatar`, {
+    method: 'POST',
+    body: form,
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to upload avatar');
+  return json;
+}
+
+export async function resolvePoll(pollId, correctOptionId) {
+  const res = await fetch(`${BASE}/polls/${pollId}/resolve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+    body: JSON.stringify({ correctOptionId }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to resolve poll');
+  return json;
+}
+
+// ─── Fan Forums ─────────────────────────────────────────────────────────────
+
+export async function fetchForumThreads({ league = 'all', sort = 'latest' } = {}) {
+  const res = await fetch(`${BASE}/forum/threads?league=${league}&sort=${sort}`);
+  if (!res.ok) throw new Error('Failed to fetch threads');
+  return res.json();
+}
+
+export async function fetchForumThread(id) {
+  const res = await fetch(`${BASE}/forum/threads/${id}`);
+  if (!res.ok) throw new Error('Thread not found');
+  return res.json();
+}
+
+export async function fetchForumReplies(threadId) {
+  const res = await fetch(`${BASE}/forum/threads/${threadId}/replies`);
+  if (!res.ok) throw new Error('Failed to fetch replies');
+  return res.json();
+}
+
+export async function createForumThread({ league, title, body, userId }) {
+  const res = await fetch(`${BASE}/forum/threads`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ league, title, body, userId }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to create thread');
+  return json;
+}
+
+export async function createForumReply(threadId, { userId, text }) {
+  const res = await fetch(`${BASE}/forum/threads/${threadId}/replies`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, text }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to post reply');
+  return json;
+}
+
+export async function likeForumThread(threadId, userId) {
+  const res = await fetch(`${BASE}/forum/threads/${threadId}/like`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to like thread');
+  return json;
+}
+
+export async function likeForumReply(replyId, userId) {
+  const res = await fetch(`${BASE}/forum/replies/${replyId}/like`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to like reply');
+  return json;
+}
+
+export async function fetchAdminForumThreads({ status } = {}) {
+  const url = status ? `${BASE}/admin/forum/threads?status=${status}` : `${BASE}/admin/forum/threads`;
+  const res = await fetch(url, { headers: { 'x-admin-token': ADMIN_TOKEN } });
+  if (!res.ok) throw new Error('Failed to fetch admin threads');
+  return res.json();
+}
+
+export async function moderateForumThread(id, updates) {
+  const res = await fetch(`${BASE}/admin/forum/threads/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'x-admin-token': ADMIN_TOKEN },
+    body: JSON.stringify(updates),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || 'Failed to update thread');
+  return json;
+}
+
+export async function deleteForumThread(id) {
+  const res = await fetch(`${BASE}/admin/forum/threads/${id}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-token': ADMIN_TOKEN },
+  });
+  if (!res.ok) throw new Error('Failed to delete thread');
+  return res.json();
+}
+
+export async function deleteForumReply(id) {
+  const res = await fetch(`${BASE}/admin/forum/replies/${id}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-token': ADMIN_TOKEN },
+  });
+  if (!res.ok) throw new Error('Failed to delete reply');
   return res.json();
 }

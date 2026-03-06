@@ -20,6 +20,7 @@ app.use(express.json());
 const uploadsDir = path.join(__dirname, '../public/uploads/articles');
 const videoUploadsDir = path.join(__dirname, '../public/uploads/videos');
 const thumbnailUploadsDir = path.join(__dirname, '../public/uploads/thumbnails');
+const avatarUploadsDir = path.join(__dirname, '../public/uploads/avatars');
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -29,6 +30,9 @@ if (!fs.existsSync(videoUploadsDir)) {
 }
 if (!fs.existsSync(thumbnailUploadsDir)) {
   fs.mkdirSync(thumbnailUploadsDir, { recursive: true });
+}
+if (!fs.existsSync(avatarUploadsDir)) {
+  fs.mkdirSync(avatarUploadsDir, { recursive: true });
 }
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
@@ -368,6 +372,83 @@ let sectionIdCounter = 1;
 let twitterPosts = [];
 let twitterPostIdCounter = 1;
 
+// ─── Users (registered users for comments & polls) ────────────────────────────
+let users = [
+  { id: 1, username: 'SportsFanatic99', email: 'fan99@example.com', password: 'pass1', avatar: 'SF', role: 'user', createdAt: new Date(Date.now() - 7*24*60*60*1000).toISOString() },
+  { id: 2, username: 'CricketKing_AU', email: 'cricket.au@example.com', password: 'pass2', avatar: 'CK', role: 'user', createdAt: new Date(Date.now() - 5*24*60*60*1000).toISOString() },
+  { id: 3, username: 'HockeyNightFan', email: 'hockey.fan@example.com', password: 'pass3', avatar: 'HN', role: 'user', createdAt: new Date(Date.now() - 3*24*60*60*1000).toISOString() },
+  { id: 4, username: 'NZSportsNerd', email: 'nzsports@example.com', password: 'pass4', avatar: 'NZ', role: 'user', createdAt: new Date(Date.now() - 2*24*60*60*1000).toISOString() },
+  { id: 5, username: 'BallzDeep_UK', email: 'uk.sports@example.com', password: 'pass5', avatar: 'BD', role: 'user', createdAt: new Date(Date.now() - 1*24*60*60*1000).toISOString() },
+];
+let userIdCounter = 6;
+
+// ─── Polls (admin-created, sidebar widget) ────────────────────────────────────
+let polls = [
+  {
+    id: 1,
+    question: 'Who wins the T20 Cricket World Cup?',
+    options: [
+      { id: 1, text: 'India', votes: 1 },
+      { id: 2, text: 'England', votes: 1 },
+      { id: 3, text: 'Australia', votes: 1 },
+      { id: 4, text: 'New Zealand', votes: 1 },
+    ],
+    sidebar: true,
+    sidebarPosition: 'above-twitter',
+    active: true,
+    totalVotes: 4,
+    createdAt: new Date(Date.now() - 2*60*60*1000).toISOString(),
+    voters: { 1: 1, 2: 2, 3: 3, 4: 4 },  // userId -> optionId
+    category: 'cricket',
+  }
+];
+let pollIdCounter = 2;
+
+// ─── Comments ─────────────────────────────────────────────────────────────────
+let comments = [
+  {
+    id: 1,
+    articleSlug: 'lakers-dominate-in-thrilling-game-7-victory',
+    userId: 1,
+    username: 'SportsFanatic99',
+    avatar: 'SF',
+    text: 'What a game! LeBron just never stops delivering in the clutch. Pure greatness.',
+    createdAt: new Date(Date.now() - 90*60*1000).toISOString(),
+    likes: 14,
+  },
+  {
+    id: 2,
+    articleSlug: 'lakers-dominate-in-thrilling-game-7-victory',
+    userId: 3,
+    username: 'HockeyNightFan',
+    avatar: 'HN',
+    text: 'As a hockey guy I don\'t normally watch NBA but even I tuned in for that Game 7. Incredible.',
+    createdAt: new Date(Date.now() - 60*60*1000).toISOString(),
+    likes: 8,
+  },
+  {
+    id: 3,
+    articleSlug: 'maple-leafs-stun-rangers-in-overtime-thriller',
+    userId: 3,
+    username: 'HockeyNightFan',
+    avatar: 'HN',
+    text: 'FINALLY! The Leafs showing up in the playoffs. Matthews has been absolutely dominant.',
+    createdAt: new Date(Date.now() - 45*60*1000).toISOString(),
+    likes: 22,
+  },
+  {
+    id: 4,
+    articleSlug: 'maple-leafs-stun-rangers-in-overtime-thriller',
+    userId: 1,
+    username: 'SportsFanatic99',
+    avatar: 'SF',
+    text: 'Marner with 3 assists too! This might finally be their year.',
+    createdAt: new Date(Date.now() - 30*60*1000).toISOString(),
+    likes: 11,
+  },
+];
+let commentIdCounter = 5;
+
 // ─── Admin Authentication Middleware ──────────────────────────────────────────
 
 const adminAuth = (req, res, next) => {
@@ -476,6 +557,20 @@ app.get('/api/articles', (req, res) => {
   res.json(filtered);
 });
 
+app.get('/api/articles/placement/:flag', (req, res) => {
+  const { flag } = req.params;
+  const { limit, category } = req.query;
+  const validFlags = ['isFeatured','isTopStory','isTrending','isLatestNews','isMustSee','isFanForums','isFeaturedStory'];
+  if (!validFlags.includes(flag)) return res.status(400).json({ error: 'Invalid flag' });
+  let filtered = articles.filter(a => a.isPublished && a[flag] === true);
+  if (category && category !== 'all') {
+    filtered = filtered.filter(a => a.category.toLowerCase() === category.toLowerCase());
+  }
+  filtered.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+  if (limit) filtered = filtered.slice(0, parseInt(limit));
+  res.json(filtered);
+});
+
 app.get('/api/articles/:identifier', (req, res) => {
   const { identifier } = req.params;
   const article = articles.find(a => 
@@ -563,6 +658,8 @@ app.post('/api/articles', adminAuth, upload.single('image'), async (req, res) =>
       isTrending: isTrending === 'true' || isTrending === true,
       isLatestNews: isLatestNews === 'true' || isLatestNews === true,
       isFeaturedStory: req.body.isFeaturedStory === 'true' || req.body.isFeaturedStory === true,
+      isMustSee: req.body.isMustSee === 'true' || req.body.isMustSee === true,
+      isFanForums: req.body.isFanForums === 'true' || req.body.isFanForums === true,
       showOnHomepage: showOnHomepage === 'true' || showOnHomepage === true,
       sectionIds: req.body.sectionIds ? (typeof req.body.sectionIds === 'string' ? JSON.parse(req.body.sectionIds) : req.body.sectionIds) : [],
       views: 0,
@@ -851,7 +948,7 @@ app.get('/api/sections', (req, res) => {
 });
 
 app.post('/api/sections', adminAuth, (req, res) => {
-  const { title, description, page, position } = req.body;
+  const { title, description, page, position, style } = req.body;
   if (!title || !title.trim()) {
     return res.status(400).json({ error: 'title is required' });
   }
@@ -866,6 +963,7 @@ app.post('/api/sections', adminAuth, (req, res) => {
     description: description || '',
     page: page || 'home',
     position: position !== undefined ? parseInt(position) : sections.length,
+    style: style || 'default',
     order: sections.length,
     createdAt: new Date().toISOString(),
   };
@@ -877,7 +975,7 @@ app.put('/api/sections/:id', adminAuth, (req, res) => {
   const { id } = req.params;
   const idx = sections.findIndex(s => s.id === parseInt(id));
   if (idx === -1) return res.status(404).json({ error: 'Section not found' });
-  const { title, description, order, page, position } = req.body;
+  const { title, description, order, page, position, style } = req.body;
   if (title) {
     sections[idx].title = title.trim();
     sections[idx].slug = slugify(title.trim(), { lower: true, strict: true });
@@ -886,6 +984,7 @@ app.put('/api/sections/:id', adminAuth, (req, res) => {
   if (order !== undefined) sections[idx].order = parseInt(order);
   if (page !== undefined) sections[idx].page = page;
   if (position !== undefined) sections[idx].position = parseInt(position);
+  if (style !== undefined) sections[idx].style = style;
   res.json(sections[idx]);
 });
 
@@ -944,6 +1043,551 @@ app.delete('/api/twitter-posts/:id', adminAuth, (req, res) => {
   if (idx === -1) return res.status(404).json({ error: 'Post not found' });
   const removed = twitterPosts.splice(idx, 1)[0];
   res.json({ message: 'Post removed', post: removed });
+});
+
+// ─── User Routes ──────────────────────────────────────────────────────────────
+
+app.post('/api/auth/register', (req, res) => {
+  const { username, email, password } = req.body;
+  if (!username || !email || !password)
+    return res.status(400).json({ error: 'username, email and password required' });
+  if (users.find(u => u.email === email))
+    return res.status(400).json({ error: 'Email already registered' });
+  if (users.find(u => u.username === username))
+    return res.status(400).json({ error: 'Username already taken' });
+  const newUser = {
+    id: userIdCounter++,
+    username: username.trim(),
+    email: email.trim().toLowerCase(),
+    password,
+    avatar: username.slice(0, 2).toUpperCase(),
+    role: 'user',
+    createdAt: new Date().toISOString(),
+  };
+  users.push(newUser);
+  const { password: _pw, ...safe } = newUser;
+  res.status(201).json(safe);
+});
+
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) return res.status(401).json({ error: 'Invalid email or password' });
+  const { password: _pw, ...safe } = user;
+  res.json(safe);
+});
+
+app.get('/api/users', adminAuth, (req, res) => {
+  res.json(users.map(({ password: _pw, ...u }) => u));
+});
+
+// ─── Poll Routes ───────────────────────────────────────────────────────────────
+
+app.get('/api/polls', (req, res) => {
+  const { sidebar, active } = req.query;
+  let result = [...polls];
+  if (sidebar === 'true') result = result.filter(p => p.sidebar);
+  if (active === 'true') result = result.filter(p => p.active);
+  res.json(result.map(p => {
+    const { voters, ...safe } = p;
+    return safe;
+  }));
+});
+
+app.get('/api/polls/:id', (req, res) => {
+  const poll = polls.find(p => p.id === parseInt(req.params.id));
+  if (!poll) return res.status(404).json({ error: 'Poll not found' });
+  const { voters, ...safe } = poll;
+  res.json(safe);
+});
+
+app.post('/api/polls', adminAuth, (req, res) => {
+  const { question, options, sidebar, sidebarPosition, category } = req.body;
+  if (!question || !Array.isArray(options) || options.length < 2)
+    return res.status(400).json({ error: 'question and at least 2 options required' });
+  const newPoll = {
+    id: pollIdCounter++,
+    question: question.trim(),
+    options: options.map((opt, i) => ({ id: i + 1, text: opt.trim(), votes: 0 })),
+    sidebar: sidebar !== false,
+    sidebarPosition: sidebarPosition || 'above-twitter',
+    active: true,
+    totalVotes: 0,
+    createdAt: new Date().toISOString(),
+    voters: {},
+    category: category || '',
+  };
+  polls.push(newPoll);
+  const { voters, ...safe } = newPoll;
+  res.status(201).json(safe);
+});
+
+app.put('/api/polls/:id', adminAuth, (req, res) => {
+  const idx = polls.findIndex(p => p.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Poll not found' });
+  const { active, sidebar, sidebarPosition } = req.body;
+  if (active !== undefined) polls[idx].active = active;
+  if (sidebar !== undefined) polls[idx].sidebar = sidebar;
+  if (sidebarPosition !== undefined) polls[idx].sidebarPosition = sidebarPosition;
+  const { voters, ...safe } = polls[idx];
+  res.json(safe);
+});
+
+app.delete('/api/polls/:id', adminAuth, (req, res) => {
+  const idx = polls.findIndex(p => p.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Poll not found' });
+  polls.splice(idx, 1);
+  res.json({ message: 'Poll deleted' });
+});
+
+app.post('/api/polls/:id/vote', (req, res) => {
+  const poll = polls.find(p => p.id === parseInt(req.params.id));
+  if (!poll) return res.status(404).json({ error: 'Poll not found' });
+  if (!poll.active) return res.status(400).json({ error: 'Poll is closed' });
+  const { optionId, userId } = req.body;
+  if (!optionId || !userId)
+    return res.status(400).json({ error: 'optionId and userId required' });
+  if (poll.voters[userId] !== undefined)
+    return res.status(409).json({ error: 'You have already voted', userVote: poll.voters[userId] });
+  const option = poll.options.find(o => o.id === parseInt(optionId));
+  if (!option) return res.status(400).json({ error: 'Invalid option' });
+  option.votes++;
+  poll.totalVotes++;
+  poll.voters[userId] = parseInt(optionId);
+  const { voters, ...safe } = poll;
+  res.json({ ...safe, userVote: parseInt(optionId) });
+});
+
+app.get('/api/polls/:id/myvote', (req, res) => {
+  const poll = polls.find(p => p.id === parseInt(req.params.id));
+  if (!poll) return res.status(404).json({ error: 'Poll not found' });
+  const userId = req.query.userId;
+  const vote = userId ? poll.voters[userId] : null;
+  res.json({ userVote: vote || null });
+});
+
+// ─── Comment Routes ────────────────────────────────────────────────────────────
+
+app.get('/api/comments/all', adminAuth, (req, res) => {
+  const result = [...comments]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .map(c => {
+      const u = users.find(u => u.id === c.userId);
+      return { ...c, avatarUrl: u?.avatarUrl || null };
+    });
+  res.json(result);
+});
+
+app.get('/api/comments', (req, res) => {
+  const { slug } = req.query;
+  if (!slug) return res.status(400).json({ error: 'slug required' });
+  const result = comments
+    .filter(c => c.articleSlug === slug)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .map(c => {
+      const u = users.find(u => u.id === c.userId);
+      return { ...c, avatarUrl: u?.avatarUrl || null };
+    });
+  res.json(result);
+});
+
+app.post('/api/comments', (req, res) => {
+  const { articleSlug, userId, text } = req.body;
+  if (!articleSlug || !userId || !text || !text.trim())
+    return res.status(400).json({ error: 'articleSlug, userId and text required' });
+  const user = users.find(u => u.id === parseInt(userId));
+  if (!user) return res.status(401).json({ error: 'User not found' });
+  const newComment = {
+    id: commentIdCounter++,
+    articleSlug,
+    userId: user.id,
+    username: user.username,
+    avatar: user.avatar,
+    text: text.trim(),
+    createdAt: new Date().toISOString(),
+    likes: 0,
+    likedBy: [],
+  };
+  comments.push(newComment);
+  res.status(201).json(newComment);
+});
+
+app.post('/api/comments/:id/like', (req, res) => {
+  const comment = comments.find(c => c.id === parseInt(req.params.id));
+  if (!comment) return res.status(404).json({ error: 'Comment not found' });
+  const { userId } = req.body;
+  if (!comment.likedBy) comment.likedBy = [];
+  if (comment.likedBy.includes(userId)) {
+    comment.likedBy = comment.likedBy.filter(id => id !== userId);
+    comment.likes = Math.max(0, comment.likes - 1);
+  } else {
+    comment.likedBy.push(userId);
+    comment.likes++;
+  }
+  res.json({ likes: comment.likes, liked: comment.likedBy.includes(userId) });
+});
+
+app.delete('/api/comments/:id', adminAuth, (req, res) => {
+  const idx = comments.findIndex(c => c.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Comment not found' });
+  comments.splice(idx, 1);
+  res.json({ message: 'Comment deleted' });
+});
+
+// ─── Avatar Upload ─────────────────────────────────────────────────────────────
+
+const avatarUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB max
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|webp/;
+    if (allowed.test(file.mimetype) && allowed.test(path.extname(file.originalname).toLowerCase())) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only jpg, png, webp images allowed'));
+    }
+  }
+});
+
+app.post('/api/users/:id/avatar', avatarUpload.single('avatar'), async (req, res) => {
+  const userId = parseInt(req.params.id);
+  const user = users.find(u => u.id === userId);
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  try {
+    const filename = `avatar-${userId}-${Date.now()}.webp`;
+    const outPath = path.join(avatarUploadsDir, filename);
+    await sharp(req.file.buffer)
+      .resize(96, 96, { fit: 'cover', position: 'center' })
+      .webp({ quality: 85 })
+      .toFile(outPath);
+
+    // Delete old avatar file if exists
+    if (user.avatarFile) {
+      const old = path.join(avatarUploadsDir, user.avatarFile);
+      if (fs.existsSync(old)) fs.unlinkSync(old);
+    }
+
+    user.avatarFile = filename;
+    user.avatarUrl = `/uploads/avatars/${filename}`;
+    res.json({ avatarUrl: user.avatarUrl });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to process avatar: ' + err.message });
+  }
+});
+
+// ─── User Profile Routes ───────────────────────────────────────────────────────
+
+// Get public profile for any user (by id or username)
+app.get('/api/users/:identifier/profile', (req, res) => {
+  const { identifier } = req.params;
+  const user = users.find(u =>
+    u.id === parseInt(identifier) || u.username === identifier
+  );
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const userComments = comments.filter(c => c.userId === user.id);
+  const totalLikes = userComments.reduce((s, c) => s + (c.likes || 0), 0);
+  const totalDislikes = userComments.reduce((s, c) => s + (c.dislikes || 0), 0);
+
+  // Prediction stats
+  const userPollVotes = polls.filter(p => p.voters && p.voters[user.id] !== undefined);
+  const resolvedPolls = userPollVotes.filter(p => p.correctOptionId !== undefined);
+  const correctCount = resolvedPolls.filter(p => p.voters[user.id] === p.correctOptionId).length;
+  const predictionPct = resolvedPolls.length > 0
+    ? Math.round((correctCount / resolvedPolls.length) * 100)
+    : null;
+
+  const { password: _pw, email: _em, avatarFile: _af, ...safeUser } = user;
+  res.json({
+    ...safeUser,
+    avatarUrl: user.avatarUrl || null,
+    stats: {
+      totalComments: userComments.length,
+      totalLikes,
+      totalDislikes,
+      predictionPct,
+      correctPredictions: correctCount,
+      totalPredictions: resolvedPolls.length,
+      pendingPredictions: userPollVotes.length - resolvedPolls.length,
+    },
+  });
+});
+
+// Get all comments by a user
+app.get('/api/users/:id/comments', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const userComments = comments
+    .filter(c => c.userId === userId)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(userComments);
+});
+
+// Get all poll votes/predictions for a user
+app.get('/api/users/:id/predictions', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const result = polls
+    .filter(p => p.voters && p.voters[userId] !== undefined)
+    .map(p => {
+      const votedOptionId = p.voters[userId];
+      const votedOption = p.options.find(o => o.id === votedOptionId);
+      const correctOption = p.correctOptionId
+        ? p.options.find(o => o.id === p.correctOptionId)
+        : null;
+      const { voters, ...safe } = p;
+      return {
+        ...safe,
+        userVote: votedOptionId,
+        userVoteText: votedOption ? votedOption.text : null,
+        correctOptionText: correctOption ? correctOption.text : null,
+        isCorrect: p.correctOptionId !== undefined
+          ? votedOptionId === p.correctOptionId
+          : null,
+      };
+    });
+  res.json(result);
+});
+
+// Admin: mark correct answer for a poll (triggers scoring)
+app.post('/api/polls/:id/resolve', adminAuth, (req, res) => {
+  const poll = polls.find(p => p.id === parseInt(req.params.id));
+  if (!poll) return res.status(404).json({ error: 'Poll not found' });
+  const { correctOptionId } = req.body;
+  if (!correctOptionId) return res.status(400).json({ error: 'correctOptionId required' });
+  const option = poll.options.find(o => o.id === parseInt(correctOptionId));
+  if (!option) return res.status(400).json({ error: 'Invalid option' });
+
+  poll.correctOptionId = parseInt(correctOptionId);
+  poll.active = false;
+  poll.resolvedAt = new Date().toISOString();
+
+  const { voters, ...safe } = poll;
+  res.json({ ...safe, correctOptionText: option.text });
+});
+
+// Dislike a comment
+app.post('/api/comments/:id/dislike', (req, res) => {
+  const comment = comments.find(c => c.id === parseInt(req.params.id));
+  if (!comment) return res.status(404).json({ error: 'Comment not found' });
+  const { userId } = req.body;
+  if (!comment.dislikedBy) comment.dislikedBy = [];
+  if (!comment.dislikes) comment.dislikes = 0;
+  if (comment.dislikedBy.includes(userId)) {
+    comment.dislikedBy = comment.dislikedBy.filter(id => id !== userId);
+    comment.dislikes = Math.max(0, comment.dislikes - 1);
+  } else {
+    comment.dislikedBy.push(userId);
+    comment.dislikes++;
+    // remove like if exists
+    if (comment.likedBy && comment.likedBy.includes(userId)) {
+      comment.likedBy = comment.likedBy.filter(id => id !== userId);
+      comment.likes = Math.max(0, comment.likes - 1);
+    }
+  }
+  res.json({ likes: comment.likes, dislikes: comment.dislikes, disliked: comment.dislikedBy.includes(userId) });
+});
+
+// ─── Fan Forums ────────────────────────────────────────────────────────────────
+
+const FORUM_LEAGUES = ['nhl','nba','mlb','cfl','soccer','golf','tennis','ufc','f1','olympics','cricket','football','general'];
+
+let forumThreads = [
+  { id: 1, league: 'nhl', title: 'Who will win the Stanley Cup this year?', body: 'My money is on the Oilers if McDavid stays healthy. What does everyone think?', userId: 1, username: 'SportsFanatic99', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*5).toISOString(), likes: 14, likedBy: [], replyCount: 3, pinned: false },
+  { id: 2, league: 'nba', title: 'SGA vs Luka — who is the better player right now?', body: 'Both are incredible but I think SGA has the edge with his two-way ability. Luka is the better scorer though.', userId: 2, username: 'CricketKing_AU', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*12).toISOString(), likes: 22, likedBy: [], replyCount: 7, pinned: true },
+  { id: 3, league: 'nba', title: 'Raptors rebuild — are we going in the right direction?', body: 'The young core looks promising but we are still years away from competing. Thoughts?', userId: 3, username: 'HockeyNightFan', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*24).toISOString(), likes: 8, likedBy: [], replyCount: 4, pinned: false },
+  { id: 4, league: 'mlb', title: 'Blue Jays trade deadline wishlist', body: 'We need a lefty reliever and a veteran OF bat. Anyone have targets in mind?', userId: 1, username: 'SportsFanatic99', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*36).toISOString(), likes: 11, likedBy: [], replyCount: 2, pinned: false },
+  { id: 5, league: 'soccer', title: 'Canada 2026 World Cup predictions', body: 'Group stage or can we go further? I think we can make Round of 16 minimum with home crowd behind us.', userId: 2, username: 'CricketKing_AU', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*48).toISOString(), likes: 31, likedBy: [], replyCount: 12, pinned: true },
+  { id: 6, league: 'general', title: 'Best Canadian athlete of all time?', body: 'Wayne Gretzky has to be the GOAT but Alphonso Davies and SGA are making cases for the younger generation.', userId: 3, username: 'HockeyNightFan', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*60).toISOString(), likes: 45, likedBy: [], replyCount: 18, pinned: false },
+  { id: 7, league: 'cricket', title: 'IPL 2026 predictions thread', body: 'Who takes the trophy this year? CSK or MI for me — the two giants always come through in the end.', userId: 2, username: 'CricketKing_AU', avatarUrl: null, status: 'approved', createdAt: new Date(Date.now() - 3600000*72).toISOString(), likes: 19, likedBy: [], replyCount: 6, pinned: false },
+];
+
+let forumReplies = [
+  { id: 1, threadId: 1, userId: 2, username: 'CricketKing_AU', avatarUrl: null, text: 'Leafs in 6! Finally their year. The core is too good.', createdAt: new Date(Date.now() - 3600000*4).toISOString(), likes: 3, likedBy: [] },
+  { id: 2, threadId: 1, userId: 3, username: 'HockeyNightFan', avatarUrl: null, text: 'Maple Leafs fans have been saying that for 20 years lol. Oilers or Panthers for me.', createdAt: new Date(Date.now() - 3600000*3).toISOString(), likes: 7, likedBy: [] },
+  { id: 3, threadId: 1, userId: 1, username: 'SportsFanatic99', avatarUrl: null, text: 'Hard to bet against McDavid when he is this dominant. But goaltending is the question.', createdAt: new Date(Date.now() - 3600000*2).toISOString(), likes: 4, likedBy: [] },
+  { id: 4, threadId: 2, userId: 1, username: 'SportsFanatic99', avatarUrl: null, text: 'SGA all day. He guards 1-5, scores from everywhere, and makes his teammates better.', createdAt: new Date(Date.now() - 3600000*10).toISOString(), likes: 9, likedBy: [] },
+  { id: 5, threadId: 2, userId: 3, username: 'HockeyNightFan', avatarUrl: null, text: 'Luka has the better ceiling IMO. When he is locked in nobody can stop him.', createdAt: new Date(Date.now() - 3600000*9).toISOString(), likes: 5, likedBy: [] },
+  { id: 6, threadId: 5, userId: 1, username: 'SportsFanatic99', avatarUrl: null, text: 'Round of 16 minimum. Davies alone can change any game. Plus Larin and Buchanan are clinical.', createdAt: new Date(Date.now() - 3600000*46).toISOString(), likes: 12, likedBy: [] },
+  { id: 7, threadId: 6, userId: 2, username: 'CricketKing_AU', avatarUrl: null, text: 'Gretzky no question. 894 goals and 2857 points. Untouchable numbers for any sport.', createdAt: new Date(Date.now() - 3600000*58).toISOString(), likes: 18, likedBy: [] },
+];
+
+let forumThreadIdCounter = 8;
+let forumReplyIdCounter = 8;
+
+// GET all threads (with filters)
+app.get('/api/forum/threads', (req, res) => {
+  const { league, sort = 'latest', status } = req.query;
+  let result = [...forumThreads];
+  if (league && league !== 'all') result = result.filter(t => t.league === league);
+  if (status) result = result.filter(t => t.status === status);
+  else result = result.filter(t => t.status === 'approved');
+
+  // Sort
+  if (sort === 'popular') result.sort((a, b) => (b.likes + b.replyCount * 2) - (a.likes + a.replyCount * 2));
+  else if (sort === 'most-replied') result.sort((a, b) => b.replyCount - a.replyCount);
+  else result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // latest
+
+  // Pinned threads always first
+  result.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+  result = result.map(t => {
+    const u = users.find(u => u.id === t.userId);
+    return { ...t, avatarUrl: u?.avatarUrl || null };
+  });
+  res.json(result);
+});
+
+// GET single thread
+app.get('/api/forum/threads/:id', (req, res) => {
+  const thread = forumThreads.find(t => t.id === parseInt(req.params.id));
+  if (!thread) return res.status(404).json({ error: 'Thread not found' });
+  if (thread.status !== 'approved') return res.status(403).json({ error: 'Thread not yet approved' });
+  const u = users.find(u => u.id === thread.userId);
+  res.json({ ...thread, avatarUrl: u?.avatarUrl || null });
+});
+
+// GET replies for thread
+app.get('/api/forum/threads/:id/replies', (req, res) => {
+  const threadId = parseInt(req.params.id);
+  const result = forumReplies
+    .filter(r => r.threadId === threadId)
+    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    .map(r => {
+      const u = users.find(u => u.id === r.userId);
+      return { ...r, avatarUrl: u?.avatarUrl || null };
+    });
+  res.json(result);
+});
+
+// POST create thread (requires login, starts as pending)
+app.post('/api/forum/threads', (req, res) => {
+  const { league, title, body, userId } = req.body;
+  if (!league || !title || !body || !userId) return res.status(400).json({ error: 'league, title, body and userId required' });
+  if (!FORUM_LEAGUES.includes(league)) return res.status(400).json({ error: 'Invalid league' });
+  if (title.trim().length < 5 || title.trim().length > 120) return res.status(400).json({ error: 'Title must be 5-120 characters' });
+  if (body.trim().length < 10 || body.trim().length > 2000) return res.status(400).json({ error: 'Body must be 10-2000 characters' });
+  const user = users.find(u => u.id === parseInt(userId));
+  if (!user) return res.status(401).json({ error: 'User not found' });
+  const thread = {
+    id: forumThreadIdCounter++,
+    league,
+    title: title.trim(),
+    body: body.trim(),
+    userId: user.id,
+    username: user.username,
+    avatarUrl: user.avatarUrl || null,
+    status: user.role === 'admin' || user.role === 'editor' ? 'approved' : 'pending',
+    createdAt: new Date().toISOString(),
+    likes: 0,
+    likedBy: [],
+    replyCount: 0,
+    pinned: false,
+  };
+  forumThreads.push(thread);
+  res.status(201).json(thread);
+});
+
+// POST reply to thread
+app.post('/api/forum/threads/:id/replies', (req, res) => {
+  const threadId = parseInt(req.params.id);
+  const thread = forumThreads.find(t => t.id === threadId);
+  if (!thread) return res.status(404).json({ error: 'Thread not found' });
+  if (thread.status !== 'approved') return res.status(403).json({ error: 'Thread not approved' });
+  const { userId, text } = req.body;
+  if (!userId || !text || !text.trim()) return res.status(400).json({ error: 'userId and text required' });
+  if (text.trim().length > 1000) return res.status(400).json({ error: 'Reply must be under 1000 characters' });
+  const user = users.find(u => u.id === parseInt(userId));
+  if (!user) return res.status(401).json({ error: 'User not found' });
+  const reply = {
+    id: forumReplyIdCounter++,
+    threadId,
+    userId: user.id,
+    username: user.username,
+    avatarUrl: user.avatarUrl || null,
+    text: text.trim(),
+    createdAt: new Date().toISOString(),
+    likes: 0,
+    likedBy: [],
+  };
+  forumReplies.push(reply);
+  thread.replyCount = forumReplies.filter(r => r.threadId === threadId).length;
+  res.status(201).json(reply);
+});
+
+// POST like a thread
+app.post('/api/forum/threads/:id/like', (req, res) => {
+  const thread = forumThreads.find(t => t.id === parseInt(req.params.id));
+  if (!thread) return res.status(404).json({ error: 'Thread not found' });
+  const { userId } = req.body;
+  if (!userId) return res.status(400).json({ error: 'userId required' });
+  if (!thread.likedBy) thread.likedBy = [];
+  if (thread.likedBy.includes(userId)) {
+    thread.likedBy = thread.likedBy.filter(id => id !== userId);
+    thread.likes = Math.max(0, thread.likes - 1);
+  } else {
+    thread.likedBy.push(userId);
+    thread.likes++;
+  }
+  res.json({ likes: thread.likes, liked: thread.likedBy.includes(userId) });
+});
+
+// POST like a reply
+app.post('/api/forum/replies/:id/like', (req, res) => {
+  const reply = forumReplies.find(r => r.id === parseInt(req.params.id));
+  if (!reply) return res.status(404).json({ error: 'Reply not found' });
+  const { userId } = req.body;
+  if (!userId) return res.status(400).json({ error: 'userId required' });
+  if (!reply.likedBy) reply.likedBy = [];
+  if (reply.likedBy.includes(userId)) {
+    reply.likedBy = reply.likedBy.filter(id => id !== userId);
+    reply.likes = Math.max(0, reply.likes - 1);
+  } else {
+    reply.likedBy.push(userId);
+    reply.likes++;
+  }
+  res.json({ likes: reply.likes, liked: reply.likedBy.includes(userId) });
+});
+
+// ADMIN: get all threads including pending
+app.get('/api/admin/forum/threads', adminAuth, (req, res) => {
+  const { league, status } = req.query;
+  let result = [...forumThreads];
+  if (league && league !== 'all') result = result.filter(t => t.league === league);
+  if (status) result = result.filter(t => t.status === status);
+  result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(result);
+});
+
+// ADMIN: approve/reject/pin a thread
+app.patch('/api/admin/forum/threads/:id', adminAuth, (req, res) => {
+  const thread = forumThreads.find(t => t.id === parseInt(req.params.id));
+  if (!thread) return res.status(404).json({ error: 'Thread not found' });
+  const { status, pinned } = req.body;
+  if (status && ['approved', 'rejected', 'pending'].includes(status)) thread.status = status;
+  if (typeof pinned === 'boolean') thread.pinned = pinned;
+  res.json(thread);
+});
+
+// ADMIN: delete thread
+app.delete('/api/admin/forum/threads/:id', adminAuth, (req, res) => {
+  const idx = forumThreads.findIndex(t => t.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Thread not found' });
+  const threadId = forumThreads[idx].id;
+  forumThreads.splice(idx, 1);
+  forumReplies = forumReplies.filter(r => r.threadId !== threadId);
+  res.json({ message: 'Deleted' });
+});
+
+// ADMIN: delete reply
+app.delete('/api/admin/forum/replies/:id', adminAuth, (req, res) => {
+  const idx = forumReplies.findIndex(r => r.id === parseInt(req.params.id));
+  if (idx === -1) return res.status(404).json({ error: 'Reply not found' });
+  const { threadId } = forumReplies[idx];
+  forumReplies.splice(idx, 1);
+  const thread = forumThreads.find(t => t.id === threadId);
+  if (thread) thread.replyCount = forumReplies.filter(r => r.threadId === threadId).length;
+  res.json({ message: 'Deleted' });
 });
 
 // Get categories for footer

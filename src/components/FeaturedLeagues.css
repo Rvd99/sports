@@ -17,7 +17,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: var(--league-bg, #1a1a1a);
+  background: var(--league-bg, var(--card-bg));
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 8px;
   text-decoration: none;
@@ -53,7 +53,7 @@
 
 .league-pill__desc {
   font-size: 0.68rem;
-  color: #777;
+  color: var(--text-tertiary);
   white-space: nowrap;
 }
 
@@ -77,8 +77,8 @@
 
 .must-see-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  border-color: #3a3a3a;
+  box-shadow: 0 10px 30px var(--shadow-md);
+  border-color: var(--accent-blue);
 }
 
 .must-see-card__img-wrap {
@@ -123,7 +123,7 @@
   font-size: 0.85rem;
   font-weight: 700;
   line-height: 1.35;
-  color: #ddd;
+  color: var(--text-secondary);
   transition: color 0.2s;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -133,7 +133,7 @@
 }
 
 .must-see-card:hover .must-see-card__title {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 .must-see-card__meta {

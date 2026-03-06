@@ -1,61 +1,158 @@
-/* Theme Variables */
+/* ═══════════════════════════════════════════════════════
+   DEGEN SPORTS — ULTIMATE PROFESSIONAL THEME
+   Deep navy/slate palette — bold, clean, premium
+   ═══════════════════════════════════════════════════════ */
+
 :root[data-theme="light"] {
-  --bg-primary: #d6d8da;
-  --bg-secondary: #c8cacc;
-  --bg-tertiary: #e0e2e4;
-  --text-primary: #000000;
-  --text-secondary: #333333;
-  --text-tertiary: #666666;
-  --border-color: #c0c2c4;
-  --card-bg: #ffffff;
-  --navbar-bg: #003366;
-  --navbar-text: #ffffff;
-  --navbar-hover: #ffcc00;
-  --footer-bg: #003366;
-  --shadow: rgba(0, 0, 0, 0.10);
-  --bg-ticker: #d6d8da;
-  --red: #da020e;
+  --bg-primary:     #f4f6f9;
+  --bg-secondary:   #eaecf2;
+  --bg-tertiary:    #ffffff;
+  --text-primary:   #0f1729;
+  --text-secondary: #2d3a52;
+  --text-tertiary:  #64748b;
+  --border-color:   #d8dde8;
+  --card-bg:        #ffffff;
+  --navbar-bg:      #0f1d3a;
+  --navbar-text:    #e8edf5;
+  --navbar-hover:   #e5192a;
+  --footer-bg:      #0f1d3a;
+  --shadow:         rgba(15, 29, 58, 0.08);
+  --shadow-md:      rgba(15, 29, 58, 0.14);
+  --shadow-lg:      rgba(15, 29, 58, 0.22);
+  --bg-ticker:      #0f1d3a;
+  --red:            #e5192a;
+  --red-dark:       #b5141f;
+  --red-glow:       rgba(229, 25, 42, 0.15);
+  --accent-gold:    #f59e0b;
+  --accent-blue:    #2563eb;
+  --card-hover:     #f0f3f8;
+  --input-bg:       #eaecf2;
 }
 
 :root[data-theme="dark"] {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #2d2d2d;
-  --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --border-color: rgba(255, 255, 255, 0.1);
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --navbar-bg: #003366;
-  --navbar-text: #ffffff;
-  --navbar-hover: #ffcc00;
-  --footer-bg: #003366;
-  --shadow: rgba(0, 0, 0, 0.3);
-  --bg-ticker: #0a0a0a;
-  --red: #da020e;
+  --bg-primary:     #0e1628;
+  --bg-secondary:   #131f35;
+  --bg-tertiary:    #1a2740;
+  --text-primary:   #e8edf5;
+  --text-secondary: #9aaec4;
+  --text-tertiary:  #546880;
+  --border-color:   #1e2d47;
+  --card-bg:        #141f33;
+  --navbar-bg:      #0a1220;
+  --navbar-text:    #e8edf5;
+  --navbar-hover:   #e5192a;
+  --footer-bg:      #0a1220;
+  --shadow:         rgba(0, 0, 0, 0.4);
+  --shadow-md:      rgba(0, 0, 0, 0.55);
+  --shadow-lg:      rgba(0, 0, 0, 0.75);
+  --bg-ticker:      #0a1220;
+  --red:            #e5192a;
+  --red-dark:       #b5141f;
+  --red-glow:       rgba(229, 25, 42, 0.2);
+  --accent-gold:    #f59e0b;
+  --accent-blue:    #3b82f6;
+  --card-hover:     #1e2d47;
+  --input-bg:       #0e1628;
 }
 
-/* Default to light theme */
+/* Default (light) */
 :root {
-  --bg-primary: #d6d8da;
-  --bg-secondary: #c8cacc;
-  --bg-tertiary: #e0e2e4;
-  --text-primary: #000000;
-  --text-secondary: #333333;
-  --text-tertiary: #666666;
-  --border-color: #c0c2c4;
-  --card-bg: #ffffff;
-  --navbar-bg: #003366;
-  --navbar-text: #ffffff;
-  --navbar-hover: #ffcc00;
-  --footer-bg: #003366;
-  --shadow: rgba(0, 0, 0, 0.10);
-  --bg-ticker: #d6d8da;
-  --red: #da020e;
+  --bg-primary:     #f4f6f9;
+  --bg-secondary:   #eaecf2;
+  --bg-tertiary:    #ffffff;
+  --text-primary:   #0f1729;
+  --text-secondary: #2d3a52;
+  --text-tertiary:  #64748b;
+  --border-color:   #d8dde8;
+  --card-bg:        #ffffff;
+  --navbar-bg:      #0f1d3a;
+  --navbar-text:    #e8edf5;
+  --navbar-hover:   #e5192a;
+  --footer-bg:      #0f1d3a;
+  --shadow:         rgba(15, 29, 58, 0.08);
+  --shadow-md:      rgba(15, 29, 58, 0.14);
+  --shadow-lg:      rgba(15, 29, 58, 0.22);
+  --bg-ticker:      #0f1d3a;
+  --red:            #e5192a;
+  --red-dark:       #b5141f;
+  --red-glow:       rgba(229, 25, 42, 0.15);
+  --accent-gold:    #f59e0b;
+  --accent-blue:    #2563eb;
+  --card-hover:     #f0f3f8;
+  --input-bg:       #eaecf2;
+}
+
+/* ── Typography ───────────────────────────────────────── */
+:root {
+  --font-heading: 'Oswald', 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-ui:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-label:   'Oswald', 'Barlow Condensed', Arial, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 * {
-  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: var(--font-ui);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
+
+/* Section labels — Oswald condensed */
+.section-header__title,
+.hero-cards__heading-title,
+.sec-container__heading-title,
+.sidebar__widget-title,
+.latest-news-strip__title {
+  font-family: var(--font-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Headlines */
+.hero-card--large .hero-card__headline,
+.hero-card__headline--small,
+.stories__card-headline,
+.stories__card-headline--lg,
+.sec-card__headline,
+.sec-card__headline--sm,
+.sec-featured-card__headline,
+.sec-must-see-card__title,
+.video-card__title,
+.must-see-card__title {
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
+}
+
+/* Body text */
+.article-body,
+.article-detail__body,
+.stories__card-excerpt {
+  font-family: var(--font-body);
+  line-height: 1.75;
+}
+
+/* UI / meta text */
+.sec-card__author,
+.sec-card__author--sm,
+.hero-card--large .hero-card__author,
+.hero-card__author--small,
+.stories__card-meta,
+.stories__card-author,
+.stories__card-time,
+.recent-feed__headline,
+.latest-news-strip__headline,
+.manage-sections__label,
+.manage-sections__hint,
+.trending-item__headline,
+.sb-game__name {
+  font-family: var(--font-ui);
 }
 
 .app {
@@ -101,7 +198,7 @@
 /* Full-width section (below the grid) */
 .app__full-width {
   max-width: 1400px;
-  margin: 40px auto 0;
+  margin: 16px auto 0;
   padding: 0 24px;
 }
 

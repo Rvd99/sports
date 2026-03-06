@@ -115,38 +115,6 @@ export default function HeroCards({ news = [], articles = [], loading = false, s
     return combined.slice(0, 5);
   }, [news, articles]);
 
-  const headlines = useMemo(() => {
-    const allArticles = (articles || []).map(item => ({
-      id: `a-${item.id}`,
-      slug: item.slug,
-      headline: item.title,
-      league: (item.category || 'NEWS').toUpperCase(),
-      leagueColor: item.categoryColor || getLeagueColor(item.category),
-      isArticle: true,
-    }));
-    const allNews = (news || []).map(item => ({
-      id: `n-${item.id}`,
-      headline: item.headline,
-      league: (item.league || 'NEWS').toUpperCase(),
-      leagueColor: item.leagueColor || getLeagueColor(item.league),
-      isArticle: false,
-    }));
-    const combined = [...allArticles, ...allNews];
-    if (combined.length === 0) {
-      return [
-        { id: 'h1', headline: 'Oilers acquire defenceman Connor Murphy', league: 'NHL', leagueColor: '#0066cc' },
-        { id: 'h2', headline: 'Questions swirl around Canadian women', league: 'CAN', leagueColor: '#c8102e' },
-        { id: 'h3', headline: 'Gushue shines in battle of The Rock', league: 'CRL', leagueColor: '#555' },
-        { id: 'h4', headline: 'Canada names Josh Naylor captain for WBC', league: 'MLB', leagueColor: '#002d72' },
-        { id: 'h5', headline: 'Stars reach franchise-high win streak', league: 'NHL', leagueColor: '#0066cc' },
-        { id: 'h6', headline: 'Knight, Hughes brothers appear on Fallon', league: 'NHL', leagueColor: '#0066cc' },
-        { id: 'h7', headline: 'Kornet asks Hawks to cancel promotion', league: 'NBA', leagueColor: '#c8102e' },
-        { id: 'h8', headline: 'Young ejected before making Wizards debut', league: 'NBA', leagueColor: '#c8102e' },
-      ];
-    }
-    return combined.slice(0, 8);
-  }, [news, articles]);
-
   if (loading) {
     return (
       <div className="hero-cards">
@@ -250,31 +218,6 @@ export default function HeroCards({ news = [], articles = [], loading = false, s
               </CardWrapper>
             );
           })}
-        </div>
-
-        {/* HEADLINES Column (Right) */}
-        <div className="hero-headlines">
-          <div className="hero-headlines__title">Headlines</div>
-          <ul className="hero-headlines__list">
-            {headlines.map((item) => {
-              const ItemWrapper = item.isArticle && item.slug ? Link : 'a';
-              const itemProps = item.isArticle && item.slug
-                ? { to: `/article/${item.slug}` }
-                : { href: '#' };
-              return (
-                <ItemWrapper key={item.id} {...itemProps} className="hero-headlines__item">
-                  <div
-                    className="hero-headlines__icon-fallback"
-                    style={{ background: item.leagueColor, color: '#fff' }}
-                  >
-                    {item.league.slice(0, 3)}
-                  </div>
-                  <span className="hero-headlines__text">{item.headline}</span>
-                </ItemWrapper>
-              );
-            })}
-          </ul>
-          <div className="hero-headlines__ad">Advertisement</div>
         </div>
 
       </div>

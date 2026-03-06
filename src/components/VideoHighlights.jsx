@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import VideoModal from './VideoModal';
 import './VideoHighlights.css';
 
 const LEAGUE_COLORS = {
@@ -24,6 +25,7 @@ export default function VideoHighlights({ category = 'all' }) {
   const [loading, setLoading] = useState(true);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const trackRef = useRef(null);
 
   useEffect(() => {
@@ -97,80 +99,84 @@ export default function VideoHighlights({ category = 'all' }) {
   }
 
   return (
-    <div className="videos">
-      <div className="section-header">
-        <span className="section-header__bar" />
-        <h2 className="section-header__title">Video Highlights</h2>
-      </div>
-
-      <div className="videos__carousel-wrap">
-        {/* Prev Arrow */}
-        <button
-          className={`videos__arrow videos__arrow--prev${canPrev ? '' : ' videos__arrow--hidden'}`}
-          onClick={() => scroll(-1)}
-          aria-label="Previous videos"
-        >
-          <ChevronLeftIcon />
-        </button>
-
-        {/* Scrollable Track */}
-        <div className="videos__track" ref={trackRef}>
-          {videos.map((video) => {
-            const categoryKey = video.categories && video.categories.length > 0
-              ? video.categories[0].toLowerCase()
-              : (video.league || '').toLowerCase();
-            const categoryColor = video.leagueColor || LEAGUE_COLORS[categoryKey] || '#888';
-            const categoryLabel = categoryKey.toUpperCase();
-            const thumb = video.thumbnailUrl || video.thumb || `https://picsum.photos/seed/v${video.id}/600/340`;
-            const videoLink = video.videoUrl || '#';
-
-            return (
-              <a
-                key={video.id}
-                href={videoLink}
-                className="video-card"
-                target={video.videoUrl ? '_blank' : '_self'}
-                rel={video.videoUrl ? 'noopener noreferrer' : ''}
-              >
-                <div className="video-card__thumb-wrap">
-                  <img
-                    src={thumb}
-                    alt={video.title}
-                    className="video-card__thumb"
-                    loading="lazy"
-                  />
-                  <div className="video-card__overlay">
-                    <div className="video-card__play">
-                      <PlayIcon />
-                    </div>
-                  </div>
-                  <span className="video-card__duration">{video.duration || '—'}</span>
-                  <span className="video-card__league" style={{ background: categoryColor }}>
-                    {categoryLabel}
-                  </span>
-                </div>
-                <div className="video-card__body">
-                  <h4 className="video-card__title">{video.title}</h4>
-                  <div className="video-card__meta">
-                    <span className="video-card__views">{video.views || '—'} views</span>
-                    <span className="video-card__time">{video.time || ''}</span>
-                  </div>
-                </div>
-              </a>
-            );
-          })}
+    <>
+      <div className="videos">
+        <div className="section-header">
+          <span className="section-header__bar" />
+          <h2 className="section-header__title">Video Highlights</h2>
         </div>
 
-        {/* Next Arrow */}
-        <button
-          className={`videos__arrow videos__arrow--next${canNext ? '' : ' videos__arrow--hidden'}`}
-          onClick={() => scroll(1)}
-          aria-label="Next videos"
-        >
-          <ChevronRightIcon />
-        </button>
+        <div className="videos__carousel-wrap">
+          {/* Prev Arrow */}
+          <button
+            className={`videos__arrow videos__arrow--prev${canPrev ? '' : ' videos__arrow--hidden'}`}
+            onClick={() => scroll(-1)}
+            aria-label="Previous videos"
+          >
+            <ChevronLeftIcon />
+          </button>
+
+          {/* Scrollable Track */}
+          <div className="videos__track" ref={trackRef}>
+            {videos.map((video) => {
+              const categoryKey = video.categories && video.categories.length > 0
+                ? video.categories[0].toLowerCase()
+                : (video.league || '').toLowerCase();
+              const categoryColor = video.leagueColor || LEAGUE_COLORS[categoryKey] || '#888';
+              const categoryLabel = categoryKey.toUpperCase();
+              const thumb = video.thumbnailUrl || video.thumb || `https://picsum.photos/seed/v${video.id}/600/340`;
+
+              return (
+                <button
+                  key={video.id}
+                  className="video-card"
+                  onClick={() => setSelectedVideo(video)}
+                  type="button"
+                >
+                  <div className="video-card__thumb-wrap">
+                    <img
+                      src={thumb}
+                      alt={video.title}
+                      className="video-card__thumb"
+                      loading="lazy"
+                    />
+                    <div className="video-card__overlay">
+                      <div className="video-card__play">
+                        <PlayIcon />
+                      </div>
+                    </div>
+                    <span className="video-card__duration">{video.duration || '—'}</span>
+                    <span className="video-card__league" style={{ background: categoryColor }}>
+                      {categoryLabel}
+                    </span>
+                  </div>
+                  <div className="video-card__body">
+                    <h4 className="video-card__title">{video.title}</h4>
+                    <div className="video-card__meta">
+                      <span className="video-card__views">{video.views || '—'} views</span>
+                      <span className="video-card__time">{video.time || ''}</span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Next Arrow */}
+          <button
+            className={`videos__arrow videos__arrow--next${canNext ? '' : ' videos__arrow--hidden'}`}
+            onClick={() => scroll(1)}
+            aria-label="Next videos"
+          >
+            <ChevronRightIcon />
+          </button>
+        </div>
       </div>
-    </div>
+
+      {selectedVideo && (
+        <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />
+      )}
+    </>
   );
 }
 

@@ -6,14 +6,10 @@
 }
 
 .hero-cards__heading-bar {
-  background: var(--bg-primary, #fff);
+  background: var(--bg-primary);
   padding: 14px 0 10px;
   margin-bottom: 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-:root[data-theme="dark"] .hero-cards__heading-bar {
-  border-bottom-color: #2e2e2e;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .hero-cards__heading-inner {
@@ -29,7 +25,7 @@
   display: inline-block;
   width: 4px;
   height: 18px;
-  background: #c8102e;
+  background: var(--red);
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -39,13 +35,9 @@
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #111;
+  color: var(--text-primary);
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-:root[data-theme="dark"] .hero-cards__heading-title {
-  color: #f0f0f0;
+  font-family: var(--font-label);
 }
 
 .hero-cards__container-wrap {
@@ -54,7 +46,7 @@
 
 .hero-cards__container {
   display: grid;
-  grid-template-columns: 42% 33% 25%;
+  grid-template-columns: 57% 43%;
   gap: 16px;
   max-width: 1400px;
   margin: 0 auto;
@@ -67,17 +59,17 @@
   position: relative;
   display: block;
   height: 460px;
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
   transition: box-shadow 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
-  background: #ccc;
+  box-shadow: 0 2px 12px var(--shadow);
+  background: var(--bg-secondary);
 }
 
 .hero-card--large:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 6px 24px var(--shadow-md);
 }
 
 /* Small Cards Container (Right Side) */
@@ -95,18 +87,18 @@
   display: flex;
   align-items: stretch;
   height: 144px;
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
   transition: box-shadow 0.2s ease;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  border: none;
+  background: var(--card-bg);
+  box-shadow: 0 1px 6px var(--shadow);
+  border: 1px solid var(--border-color);
 }
 
 .hero-card--small:hover {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 4px 16px var(--shadow-md);
 }
 
 /* Background Image (Large Card) */
@@ -128,7 +120,7 @@
   background-size: cover;
   background-position: center;
   transition: none;
-  background-color: #bbb;
+  background-color: var(--bg-secondary);
   border-radius: 0;
 }
 
@@ -136,7 +128,7 @@
 .hero-card--large .hero-card__badge {
   display: inline-flex;
   align-items: center;
-  background: #0066cc;
+  background: var(--accent-blue);
   color: #fff;
   font-size: 0.68rem;
   font-weight: 800;
@@ -151,7 +143,7 @@
 .hero-card__badge--small {
   display: inline-flex;
   align-items: center;
-  background: #0066cc;
+  background: var(--accent-blue);
   color: #fff;
   font-size: 0.63rem;
   font-weight: 800;
@@ -175,27 +167,27 @@
   right: 0;
   z-index: 2;
   padding: 14px 16px 18px;
-  background: #fff;
+  background: var(--card-bg);
 }
 
 .hero-card--large .hero-card__author {
   font-size: 0.72rem;
   font-weight: 400;
-  color: #444;
+  color: var(--text-tertiary);
   margin-bottom: 7px;
   display: flex;
   align-items: center;
   gap: 7px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-ui);
 }
 
 .hero-card--large .hero-card__headline {
   font-size: 1.3rem;
   font-weight: 700;
   line-height: 1.28;
-  color: #0d0d0d;
+  color: var(--text-primary);
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-heading);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -211,7 +203,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  background: #fff;
+  background: var(--card-bg);
 }
 
 .hero-card__text-top {
@@ -224,17 +216,17 @@
 .hero-card__author--small {
   font-size: 0.72rem;
   font-weight: 400;
-  color: #555;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text-tertiary);
+  font-family: var(--font-ui);
 }
 
 .hero-card__headline--small {
   font-size: 0.97rem;
   font-weight: 700;
   line-height: 1.32;
-  color: #0d0d0d;
+  color: var(--text-primary);
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-heading);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -242,43 +234,11 @@
   text-overflow: ellipsis;
 }
 
-/* Dark mode overrides */
-:root[data-theme="dark"] .hero-card--small {
-  background: #242628;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-}
-
-:root[data-theme="dark"] .hero-card--small:hover {
-  box-shadow: 0 3px 12px rgba(0,0,0,0.55);
-}
-
-:root[data-theme="dark"] .hero-card__text {
-  background: #242628;
-}
-
-:root[data-theme="dark"] .hero-card__headline--small {
-  color: #f0f0f0;
-}
-
-:root[data-theme="dark"] .hero-card__author--small {
-  color: #aaa;
-}
-
-:root[data-theme="dark"] .hero-card--large .hero-card__content {
-  background: #1e2022;
-}
-
-:root[data-theme="dark"] .hero-card--large .hero-card__headline {
-  color: #f0f0f0;
-}
-
-:root[data-theme="dark"] .hero-card--large .hero-card__author {
-  color: #bbb;
-}
+/* Dark mode — all handled via CSS variables above, no overrides needed */
 
 /* Skeleton Loading */
 .hero-card--skeleton {
-  background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--border-color) 50%, var(--bg-secondary) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
   pointer-events: none;
@@ -293,15 +253,11 @@
 .hero-headlines {
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 6px var(--shadow);
   overflow: hidden;
-}
-
-:root[data-theme="dark"] .hero-headlines {
-  background: #242628;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
 
 .hero-headlines__title {
@@ -309,15 +265,10 @@
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #111;
+  color: var(--text-primary);
   padding: 14px 16px 10px;
-  border-bottom: 2px solid #e0e0e0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-:root[data-theme="dark"] .hero-headlines__title {
-  color: #f0f0f0;
-  border-bottom-color: #333;
+  border-bottom: 2px solid var(--border-color);
+  font-family: var(--font-label);
 }
 
 .hero-headlines__list {
@@ -385,49 +336,37 @@
   justify-content: center;
   font-size: 0.6rem;
   font-weight: 800;
-  color: #555;
+  color: var(--text-tertiary);
   text-transform: uppercase;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-:root[data-theme="dark"] .hero-headlines__icon-fallback {
-  background: #3a3a3a;
-  color: #ccc;
+  font-family: var(--font-label);
 }
 
 .hero-headlines__text {
   font-size: 0.82rem;
   font-weight: 600;
   line-height: 1.35;
-  color: #111;
+  color: var(--text-primary);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-:root[data-theme="dark"] .hero-headlines__text {
-  color: #e8e8e8;
+  font-family: var(--font-heading);
 }
 
 .hero-headlines__ad {
   padding: 12px 14px;
   font-size: 0.65rem;
-  color: #aaa;
+  color: var(--text-tertiary);
   text-align: center;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
 }
 
 /* Responsive */
 @media (max-width: 1100px) {
   .hero-cards__container {
-    grid-template-columns: 48% 52%;
-  }
-  .hero-headlines {
-    display: none;
+    grid-template-columns: 55% 45%;
   }
 }
 

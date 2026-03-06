@@ -5,8 +5,15 @@ import SectionContainer from '../components/SectionContainer';
 import VideoHighlights from '../components/VideoHighlights';
 import Sidebar from '../components/Sidebar';
 import FeaturedLeagues from '../components/FeaturedLeagues';
-import { fetchNews, fetchScores, fetchVideos, fetchArticles, fetchSections } from '../api';
+import { fetchNews, fetchScores, fetchVideos, fetchArticles, fetchSections, fetchArticlesByPlacement } from '../api';
 import './LeaguePage.css';
+
+const MUST_SEE_FALLBACK = [
+  { id: 1, image: 'https://picsum.photos/seed/must1/400/260', label: 'EXCLUSIVE', labelColor: '#f5a623', title: 'Inside the Locker Room: Maple Leafs Playoff Preparation', league: 'NHL', time: 'Yesterday', slug: null },
+  { id: 2, image: 'https://picsum.photos/seed/must2/400/260', label: 'FEATURE', labelColor: '#0066cc', title: "SGA's Rise to MVP: The Oklahoma City Thunder Story", league: 'NBA', time: '2 days ago', slug: null },
+  { id: 3, image: 'https://picsum.photos/seed/must3/400/260', label: 'DOCUMENTARY', labelColor: '#00a651', title: "Canada's World Cup Journey: Road to 2026", league: 'SOCCER', time: '3 days ago', slug: null },
+  { id: 4, image: 'https://picsum.photos/seed/must4/400/260', label: 'ANALYSIS', labelColor: '#c8102e', title: 'Blue Jays Trade Deadline: Winners and Losers', league: 'MLB', time: '4 days ago', slug: null },
+];
 
 const LEAGUE_LABELS = {
   all: 'Top Sports News',
@@ -42,6 +49,7 @@ export default function LeaguePage({ league }) {
   const [videos, setVideos] = useState([]);
   const [articles, setArticles] = useState([]);
   const [sections, setSections] = useState([]);
+  const [mustSeeArticles, setMustSeeArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -61,6 +69,7 @@ export default function LeaguePage({ league }) {
         setVideos(videosData);
         setArticles(articlesData);
         setSections(sectionsData);
+        fetchArticlesByPlacement('isMustSee', { limit: 4 }).then(setMustSeeArticles).catch(() => {});
         setLoading(false);
       })
       .catch((err) => {
@@ -107,9 +116,6 @@ export default function LeaguePage({ league }) {
         </div>
       )}
 
-      {/* Hero Cards Section */}
-      <HeroCards news={news} articles={articles} loading={loading} showTopNewsLabel={league === 'all'} />
-
       {/* Offline warning */}
       {error === 'backend-offline' && (
         <div className="offline-banner">
@@ -117,39 +123,127 @@ export default function LeaguePage({ league }) {
         </div>
       )}
 
-      {/* Position 1 — After hero */}
-      {sectionsAt(1)}
+      {/* Full-page grid: main column + sidebar spans entire page */}
+      <div className="league-page__page-grid">
+        <div className="league-page__page-main">
 
-      {/* Main content */}
-      <div className="league-page__content">
-        <div className="league-page__content-inner">
-          <div className="league-page__main-col">
-            {/* Video Highlights — above Featured Stories */}
-            <div className="league-page__section-gap">
-              <VideoHighlights category={league} />
-            </div>
+          {/* Hero Cards Section */}
+          <HeroCards news={news} articles={articles} loading={loading} showTopNewsLabel={league === 'all'} />
 
-            {/* Position 2 — After Videos */}
-            {sectionsAt(2)}
-
-            {/* Top Stories */}
-            <TopStories news={news} articles={articles} loading={loading} />
-
-            {/* Position 3 — After Top Stories */}
-            {sectionsAt(3)}
+          {/* Featured leagues / Fan Forums section */}
+          <div className="league-page__featured-leagues">
+            <FeaturedLeagues />
           </div>
-          
-          {/* Sidebar */}
+
+          {/* Latest News strip */}
+          {news.length > 0 && (
+            <div className="latest-news-strip">
+              <div className="latest-news-strip__inner">
+                <div className="latest-news-strip__header">
+                  <span className="latest-news-strip__bar" />
+                  <h2 className="latest-news-strip__title">Latest News</h2>
+                  <a href="#" className="latest-news-strip__link">View All →</a>
+                </div>
+                <div className="latest-news-strip__feed">
+                  {news.slice(0, 10).map((item) => (
+                    <a key={item.id} href="#" className="latest-news-strip__item">
+                      <span
+                        className="latest-news-strip__league"
+                        style={{ color: item.leagueColor || '#888' }}
+                      >
+                        {(item.league || 'NEWS').toUpperCase()}
+                      </span>
+                      <span className="latest-news-strip__headline">{item.headline}</span>
+                      <span className="latest-news-strip__time">{item.time}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Position 1 — After hero */}
+          {sectionsAt(1)}
+
+          {/* Video Highlights */}
+          <div className="league-page__section-gap">
+            <VideoHighlights category={league} />
+          </div>
+
+          {/* Position 2 — After Videos */}
+          {sectionsAt(2)}
+
+          {/* Top Stories */}
+          <TopStories news={news} articles={articles} loading={loading} />
+
+          {/* Position 3 — After Top Stories */}
+          {sectionsAt(3)}
+
+          {/* Position 4 — Bottom of main col */}
+          {sectionsAt(4)}
+
+          {/* Must See — bottom of page */}
+          {(() => {
+            const items = mustSeeArticles.length > 0
+              ? mustSeeArticles.map(a => ({
+                  id: a.id,
+                  image: a.imageUrl,
+                  label: (a.category || 'NEWS').toUpperCase(),
+                  labelColor: a.categoryColor || '#888',
+                  title: a.title,
+                  league: (a.category || '').toUpperCase(),
+                  time: a.time || (a.publishedAt ? new Date(a.publishedAt).toLocaleDateString() : ''),
+                  slug: a.slug,
+                }))
+              : MUST_SEE_FALLBACK;
+            return (
+              <div className="league-page__must-see">
+                <div className="section-header">
+                  <span className="section-header__bar" />
+                  <h2 className="section-header__title">Must See</h2>
+                  <a href="#" className="section-header__link">View All →</a>
+                </div>
+                <div className="must-see-grid">
+                  {items.map(item => (
+                    item.slug
+                      ? <a key={item.id} href={`/article/${item.slug}`} className="must-see-card">
+                          <div className="must-see-card__img-wrap">
+                            <img src={item.image} alt={item.title} className="must-see-card__img" loading="lazy" />
+                            <span className="must-see-card__label" style={{ background: item.labelColor }}>{item.label}</span>
+                          </div>
+                          <div className="must-see-card__body">
+                            <h4 className="must-see-card__title">{item.title}</h4>
+                            <div className="must-see-card__meta">
+                              <span className="must-see-card__league">{item.league}</span>
+                              <span className="must-see-card__time">{item.time}</span>
+                            </div>
+                          </div>
+                        </a>
+                      : <a key={item.id} href="#" className="must-see-card">
+                          <div className="must-see-card__img-wrap">
+                            <img src={item.image} alt={item.title} className="must-see-card__img" loading="lazy" />
+                            <span className="must-see-card__label" style={{ background: item.labelColor }}>{item.label}</span>
+                          </div>
+                          <div className="must-see-card__body">
+                            <h4 className="must-see-card__title">{item.title}</h4>
+                            <div className="must-see-card__meta">
+                              <span className="must-see-card__league">{item.league}</span>
+                              <span className="must-see-card__time">{item.time}</span>
+                            </div>
+                          </div>
+                        </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+
+        </div>
+
+        {/* Sidebar — spans full height */}
+        <div className="league-page__page-sidebar">
           <Sidebar scores={scores} news={news} articles={articles} loading={loading} page={pageKey} />
         </div>
-      </div>
-
-      {/* Position 4 — Bottom of page */}
-      {sectionsAt(4)}
-
-      {/* Featured leagues section */}
-      <div className="app__full-width">
-        <FeaturedLeagues />
       </div>
     </>
   );

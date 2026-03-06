@@ -142,7 +142,13 @@ export default function Navbar() {
           
           {user ? (
             <div className="navbar__user-menu">
-              <span className="navbar__user-name">{user.name}</span>
+              {user.avatarUrl ? (
+                <img src={`http://localhost:5001${user.avatarUrl}`} alt={user.username || user.name} className="navbar__user-avatar navbar__user-avatar--img" />
+              ) : (
+                <span className="navbar__user-avatar">{(user.username || user.name || 'U').slice(0,2).toUpperCase()}</span>
+              )}
+              <span className="navbar__user-name">{user.username || user.name}</span>
+              <Link to="/profile" className="navbar__profile-link">My Panel</Link>
               <button className="navbar__logout" onClick={logout}>
                 Logout
               </button>
@@ -223,7 +229,8 @@ export default function Navbar() {
           <div className="navbar__mobile-actions">
             {user ? (
               <div className="navbar__mobile-user">
-                <span className="navbar__mobile-user-name">{user.name}</span>
+                <span className="navbar__mobile-user-name">{user.username || user.name}</span>
+                <Link to="/profile" className="navbar__mobile-link navbar__mobile-link--profile" onClick={closeMobile}>My Panel</Link>
                 <button className="navbar__mobile-logout" onClick={logout}>
                   Logout
                 </button>

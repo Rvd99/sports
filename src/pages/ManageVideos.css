@@ -67,7 +67,7 @@
   padding: 0.875rem 1.5rem;
   font-size: 1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #fff;
   background: var(--red);
   border: none;
   border-radius: 6px;
@@ -80,9 +80,9 @@
 }
 
 .manage-videos__add-btn:hover {
-  background: #c8102e;
+  background: var(--red-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(218, 2, 14, 0.3);
+  box-shadow: 0 4px 12px rgba(229, 25, 42, 0.3);
 }
 
 .manage-videos__loading {
@@ -139,7 +139,7 @@
   padding: 0.875rem 1.75rem;
   font-size: 1rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #fff;
   background: var(--red);
   border: none;
   border-radius: 6px;
@@ -148,9 +148,9 @@
 }
 
 .manage-videos__empty-btn:hover {
-  background: #c8102e;
+  background: var(--red-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(218, 2, 14, 0.3);
+  box-shadow: 0 4px 12px rgba(229, 25, 42, 0.3);
 }
 
 .manage-videos__stats {
@@ -223,8 +223,8 @@
   bottom: 0.5rem;
   right: 0.5rem;
   padding: 0.25rem 0.5rem;
-  background: rgba(0, 0, 0, 0.8);
-  color: #ffffff;
+  background: rgba(10, 18, 32, 0.85);
+  color: #fff;
   font-size: 0.75rem;
   font-weight: 700;
   border-radius: 3px;
@@ -333,16 +333,16 @@
 }
 
 .manage-videos__card-btn--view {
-  color: #ffffff;
-  background: #2563eb;
+  color: #fff;
+  background: var(--accent-blue);
 }
 
 .manage-videos__card-btn--view:hover {
-  background: #1d4ed8;
+  filter: brightness(1.1);
 }
 
 .manage-videos__card-btn--delete {
-  color: #ffffff;
+  color: #fff;
   background: #dc2626;
 }
 

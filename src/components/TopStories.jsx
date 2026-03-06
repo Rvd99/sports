@@ -183,30 +183,6 @@ export default function TopStories({ news = [], articles = [], loading = false, 
         </div>
       )}
 
-      {/* Recent News Feed */}
-      {recent.length > 0 && (
-        <>
-          <div className="section-header" style={{ marginTop: '36px' }}>
-            <span className="section-header__bar" />
-            <h2 className="section-header__title">Latest News</h2>
-            <a href="#" className="section-header__link">View All →</a>
-          </div>
-          <div className="recent-feed">
-            {recent.map((item) => (
-              <a key={item.id} href="#" className="recent-feed__item">
-                <span
-                  className="recent-feed__league"
-                  style={{ color: item.leagueColor || getLeagueColor(item.league) }}
-                >
-                  {normalizeLeague(item.league)}
-                </span>
-                <span className="recent-feed__headline">{item.headline}</span>
-                <span className="recent-feed__time">{item.time}</span>
-              </a>
-            ))}
-          </div>
-        </>
-      )}
     </div>
   );
 }
