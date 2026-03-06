@@ -3,7 +3,7 @@
   top: 0;
   z-index: 100;
   background: var(--navbar-bg);
-  border-bottom: 2px solid var(--red);
+  border-bottom: 2px solid var(--primary);
   box-shadow: 0 2px 16px var(--shadow-md);
   transition: box-shadow 0.2s, background-color 0.3s;
 }
@@ -85,7 +85,7 @@
 .navbar__link--active {
   color: #fff !important;
   background: rgba(229, 25, 42, 0.18);
-  border-bottom: 2px solid var(--red);
+  border-bottom: 2px solid var(--primary);
 }
 
 .navbar__link--admin {

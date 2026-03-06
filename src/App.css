@@ -1,32 +1,60 @@
 /* ═══════════════════════════════════════════════════════
-   DEGEN SPORTS — ULTIMATE PROFESSIONAL THEME
-   Deep navy/slate palette — bold, clean, premium
+   SPORTS APP — LIGHT THEME
+   Emerald green accent, white background, slate text
    ═══════════════════════════════════════════════════════ */
 
 :root[data-theme="light"] {
-  --bg-primary:     #f4f6f9;
-  --bg-secondary:   #eaecf2;
-  --bg-tertiary:    #ffffff;
-  --text-primary:   #0f1729;
-  --text-secondary: #2d3a52;
-  --text-tertiary:  #64748b;
-  --border-color:   #d8dde8;
-  --card-bg:        #ffffff;
-  --navbar-bg:      #0f1d3a;
-  --navbar-text:    #e8edf5;
-  --navbar-hover:   #e5192a;
-  --footer-bg:      #0f1d3a;
-  --shadow:         rgba(15, 29, 58, 0.08);
-  --shadow-md:      rgba(15, 29, 58, 0.14);
-  --shadow-lg:      rgba(15, 29, 58, 0.22);
-  --bg-ticker:      #0f1d3a;
+  /* ── Background & Surface ───────────────────────────── */
+  --bg-primary:     #FFFFFF;        /* pure white page background */
+  --bg-secondary:   #F9FBFD;        /* very light cool white for panels */
+  --bg-tertiary:    #F1F5F9;        /* subtle section backgrounds */
+  --card-bg:        #FFFFFF;        /* card surfaces */
+  --card-hover:     #F0FDF9;        /* card hover — light mint tint */
+  --input-bg:       #F1F5F9;
+
+  /* ── Text ───────────────────────────────────────────── */
+  --text-primary:   #1E293B;        /* dark cool gray for body content */
+  --text-secondary: #0F172A;        /* deep slate for headings/labels */
+  --text-tertiary:  #64748B;        /* mid-gray for captions/meta */
+
+  /* ── Borders & Dividers ─────────────────────────────── */
+  --border-color:   #E2E8F0;        /* subtle light borders */
+
+  /* ── Navbar & Footer ────────────────────────────────── */
+  --navbar-bg:      #F9FBFD;        /* very light cool white header */
+  --navbar-text:    #0F172A;        /* deep slate menu links */
+  --navbar-hover:   #10B981;        /* emerald green hover */
+  --footer-bg:      #0F172A;        /* deep slate footer */
+
+  /* ── Shadows ────────────────────────────────────────── */
+  --shadow:         rgba(15, 23, 42, 0.06);
+  --shadow-md:      rgba(15, 23, 42, 0.10);
+  --shadow-lg:      rgba(15, 23, 42, 0.18);
+
+  /* ── Primary Accent: Emerald Green ──────────────────── */
+  --primary:        #10B981;        /* main accent — links, CTAs, live */
+  --primary-hover:  #059669;        /* deeper green for hover/active */
+  --primary-glow:   rgba(16, 185, 129, 0.15);
+
+  /* ── Legacy red (kept for backwards compat) ──────────── */
   --red:            #e5192a;
   --red-dark:       #b5141f;
   --red-glow:       rgba(229, 25, 42, 0.15);
+
+  /* ── Other Accents ──────────────────────────────────── */
   --accent-gold:    #f59e0b;
   --accent-blue:    #2563eb;
-  --card-hover:     #f0f3f8;
-  --input-bg:       #eaecf2;
+  --bg-ticker:      #0F172A;
+
+  /* ── Design Tokens ──────────────────────────────────── */
+  --background-main:  #FFFFFF;
+  --header-bg:        #F9FBFD;
+  --menu-text:        #0F172A;
+  --body-text:        #1E293B;
+  --headings:         #0F172A;
+  --secondary-gray:   #64748B;
+  --border-light:     #E2E8F0;
+  --success-hover:    #059669;
 }
 
 :root[data-theme="dark"] {
@@ -40,12 +68,15 @@
   --card-bg:        #141f33;
   --navbar-bg:      #0a1220;
   --navbar-text:    #e8edf5;
-  --navbar-hover:   #e5192a;
+  --navbar-hover:   #10B981;
   --footer-bg:      #0a1220;
   --shadow:         rgba(0, 0, 0, 0.4);
   --shadow-md:      rgba(0, 0, 0, 0.55);
   --shadow-lg:      rgba(0, 0, 0, 0.75);
   --bg-ticker:      #0a1220;
+  --primary:        #10B981;
+  --primary-hover:  #059669;
+  --primary-glow:   rgba(16, 185, 129, 0.2);
   --red:            #e5192a;
   --red-dark:       #b5141f;
   --red-glow:       rgba(229, 25, 42, 0.2);
@@ -53,41 +84,77 @@
   --accent-blue:    #3b82f6;
   --card-hover:     #1e2d47;
   --input-bg:       #0e1628;
+  --background-main:  #0e1628;
+  --header-bg:        #0a1220;
+  --menu-text:        #e8edf5;
+  --body-text:        #9aaec4;
+  --headings:         #e8edf5;
+  --secondary-gray:   #546880;
+  --border-light:     #1e2d47;
+  --success-hover:    #059669;
 }
 
-/* Default (light) */
+/* ── Default (light) — mirrors [data-theme="light"] ──── */
 :root {
-  --bg-primary:     #f4f6f9;
-  --bg-secondary:   #eaecf2;
-  --bg-tertiary:    #ffffff;
-  --text-primary:   #0f1729;
-  --text-secondary: #2d3a52;
-  --text-tertiary:  #64748b;
-  --border-color:   #d8dde8;
-  --card-bg:        #ffffff;
-  --navbar-bg:      #0f1d3a;
-  --navbar-text:    #e8edf5;
-  --navbar-hover:   #e5192a;
-  --footer-bg:      #0f1d3a;
-  --shadow:         rgba(15, 29, 58, 0.08);
-  --shadow-md:      rgba(15, 29, 58, 0.14);
-  --shadow-lg:      rgba(15, 29, 58, 0.22);
-  --bg-ticker:      #0f1d3a;
+  /* ── Background & Surface ───────────────────────────── */
+  --bg-primary:     #FFFFFF;
+  --bg-secondary:   #F9FBFD;
+  --bg-tertiary:    #F1F5F9;
+  --card-bg:        #FFFFFF;
+  --card-hover:     #F0FDF9;
+  --input-bg:       #F1F5F9;
+
+  /* ── Text ───────────────────────────────────────────── */
+  --text-primary:   #1E293B;
+  --text-secondary: #0F172A;
+  --text-tertiary:  #64748B;
+
+  /* ── Borders ────────────────────────────────────────── */
+  --border-color:   #E2E8F0;
+
+  /* ── Navbar & Footer ────────────────────────────────── */
+  --navbar-bg:      #F9FBFD;
+  --navbar-text:    #0F172A;
+  --navbar-hover:   #10B981;
+  --footer-bg:      #0F172A;
+
+  /* ── Shadows ────────────────────────────────────────── */
+  --shadow:         rgba(15, 23, 42, 0.06);
+  --shadow-md:      rgba(15, 23, 42, 0.10);
+  --shadow-lg:      rgba(15, 23, 42, 0.18);
+
+  /* ── Primary Accent: Emerald Green ──────────────────── */
+  --primary:        #10B981;
+  --primary-hover:  #059669;
+  --primary-glow:   rgba(16, 185, 129, 0.15);
+
+  /* ── Legacy red (kept for backwards compat) ──────────── */
   --red:            #e5192a;
   --red-dark:       #b5141f;
   --red-glow:       rgba(229, 25, 42, 0.15);
+
+  /* ── Other Accents ──────────────────────────────────── */
   --accent-gold:    #f59e0b;
   --accent-blue:    #2563eb;
-  --card-hover:     #f0f3f8;
-  --input-bg:       #eaecf2;
+  --bg-ticker:      #0F172A;
+
+  /* ── Named Design Tokens ────────────────────────────── */
+  --background-main:  #FFFFFF;
+  --header-bg:        #F9FBFD;
+  --menu-text:        #0F172A;
+  --body-text:        #1E293B;
+  --headings:         #0F172A;
+  --secondary-gray:   #64748B;
+  --border-light:     #E2E8F0;
+  --success-hover:    #059669;
 }
 
 /* ── Typography ───────────────────────────────────────── */
 :root {
-  --font-heading: 'Oswald', 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  --font-heading: 'Bebas Neue', 'Oswald', 'Arial Narrow', Arial, sans-serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-ui:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-label:   'Oswald', 'Barlow Condensed', Arial, sans-serif;
+  --font-label:   'Bebas Neue', 'Oswald', Arial, sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 }
 
@@ -101,7 +168,10 @@
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  letter-spacing: 0.01em;
+  font-weight: 400;              /* Bebas Neue only has regular weight */
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--headings);
 }
 
 /* Section labels — Oswald condensed */
@@ -278,5 +348,177 @@ h1, h2, h3, h4, h5, h6 {
   .app__full-width {
     padding: 0 16px;
     margin-top: 28px;
+  }
+}
+
+/* ── Global Button Styles ─────────────────────────────── */
+
+/* Primary button: emerald green CTA */
+.btn-primary,
+button.btn-primary {
+  background: var(--primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Secondary button: light gray */
+.btn-secondary,
+button.btn-secondary {
+  background: var(--border-color);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #D1D9E6;
+}
+
+/* ── Live Score Tracker ───────────────────────────────── */
+/* Fixed bar at top, above header. Mint-green "live field" */
+
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.live-score-tracker {
+  /* Layout */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  padding: 10px 24px;
+
+  /* Colors */
+  background: #E0F2F1;               /* light mint-green — "live field" feel */
+  border-bottom: 1px solid #C6EDE9;  /* soft green bottom edge */
+}
+
+/* Individual match block inside the tracker */
+.live-score-tracker__match {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.live-score-tracker__match:hover {
+  background: #059669;               /* deeper green on hover */
+}
+
+/* LIVE badge with pulsing animation */
+.live-score-tracker__live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #10B981;               /* emerald green badge */
+  color: #FFFFFF;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+
+/* Pulsing dot inside the LIVE badge */
+.live-score-tracker__live-badge::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+/* Team names and scores — Bebas Neue */
+.live-score-tracker__teams {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #0F172A;                    /* deep slate for max contrast */
+}
+
+/* Score numbers — bold green accent */
+.live-score-tracker__score {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  color: #10B981;                    /* emerald green for runs/wickets/points */
+}
+
+/* Meta details (overs, run rate) — Inter */
+.live-score-tracker__meta {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: #64748B;                    /* mid-gray */
+}
+
+/* Status label (e.g. "1st Innings", "HT") */
+.live-score-tracker__status {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+/* Divider between matches */
+.live-score-tracker__divider {
+  width: 1px;
+  height: 20px;
+  background: #C6EDE9;
+  flex-shrink: 0;
+}
+
+/* Responsive: scroll horizontally on small screens */
+@media (max-width: 768px) {
+  .live-score-tracker {
+    justify-content: flex-start;
+    overflow-x: auto;
+    gap: 16px;
+    padding: 8px 16px;
+    scrollbar-width: none;
+  }
+
+  .live-score-tracker::-webkit-scrollbar {
+    display: none;
   }
 }
