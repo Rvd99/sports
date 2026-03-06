@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { fetchComments, postComment, likeComment, dislikeComment } from '../api';
+import { fetchComments, postComment, likeComment, dislikeComment, deleteComment } from '../api';
 import { useAuth } from '../contexts/AuthContext';
 import UserHoverCard from './UserHoverCard';
 import './CommentsSection.css';
@@ -22,6 +22,7 @@ export default function CommentsSection({ articleSlug }) {
   const [error, setError] = useState('');
   const [likedSet, setLikedSet] = useState(new Set());
   const [dislikedSet, setDislikedSet] = useState(new Set());
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     if (!articleSlug) return;
@@ -74,6 +75,19 @@ export default function CommentsSection({ articleSlug }) {
         setDislikedSet(prev => { const n = new Set(prev); n.delete(commentId); return n; });
       }
     } catch {}
+  }
+
+  async function handleDeleteComment(commentId) {
+    if (!window.confirm('Delete this comment?')) return;
+    setDeletingId(commentId);
+    try {
+      await deleteComment(commentId);
+      setComments(prev => prev.filter(c => c.id !== commentId));
+    } catch (err) {
+      alert(err.message || 'Failed to delete comment');
+    } finally {
+      setDeletingId(null);
+    }
   }
 
   async function handleDislike(commentId) {
@@ -158,7 +172,7 @@ export default function CommentsSection({ articleSlug }) {
                   <span className="comment__time">{timeAgo(c.createdAt)}</span>
                 </div>
                 <p className="comment__text">{c.text}</p>
-                <div className="comment__actions">
+                <div className="comment__actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <button
                     className={`comment__like${likedSet.has(c.id) ? ' comment__like--active' : ''}`}
                     onClick={() => handleLike(c.id)}
@@ -181,6 +195,16 @@ export default function CommentsSection({ articleSlug }) {
                     </svg>
                     {(c.dislikes || 0) > 0 && <span>{c.dislikes}</span>}
                   </button>
+                  {user && (user.role === 'admin' || user.role === 'editor') && (
+                    <button
+                      className="comment__delete-btn"
+                      onClick={() => handleDeleteComment(c.id)}
+                      disabled={deletingId === c.id}
+                      title="Delete comment"
+                    >
+                      {deletingId === c.id ? '⏳' : '🗑️'}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

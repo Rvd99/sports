@@ -50,6 +50,7 @@ export default function LeaguePage({ league }) {
   const [articles, setArticles] = useState([]);
   const [sections, setSections] = useState([]);
   const [mustSeeArticles, setMustSeeArticles] = useState([]);
+  const [latestNewsArticles, setLatestNewsArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -70,6 +71,7 @@ export default function LeaguePage({ league }) {
         setArticles(articlesData);
         setSections(sectionsData);
         fetchArticlesByPlacement('isMustSee', { limit: 4 }).then(setMustSeeArticles).catch(() => {});
+        fetchArticlesByPlacement('isLatestNews', { limit: 10 }).then(setLatestNewsArticles).catch(() => {});
         setLoading(false);
       })
       .catch((err) => {
@@ -135,8 +137,8 @@ export default function LeaguePage({ league }) {
             <FeaturedLeagues />
           </div>
 
-          {/* Latest News strip */}
-          {news.length > 0 && (
+          {/* Latest News strip — shows articles marked isLatestNews, falls back to news feed */}
+          {(latestNewsArticles.length > 0 || news.length > 0) && (
             <div className="latest-news-strip">
               <div className="latest-news-strip__inner">
                 <div className="latest-news-strip__header">
@@ -145,18 +147,34 @@ export default function LeaguePage({ league }) {
                   <a href="#" className="latest-news-strip__link">View All →</a>
                 </div>
                 <div className="latest-news-strip__feed">
-                  {news.slice(0, 10).map((item) => (
-                    <a key={item.id} href="#" className="latest-news-strip__item">
-                      <span
-                        className="latest-news-strip__league"
-                        style={{ color: item.leagueColor || '#888' }}
-                      >
-                        {(item.league || 'NEWS').toUpperCase()}
-                      </span>
-                      <span className="latest-news-strip__headline">{item.headline}</span>
-                      <span className="latest-news-strip__time">{item.time}</span>
-                    </a>
-                  ))}
+                  {latestNewsArticles.length > 0
+                    ? latestNewsArticles.map((item) => (
+                        <a key={item.id} href={`/article/${item.slug}`} className="latest-news-strip__item">
+                          <span
+                            className="latest-news-strip__league"
+                            style={{ color: item.categoryColor || '#888' }}
+                          >
+                            {(item.category || 'NEWS').toUpperCase()}
+                          </span>
+                          <span className="latest-news-strip__headline">{item.title}</span>
+                          <span className="latest-news-strip__time">
+                            {item.publishedAt ? new Date(item.publishedAt).toLocaleDateString() : ''}
+                          </span>
+                        </a>
+                      ))
+                    : news.slice(0, 10).map((item) => (
+                        <a key={item.id} href="#" className="latest-news-strip__item">
+                          <span
+                            className="latest-news-strip__league"
+                            style={{ color: item.leagueColor || '#888' }}
+                          >
+                            {(item.league || 'NEWS').toUpperCase()}
+                          </span>
+                          <span className="latest-news-strip__headline">{item.headline}</span>
+                          <span className="latest-news-strip__time">{item.time}</span>
+                        </a>
+                      ))
+                  }
                 </div>
               </div>
             </div>

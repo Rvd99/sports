@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createArticle, fetchSections, createSection } from '../api';
+import { createArticle, fetchSections, createSection, deleteSection } from '../api';
 import './CreateArticle.css';
 
 const CATEGORIES = [
@@ -70,6 +70,17 @@ export default function CreateArticle() {
   useEffect(() => {
     fetchSections().then(setSections).catch(() => {});
   }, []);
+
+  async function handleDeleteSection(sectionId) {
+    if (!window.confirm('Delete this section?')) return;
+    try {
+      await deleteSection(sectionId);
+      setSections(prev => prev.filter(s => s.id !== sectionId));
+      setForm(prev => ({ ...prev, sectionIds: prev.sectionIds.filter(id => id !== sectionId) }));
+    } catch (err) {
+      setErrorMsg(err.message || 'Failed to delete section');
+    }
+  }
 
   async function handleAddSection(e) {
     e.preventDefault();
@@ -814,27 +825,37 @@ export default function CreateArticle() {
                   {sections.map(section => {
                     const checked = form.sectionIds.includes(section.id);
                     return (
-                      <label key={section.id} className="article-form__placement-label">
-                        <input
-                          type="checkbox"
-                          className="article-form__checkbox"
-                          checked={checked}
-                          onChange={() => {
-                            setForm(prev => ({
-                              ...prev,
-                              sectionIds: checked
-                                ? prev.sectionIds.filter(id => id !== section.id)
-                                : [...prev.sectionIds, section.id],
-                            }));
-                          }}
-                        />
-                        <div className="article-form__placement-info">
-                          <span className="article-form__placement-name">📂 {section.title}</span>
-                          <span className="article-form__placement-desc">
-                            {section.description || `Appears under "${section.title}" on the homepage`}
-                          </span>
-                        </div>
-                      </label>
+                      <div key={section.id} className="article-form__section-row">
+                        <label className="article-form__placement-label" style={{ flex: 1 }}>
+                          <input
+                            type="checkbox"
+                            className="article-form__checkbox"
+                            checked={checked}
+                            onChange={() => {
+                              setForm(prev => ({
+                                ...prev,
+                                sectionIds: checked
+                                  ? prev.sectionIds.filter(id => id !== section.id)
+                                  : [...prev.sectionIds, section.id],
+                              }));
+                            }}
+                          />
+                          <div className="article-form__placement-info">
+                            <span className="article-form__placement-name">📂 {section.title}</span>
+                            <span className="article-form__placement-desc">
+                              {section.description || `Appears under "${section.title}" on the homepage`}
+                            </span>
+                          </div>
+                        </label>
+                        <button
+                          type="button"
+                          className="article-form__section-delete-btn"
+                          onClick={() => handleDeleteSection(section.id)}
+                          title="Delete section"
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     );
                   })}
                 </div>

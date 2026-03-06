@@ -489,6 +489,30 @@
   cursor: not-allowed;
 }
 
+.article-form__section-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.article-form__section-delete-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border-radius: 5px;
+  color: var(--text-tertiary);
+  opacity: 0.55;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.article-form__section-delete-btn:hover {
+  opacity: 1;
+  color: var(--red);
+}
+
 .article-form__preview {
   position: relative;
   width: 100%;

@@ -253,6 +253,29 @@
   cursor: default;
 }
 
+.comment__delete-btn {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  font-size: 0.78rem;
+  padding: 0;
+  margin-left: auto;
+  opacity: 0.5;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.comment__delete-btn:hover:not(:disabled) {
+  opacity: 1;
+  color: var(--red);
+}
+
+.comment__delete-btn:disabled {
+  cursor: default;
+}
+
 .comment__username {
   cursor: pointer;
   text-decoration: underline dotted;
