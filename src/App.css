@@ -1,160 +1,170 @@
 /* ═══════════════════════════════════════════════════════
-   SPORTS APP — LIGHT THEME
-   Emerald green accent, white background, slate text
+   SPORTS APP — WINDSURF / OCEAN DARK THEME
+   Deep navy bg, cyan accents, coral danger, lime live
+   NOTE: navbar-bg, navbar-text, footer-bg, bg-ticker
+         are intentionally kept from the blue/orange scheme
    ═══════════════════════════════════════════════════════ */
 
 :root[data-theme="light"] {
   /* ── Background & Surface ───────────────────────────── */
-  --bg-primary:     #FFFFFF;        /* pure white page background */
-  --bg-secondary:   #F9FBFD;        /* very light cool white for panels */
-  --bg-tertiary:    #F1F5F9;        /* subtle section backgrounds */
-  --card-bg:        #F1F5F9;        /* light grey card surfaces */
-  --card-hover:     #E8EEF5;        /* slightly darker grey on hover */
-  --input-bg:       #F1F5F9;
+  --bg-primary:     #0c1425;        /* deep ocean navy page bg */
+  --bg-secondary:   #0f172a;        /* slightly lighter navy for panels */
+  --bg-tertiary:    #1e293b;        /* slate for subtle section bg */
+  --card-bg:        #1e293b;        /* slate card surfaces */
+  --card-hover:     #253349;        /* lighter slate on hover */
+  --input-bg:       #1e293b;
 
   /* ── Text ───────────────────────────────────────────── */
-  --text-primary:   #1E293B;        /* dark cool gray for body content */
-  --text-secondary: #0F172A;        /* deep slate for headings/labels */
-  --text-tertiary:  #64748B;        /* mid-gray for captions/meta */
+  --text-primary:   #f1f5f9;        /* bright off-white for body content */
+  --text-secondary: #e2e8f0;        /* near-white for headings/labels */
+  --text-tertiary:  #94a3b8;        /* cool gray for captions/meta */
 
   /* ── Borders & Dividers ─────────────────────────────── */
-  --border-color:   #E2E8F0;        /* subtle light borders */
+  --border-color:   #334155;        /* subtle cyan-tinted slate border */
 
-  /* ── Navbar & Footer ────────────────────────────────── */
-  --navbar-bg:      #245b8a;        /* steel blue header */
-  --navbar-text:    #FFFFFF;         /* white text on blue header */
-  --navbar-hover:   #10B981;        /* emerald green hover */
-  --footer-bg:      #245b8a;        /* matches header */
+  /* ── Navbar & Footer — kept from blue/orange scheme ─── */
+  --navbar-bg:      #245b8a;
+  --navbar-text:    #FFFFFF;
+  --navbar-hover:   #00d4ff;
+  --footer-bg:      #245b8a;
 
   /* ── Shadows ────────────────────────────────────────── */
-  --shadow:         rgba(15, 23, 42, 0.06);
-  --shadow-md:      rgba(15, 23, 42, 0.10);
-  --shadow-lg:      rgba(15, 23, 42, 0.18);
+  --shadow:         rgba(0, 0, 0, 0.25);
+  --shadow-md:      rgba(0, 0, 0, 0.40);
+  --shadow-lg:      rgba(0, 0, 0, 0.60);
 
-  /* ── Primary Accent: Emerald Green ──────────────────── */
-  --primary:        #10B981;        /* main accent — links, CTAs, live */
-  --primary-hover:  #059669;        /* deeper green for hover/active */
-  --primary-glow:   rgba(16, 185, 129, 0.15);
+  /* ── Primary Accent: Surf Cyan ──────────────────────── */
+  --primary:        #00d4ff;        /* vibrant surf turquoise */
+  --primary-hover:  #00b8e0;        /* slightly deeper cyan on hover */
+  --primary-glow:   rgba(0, 212, 255, 0.18);
 
-  /* ── Legacy red (kept for backwards compat) ──────────── */
-  --red:            #e5192a;
-  --red-dark:       #b5141f;
-  --red-glow:       rgba(229, 25, 42, 0.15);
+  /* ── Danger / Score highlight ───────────────────────── */
+  --red:            #f87171;        /* coral red-orange (no pure red) */
+  --red-dark:       #ef4444;
+  --red-glow:       rgba(248, 113, 113, 0.18);
+
+  /* ── Live / Success ─────────────────────────────────── */
+  --live-color:     #a3e635;        /* lime-aqua live indicator */
 
   /* ── Other Accents ──────────────────────────────────── */
-  --accent-gold:    #f59e0b;
-  --accent-blue:    #2563eb;
+  --accent-gold:    #fbbf24;
+  --accent-blue:    #22d3ee;        /* electric cyan */
   --bg-ticker:      #64748B;
 
   /* ── Design Tokens ──────────────────────────────────── */
-  --background-main:  #FFFFFF;
-  --header-bg:        #F9FBFD;
-  --menu-text:        #0F172A;
-  --body-text:        #1E293B;
-  --headings:         #0F172A;
-  --secondary-gray:   #64748B;
-  --border-light:     #E2E8F0;
-  --success-hover:    #059669;
+  --background-main:  #0c1425;
+  --header-bg:        #0f172a;
+  --menu-text:        #f1f5f9;
+  --body-text:        #f1f5f9;
+  --headings:         #f1f5f9;
+  --secondary-gray:   #94a3b8;
+  --border-light:     #334155;
+  --success-hover:    #00b8e0;
 }
 
 :root[data-theme="dark"] {
-  --bg-primary:     #0e1628;
-  --bg-secondary:   #131f35;
-  --bg-tertiary:    #1a2740;
-  --text-primary:   #e8edf5;
-  --text-secondary: #9aaec4;
-  --text-tertiary:  #546880;
-  --border-color:   #1e2d47;
-  --card-bg:        #141f33;
+  --bg-primary:     #0c1425;
+  --bg-secondary:   #0f172a;
+  --bg-tertiary:    #1e293b;
+  --text-primary:   #f1f5f9;
+  --text-secondary: #e2e8f0;
+  --text-tertiary:  #94a3b8;
+  --border-color:   #334155;
+  --card-bg:        #1e293b;
+  --card-hover:     #253349;
   --navbar-bg:      #0a1220;
   --navbar-text:    #e8edf5;
-  --navbar-hover:   #10B981;
+  --navbar-hover:   #00d4ff;
   --footer-bg:      #0a1220;
   --shadow:         rgba(0, 0, 0, 0.4);
   --shadow-md:      rgba(0, 0, 0, 0.55);
   --shadow-lg:      rgba(0, 0, 0, 0.75);
   --bg-ticker:      #0a1220;
-  --primary:        #10B981;
-  --primary-hover:  #059669;
-  --primary-glow:   rgba(16, 185, 129, 0.2);
-  --red:            #e5192a;
-  --red-dark:       #b5141f;
-  --red-glow:       rgba(229, 25, 42, 0.2);
-  --accent-gold:    #f59e0b;
-  --accent-blue:    #3b82f6;
-  --card-hover:     #1e2d47;
-  --input-bg:       #0e1628;
-  --background-main:  #0e1628;
-  --header-bg:        #0a1220;
-  --menu-text:        #e8edf5;
-  --body-text:        #9aaec4;
-  --headings:         #e8edf5;
-  --secondary-gray:   #546880;
-  --border-light:     #1e2d47;
-  --success-hover:    #059669;
+  --primary:        #00d4ff;
+  --primary-hover:  #00b8e0;
+  --primary-glow:   rgba(0, 212, 255, 0.2);
+  --red:            #f87171;
+  --red-dark:       #ef4444;
+  --red-glow:       rgba(248, 113, 113, 0.2);
+  --live-color:     #a3e635;
+  --accent-gold:    #fbbf24;
+  --accent-blue:    #22d3ee;
+  --input-bg:       #0c1425;
+  --background-main:  #0c1425;
+  --header-bg:        #0f172a;
+  --menu-text:        #f1f5f9;
+  --body-text:        #f1f5f9;
+  --headings:         #f1f5f9;
+  --secondary-gray:   #94a3b8;
+  --border-light:     #334155;
+  --success-hover:    #00b8e0;
 }
 
-/* ── Default (light) — mirrors [data-theme="light"] ──── */
+/* ── Default — mirrors windsurf theme ───────────────── */
 :root {
   /* ── Background & Surface ───────────────────────────── */
-  --bg-primary:     #FFFFFF;
-  --bg-secondary:   #F9FBFD;
-  --bg-tertiary:    #F1F5F9;
-  --card-bg:        #F1F5F9;
-  --card-hover:     #E8EEF5;
-  --input-bg:       #F1F5F9;
+  --bg-primary:     #0c1425;
+  --bg-secondary:   #0f172a;
+  --bg-tertiary:    #1e293b;
+  --card-bg:        #1e293b;
+  --card-hover:     #253349;
+  --input-bg:       #1e293b;
 
   /* ── Text ───────────────────────────────────────────── */
-  --text-primary:   #1E293B;
-  --text-secondary: #0F172A;
-  --text-tertiary:  #64748B;
+  --text-primary:   #f1f5f9;
+  --text-secondary: #e2e8f0;
+  --text-tertiary:  #94a3b8;
 
   /* ── Borders ────────────────────────────────────────── */
-  --border-color:   #E2E8F0;
+  --border-color:   #334155;
 
-  /* ── Navbar & Footer ────────────────────────────────── */
+  /* ── Navbar & Footer — kept from blue/orange scheme ─── */
   --navbar-bg:      #245b8a;
   --navbar-text:    #FFFFFF;
-  --navbar-hover:   #10B981;
+  --navbar-hover:   #00d4ff;
   --footer-bg:      #245b8a;
 
   /* ── Shadows ────────────────────────────────────────── */
-  --shadow:         rgba(15, 23, 42, 0.06);
-  --shadow-md:      rgba(15, 23, 42, 0.10);
-  --shadow-lg:      rgba(15, 23, 42, 0.18);
+  --shadow:         rgba(0, 0, 0, 0.25);
+  --shadow-md:      rgba(0, 0, 0, 0.40);
+  --shadow-lg:      rgba(0, 0, 0, 0.60);
 
-  /* ── Primary Accent: Emerald Green ──────────────────── */
-  --primary:        #10B981;
-  --primary-hover:  #059669;
-  --primary-glow:   rgba(16, 185, 129, 0.15);
+  /* ── Primary Accent: Surf Cyan ──────────────────────── */
+  --primary:        #00d4ff;
+  --primary-hover:  #00b8e0;
+  --primary-glow:   rgba(0, 212, 255, 0.18);
 
-  /* ── Legacy red (kept for backwards compat) ──────────── */
-  --red:            #e5192a;
-  --red-dark:       #b5141f;
-  --red-glow:       rgba(229, 25, 42, 0.15);
+  /* ── Danger / Score highlight ───────────────────────── */
+  --red:            #f87171;
+  --red-dark:       #ef4444;
+  --red-glow:       rgba(248, 113, 113, 0.18);
+
+  /* ── Live / Success ─────────────────────────────────── */
+  --live-color:     #a3e635;
 
   /* ── Other Accents ──────────────────────────────────── */
-  --accent-gold:    #f59e0b;
-  --accent-blue:    #2563eb;
-  --bg-ticker:      #64748B;        /* slate-gray ticker bar */
+  --accent-gold:    #fbbf24;
+  --accent-blue:    #22d3ee;
+  --bg-ticker:      #64748B;
 
   /* ── Named Design Tokens ────────────────────────────── */
-  --background-main:  #FFFFFF;
-  --header-bg:        #F9FBFD;
-  --menu-text:        #0F172A;
-  --body-text:        #1E293B;
-  --headings:         #0F172A;
-  --secondary-gray:   #64748B;
-  --border-light:     #E2E8F0;
-  --success-hover:    #059669;
+  --background-main:  #0c1425;
+  --header-bg:        #0f172a;
+  --menu-text:        #f1f5f9;
+  --body-text:        #f1f5f9;
+  --headings:         #f1f5f9;
+  --secondary-gray:   #94a3b8;
+  --border-light:     #334155;
+  --success-hover:    #00b8e0;
 }
 
 /* ── Typography ───────────────────────────────────────── */
 :root {
-  --font-heading: 'Bebas Neue', 'Oswald', 'Arial Narrow', Arial, sans-serif;
+  --font-heading: 'Poppins', 'Inter', -apple-system, sans-serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-ui:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-label:   'Bebas Neue', 'Oswald', Arial, sans-serif;
+  --font-label:   'Poppins', 'Inter', Arial, sans-serif;
+  --font-meta:    'Manrope', 'Inter', sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 }
 
@@ -168,20 +178,21 @@
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 400;              /* Bebas Neue only has regular weight */
-  letter-spacing: 0.04em;
+  font-weight: 900;              /* Poppins Black — bold, impactful */
+  letter-spacing: 0.01em;
   text-transform: uppercase;
   color: var(--headings);
 }
 
-/* Section labels — Oswald condensed */
+/* Section labels — Poppins bold */
 .section-header__title,
 .hero-cards__heading-title,
 .sec-container__heading-title,
 .sidebar__widget-title,
 .latest-news-strip__title {
   font-family: var(--font-label);
-  letter-spacing: 0.08em;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -208,7 +219,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.75;
 }
 
-/* UI / meta text */
+/* UI / meta text — Manrope for tags/meta, Inter for general UI */
 .sec-card__author,
 .sec-card__author--sm,
 .hero-card--large .hero-card__author,
@@ -222,7 +233,8 @@ h1, h2, h3, h4, h5, h6 {
 .manage-sections__hint,
 .trending-item__headline,
 .sb-game__name {
-  font-family: var(--font-ui);
+  font-family: var(--font-meta);
+  font-weight: 600;
 }
 
 .app {
