@@ -10,8 +10,8 @@
   --bg-primary:     #FFFFFF;        /* pure white page background */
   --bg-secondary:   #F8FAFC;        /* very light cool white for panels */
   --bg-tertiary:    #F1F5F9;        /* subtle section backgrounds */
-  --card-bg:        #F1F5F9;        /* grey card surfaces */
-  --card-hover:     #E2E8F0;        /* slightly darker grey on hover */
+  --card-bg:        #D8DFE9;        /* grey card surfaces — 15% darker */
+  --card-hover:     #C8D2E0;        /* slightly darker grey on hover */
   --input-bg:       #F1F5F9;
 
   /* ── Text ───────────────────────────────────────────── */
@@ -70,8 +70,8 @@
   --text-secondary: #e2e8f0;
   --text-tertiary:  #94a3b8;
   --border-color:   #334155;
-  --card-bg:        #1e293b;
-  --card-hover:     #253349;
+  --card-bg:        #141e2e;
+  --card-hover:     #1a2640;
   --navbar-bg:      #0a1220;
   --navbar-text:    #e8edf5;
   --navbar-hover:   #00d4ff;
@@ -106,9 +106,9 @@
   --bg-primary:     #0c1425;
   --bg-secondary:   #0f172a;
   --bg-tertiary:    #1e293b;
-  --card-bg:        #1e293b;
-  --card-hover:     #253349;
-  --input-bg:       #1e293b;
+  --card-bg:        #141e2e;
+  --card-hover:     #1a2640;
+  --input-bg:       #0c1425;
 
   /* ── Text ───────────────────────────────────────────── */
   --text-primary:   #f1f5f9;
@@ -255,7 +255,7 @@ h1, h2, h3, h4, h5, h6 {
 .app__content-wrap {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 36px 24px 0;
+  padding: 48px 24px 0;
   width: 100%;
 }
 
@@ -274,7 +274,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .app__section-gap {
-  margin-top: 40px;
+  margin-top: 56px;
 }
 
 /* Full-width section (below the grid) */

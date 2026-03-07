@@ -7,8 +7,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -23,9 +23,9 @@
 
 .section-header__title {
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--headings);
   font-family: var(--font-label);
   flex: 1;

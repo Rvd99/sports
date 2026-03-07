@@ -38,9 +38,9 @@
 
 .sidebar__widget-title {
   font-size: 1.1rem;
-  font-weight: 400;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--headings);
   font-family: var(--font-label);
 }
