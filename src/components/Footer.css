@@ -1,6 +1,6 @@
 .footer {
   background: var(--footer-bg);
-  border-top: 3px solid #0057A8;
+  border-top: 3px solid var(--primary);
   margin-top: 60px;
 }
 
@@ -34,13 +34,13 @@
 .footer__logo-degen {
   font-size: 1.3rem;
   font-weight: 900;
-  color: #FFFFFF;
+  color: #10B981;
   letter-spacing: -0.5px;
 }
 
 .footer__logo-dot {
   font-size: 0.45rem;
-  color: #FFFFFF;
+  color: #10B981;
   margin: 0 3px;
 }
 
@@ -117,7 +117,7 @@
 }
 
 .footer__col-link:hover {
-  color: #7EC8F4;
+  color: #10B981;
 }
 
 /* Bottom Bar */
@@ -156,7 +156,7 @@
 }
 
 .footer__bottom-link:hover {
-  color: #7EC8F4;
+  color: #10B981;
 }
 
 /* Responsive */
